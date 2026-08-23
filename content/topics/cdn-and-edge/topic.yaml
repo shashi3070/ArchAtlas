@@ -1,0 +1,36 @@
+id: cdn-and-edge
+title: "CDNs & Edge Delivery"
+category: delivery
+order: 9
+summary: "Serving static (and increasingly dynamic) content from locations physically near users."
+prerequisites: [http-fundamentals, caching]
+related_challenges: []
+objectives:
+  - "Configure cache-control headers intentionally"
+  - "Route dynamic requests through edge networks wisely"
+  - "Handle invalidation and origin shielding correctly"
+quiz:
+  - q: "Primary latency win of a CDN comes from:"
+    options:
+      - "Bigger servers"
+      - "Geographic proximity reducing RTT"
+      - "HTTP/3 only"
+      - "Origin database tuning"
+    answer: 1
+    explain: "Serving from PoPs near users slashes round-trip time and avoids traversing congested transit paths repeatedly."
+  - q: "Cache-Control: max-age=31536000, immutable suits:"
+    options:
+      - "Bank balances"
+      - "Hashed static assets (app.9f2c.js)"
+      - "Search results"
+      - "User avatars uploaded hourly"
+    answer: 1
+    explain: "Content-hashed filenames never change content, so year-long immutable caching is safe; HTML references the new hash on release."
+  - q: "Origin shielding protects:"
+    options:
+      - "Users from malware"
+      - "The origin from full-cache-miss floods via an intermediate tier"
+      - "CDN billing"
+      - "TLS certificates"
+    answer: 1
+    explain: "A shield tier coalesces misses from many PoPs into one origin request per object."

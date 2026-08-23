@@ -1,0 +1,36 @@
+id: http-fundamentals
+title: "HTTP Fundamentals"
+category: networking
+order: 1
+summary: "How requests travel from browser to server and back - the vocabulary every later topic builds on."
+prerequisites: []
+related_challenges: []
+objectives:
+  - "Trace a request through DNS, TCP, TLS and HTTP"
+  - "Choose between REST, RPC and async styles deliberately"
+  - "Reason about latency budgets across hops"
+quiz:
+  - q: "Which phase of a request typically dominates tail latency for a fast API?"
+    options:
+      - "TCP handshake"
+      - "Server processing time"
+      - "TLS certificate download"
+      - "DNS propagation"
+    answer: 1
+    explain: "For APIs returning small payloads, the server's own processing usually dwarfs transport setup, which amortizes across kept-alive connections."
+  - q: "What does a 502 status code indicate?"
+    options:
+      - "The client sent a malformed request"
+      - "An upstream/proxy got an invalid response from the origin"
+      - "The resource moved permanently"
+      - "Rate limit exceeded"
+    answer: 1
+    explain: "502 Bad Gateway means a proxy (LB, CDN, gateway) received an invalid or no response from the upstream service."
+  - q: "Why do connection keep-alive and multiplexing matter?"
+    options:
+      - "They compress headers automatically"
+      - "They amortize connection-setup cost across requests"
+      - "They guarantee delivery"
+      - "They encrypt traffic faster"
+    answer: 1
+    explain: "Reusing connections avoids repeated TCP/TLS handshakes; HTTP/2 multiplexing further removes head-of-line blocking at the HTTP layer."

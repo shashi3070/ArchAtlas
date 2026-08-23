@@ -1,0 +1,36 @@
+id: consistency-and-cap
+title: "Consistency & CAP"
+category: theory
+order: 6
+summary: "What 'consistent' actually means across replicas, why networks lie during partitions, and how to choose trade-offs deliberately."
+prerequisites: [databases]
+related_challenges: []
+objectives:
+  - "Distinguish strong, read-your-writes and eventual consistency"
+  - "Explain CAP and PACELC plainly"
+  - "Select consistency per operation, not per company"
+quiz:
+  - q: "During a network partition, a CP system will:"
+    options:
+      - "Serve possibly-stale reads"
+      - "Reject/limit operations to preserve consistency"
+      - "Automatically heal the partition"
+      - "Convert to AP temporarily"
+    answer: 1
+    explain: "CP systems sacrifice availability during partitions rather than risk divergent state; AP keeps serving but allows divergence."
+  - q: "Read-your-writes consistency means:"
+    options:
+      - "All users see writes instantly"
+      - "A user observes their own prior writes on subsequent reads"
+      - "Writes are durable immediately"
+      - "Replicas are byte-identical"
+    answer: 1
+    explain: "It's a per-session guarantee - route the user's reads to a replica caught up past their latest write (or the primary)."
+  - q: "Quorum writes W=2, reads R=2, N=3 ensure overlap because:"
+    options:
+      - "W+R>N"
+      - "W>N/2"
+      - "R=1"
+      - "N is odd"
+    answer: 0
+    explain: "With R+W>N some written replica participates in every read, so the newest version is observed."

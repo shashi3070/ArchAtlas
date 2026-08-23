@@ -1,0 +1,36 @@
+id: messaging-queues
+title: "Messaging & Queues"
+category: communication
+order: 5
+summary: "Decoupling services with asynchronous messages - brokers, delivery guarantees, and backpressure by design."
+prerequisites: [http-fundamentals]
+related_challenges: []
+objectives:
+  - "Model producer/broker/consumer flows"
+  - "Choose delivery semantics and make processing idempotent"
+  - "Use queues to absorb bursts safely"
+quiz:
+  - q: "Core benefit of inserting a queue between producer and consumer?"
+    options:
+      - "Lower p50 latency"
+      - "Decoupling: independent scaling and burst absorption"
+      - "Guaranteed ordering across all consumers"
+      - "Eliminates all failure modes"
+    answer: 1
+    explain: "Queues break temporal coupling - producers finish fast while consumers drain at their own pace, absorbing spikes."
+  - q: "At-least-once delivery requires consumers to be:"
+    options:
+      - "Single-threaded"
+      - "Idempotent"
+      - "Stateless"
+      - "Region-local"
+    answer: 1
+    explain: "Redelivery will happen; duplicate-safe processing (idempotency keys, upserts) turns redelivery harmless."
+  - q: "Kafka partitions guarantee order within:"
+    options:
+      - "The whole topic"
+      - "A partition per producer key"
+      - "Consumer groups"
+      - "Nothing at all"
+    answer: 1
+    explain: "Ordering holds only inside a partition; choosing a good partition key preserves per-entity order."

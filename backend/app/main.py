@@ -11,15 +11,19 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import components, health
-from app.content import loader
+from app.api.routes import components, health, progress, topics
+from app.content import loader, topics_loader
 from app.core.config import get_settings
+from app.db import init_db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # Fail fast at startup if the seeded content violates canonical schemas.
     loader.load_catalog()
+    topics_loader.load_topics()
+    topics_loader.load_glossary()
+    init_db()
     yield
 
 
@@ -39,6 +43,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(health.router)
     app.include_router(components.router)
+    app.include_router(topics.router)
+    app.include_router(progress.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:

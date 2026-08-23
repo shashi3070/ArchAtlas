@@ -1,0 +1,36 @@
+id: observability
+title: "Observability"
+category: operations
+order: 8
+summary: "Metrics, logs and traces that turn 'it's slow' into actionable diagnosis - plus SLOs that decide what matters."
+prerequisites: []
+related_challenges: []
+objectives:
+  - "Instrument RED/USE metrics meaningfully"
+  - "Correlate logs and traces across service hops"
+  - "Define SLOs and burn-rate alerts that page only when users hurt"
+quiz:
+  - q: "RED metrics stand for:"
+    options:
+      - "Reliability, Efficiency, Durability"
+      - "Rate, Errors, Duration"
+      - "Requests, Endpoints, Dependencies"
+      - "Root, Exception, Dump"
+    answer: 1
+    explain: "RED covers request rate, error rate and duration - the minimal signal set for request-serving services."
+  - q: "Distributed tracing solves mainly:"
+    options:
+      - "Disk usage growth"
+      - "Following one request across service hops"
+      - "User authentication"
+      - "Schema validation"
+    answer: 1
+    explain: "Trace context propagates through calls so latency and failures attribute precisely along the path taken."
+  - q: "A good paging alert is based on:"
+    options:
+      - "CPU above 80% ever"
+      - "SLO burn rate indicating user impact"
+      - "Any ERROR log line"
+      - "Deploy completion"
+    answer: 1
+    explain: "Error-budget burn alerts tie pages to user-facing harm thresholds, filtering noise from cosmetic issues."

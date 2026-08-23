@@ -1,0 +1,36 @@
+id: load-balancing
+title: "Load Balancing"
+category: core
+order: 2
+summary: "Spreading traffic across redundant servers so no single machine limits capacity or availability."
+prerequisites: [http-fundamentals]
+related_challenges: []
+objectives:
+  - "Pick an L4 vs L7 balancer consciously"
+  - "Choose scheduling algorithms that fit your workload"
+  - "Explain health checks and failover behavior"
+quiz:
+  - q: "What distinguishes L7 load balancing from L4?"
+    options:
+      - "L7 works on raw packets"
+      - "L7 inspects application messages (paths, headers) when routing"
+      - "L7 is always faster"
+      - "L7 requires UDP"
+    answer: 1
+    explain: "Layer 7 balancers understand HTTP-level detail, enabling path-based routing, header manipulation and content-aware decisions; L4 balances connections without inspecting them."
+  - q: "Why does least-connections often beat round-robin?"
+    options:
+      - "It uses fewer network hops"
+      - "Requests have varying cost and servers have uneven speed"
+      - "It enables TLS offloading"
+      - "It removes the need for health checks"
+    answer: 1
+    explain: "With heterogeneous request costs or server speeds, sending equal counts (round-robin) creates unequal loads; least-connections adapts to actual outstanding work."
+  - q: "A health check passes but requests still fail. Likely cause?"
+    options:
+      - "The balancer is down"
+      - "The check probes a different port/path than real traffic uses"
+      - "DNS is stale"
+      - "Clients are misconfigured"
+    answer: 1
+    explain: "Health checks validate only what they probe; a shallow check against a healthy endpoint misses dependencies broken elsewhere in the instance."

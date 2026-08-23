@@ -1,0 +1,4 @@
+# How It Works
+Timeout budgeting: parent deadline minus elapsed must exceed child timeout. Propagate deadlines (HTTP `Deadline` headers, gRPC contexts) so deep call trees abandon doomed work early. Retry policy essentials: cap attempts (2-3), exponential backoff with **jitter**, retry only idempotent operations or attach idempotency keys, honor `Retry-After`.
+
+Breaker states: **closed** (normal, counting), **open** (rejecting instantly, timer running), **half-open** (probe subset). Thresholds tune sensitivity - e.g., trip when >50% of last 20 calls failed. Bulkheads isolate resource pools per dependency (connection pools, worker threads, instances via cell architecture). Load shedding closes the loop: when over capacity, reject lowest-priority traffic early with clear signals (429/503 + `Retry-After`) instead of accepting everything and timing everyone out.

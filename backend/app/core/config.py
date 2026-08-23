@@ -18,6 +18,7 @@ class Settings(BaseSettings):
         "http://localhost:8080",
     ]
     content_dir: Path | None = None
+    database_url: str = "sqlite:///./sdp.db"
 
 
 @lru_cache(maxsize=1)

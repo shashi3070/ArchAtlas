@@ -1,0 +1,36 @@
+id: rate-limiting
+title: "Rate Limiting & Protection"
+category: protection
+order: 10
+summary: "Guarding shared capacity from abuse and accidents - algorithms, placement, and fair-shedding under pressure."
+prerequisites: [caching, reliability-patterns]
+related_challenges: []
+objectives:
+  - "Implement token bucket and sliding window limiters"
+  - "Place limits at edge, service and tenant layers"
+  - "Communicate limits with correct status codes and headers"
+quiz:
+  - q: "Token bucket differs from fixed window mainly by:"
+    options:
+      - "Needing no memory"
+      - "Allowing short bursts while bounding average rate"
+      - "Being per-datacenter only"
+      - "Blocking all bursts"
+    answer: 1
+    explain: "Tokens accumulate up to bucket size, permitting bursts; average consumption stays capped - smoother than window resets."
+  - q: "Where should coarse IP-based limits live?"
+    options:
+      - "Deep inside business services"
+      - "At the edge/gateway before expensive processing"
+      - "Inside the database"
+      - "Only in mobile clients"
+    answer: 1
+    explain: "Edge enforcement sheds abusive traffic before it consumes application or database capacity."
+  - q: "Correct response when a client exceeds quota:"
+    options:
+      - "200 with empty body"
+      - "429 with Retry-After headers"
+      - "403 Forbidden always"
+      - "Drop silently"
+    answer: 1
+    explain: "429 Too Many Requests plus Retry-After lets well-behaved clients back off politely; silence breeds retry storms."

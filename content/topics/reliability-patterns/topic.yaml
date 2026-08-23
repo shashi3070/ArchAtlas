@@ -1,0 +1,36 @@
+id: reliability-patterns
+title: "Reliability Patterns"
+category: resilience
+order: 7
+summary: "Timeouts, retries, circuit breakers and graceful degradation - failing predictably instead of catastrophically."
+prerequisites: [load-balancing, messaging-queues]
+related_challenges: []
+objectives:
+  - "Set timeouts and retry policies that compose safely"
+  - "Prevent cascading failures with bulkheads and breakers"
+  - "Degrade features gracefully under partial failure"
+quiz:
+  - q: "Retries without jitter/exponential backoff cause:"
+    options:
+      - "Faster recovery"
+      - "Synchronized retry waves amplifying overload"
+      - "Fewer total requests"
+      - "Automatic failover"
+    answer: 1
+    explain: "Uniform retries collide in waves (thundering herd); exponential backoff with jitter spreads them out."
+  - q: "A circuit breaker primarily protects:"
+    options:
+      - "The failing dependency"
+      - "The caller and rest of the system from the failing dependency"
+      - "The network layer"
+      - "Database disks"
+    answer: 1
+    explain: "By failing fast while the dependency is unhealthy, the breaker prevents resource exhaustion and cascade."
+  - q: "Bulkhead isolation means:"
+    options:
+      - "Sharing one connection pool"
+      - "Partitioning resources so one failure can't exhaust everything"
+      - "Encrypting inter-service links"
+      - "Deploying to multiple regions only"
+    answer: 1
+    explain: "Separate pools per dependency bound blast radius: a slow recommendation service can't consume the threads needed by payments."

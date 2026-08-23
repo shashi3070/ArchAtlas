@@ -1,0 +1,36 @@
+id: databases
+title: "Databases & Storage Engines"
+category: storage
+order: 4
+summary: "Relational, document and KV stores - choosing engines, indexing wisely, and scaling reads before writes."
+prerequisites: [http-fundamentals]
+related_challenges: []
+objectives:
+  - "Map workload shapes to storage families"
+  - "Design indexes that match query patterns"
+  - "Sequence scaling moves: indexes, replicas, partitioning"
+quiz:
+  - q: "Best first step when a relational DB read-bound workload slows down?"
+    options:
+      - "Shard immediately"
+      - "Add/fix indexes for the hot queries"
+      - "Switch to NoSQL"
+      - "Add more app servers"
+    answer: 1
+    explain: "Index-aligned queries routinely deliver order-of-magnitude gains at low risk; sharding is invasive and premature before indexing is exhausted."
+  - q: "Primary purpose of a WAL (write-ahead log)?"
+    options:
+      - "Speed up reads"
+      - "Make writes crash-durable before applying them"
+      - "Compress rows"
+      - "Balance reads across replicas"
+    answer: 1
+    explain: "Durability: changes are logged and flushed before being applied to pages, allowing recovery after crashes."
+  - q: "Read replicas primarily help with:"
+    options:
+      - "Write throughput"
+      - "Fault-tolerant read scaling"
+      - "Stronger consistency"
+      - "Schema migrations"
+    answer: 1
+    explain: "Replicas distribute read load and provide a warm standby; they do not increase write capacity and lag slightly behind primary."

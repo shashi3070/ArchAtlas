@@ -1,0 +1,36 @@
+id: caching
+title: "Caching"
+category: core
+order: 3
+summary: "Keeping hot data close to computation - the single highest-leverage performance tool in distributed systems."
+prerequisites: [http-fundamentals]
+related_challenges: []
+objectives:
+  - "Apply read-through, write-through and write-behind correctly"
+  - "Control staleness with TTL and invalidation"
+  - "Diagnose stampedes and apply countermeasures"
+quiz:
+  - q: "What is a cache stampede?"
+    options:
+      - "Cache hits exceeding capacity"
+      - "Many concurrent requests rebuild the same expired entry simultaneously"
+      - "Writing to cache before the database"
+      - "Evicting the most recently used item"
+    answer: 1
+    explain: "When a hot key expires, concurrent missers all hit the backing store; request coalescing, locks or probabilistic early refresh prevent the pile-up."
+  - q: "Write-through caching means:"
+    options:
+      - "Write cache asynchronously after ack"
+      - "Update cache and backing store synchronously together"
+      - "Bypass cache on writes"
+      - "Delete cache entries on write"
+    answer: 1
+    explain: "Writes go to cache and store in the same critical path, trading write latency for guaranteed cache-store consistency."
+  - q: "Which metric measures how well a cache avoids backend traffic?"
+    options:
+      - "p99 latency"
+      - "Hit rate"
+      - "Fan-out factor"
+      - "Replication lag"
+    answer: 1
+    explain: "Hit rate = served-from-cache / total requests; it directly determines backend load."

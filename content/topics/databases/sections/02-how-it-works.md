@@ -1,0 +1,4 @@
+# How It Works
+Under the hood, most engines share a two-part design: a **log** (WAL) making writes durable quickly, and **pages/indexes** organizing data for reads. Indexes - typically B-trees - trade extra write cost and space for logarithmic lookups. A composite index on `(user_id, created_at)` serves `WHERE user_id=? ORDER BY created_at DESC LIMIT 20` without sorting; the same query without it degenerates into a full scan.
+
+Transactions rely on MVCC: writers create new versions, readers see snapshots, locking conflicts shrink. Replication ships the log to standbys (**sync** = zero-loss, higher write latency; **async** = faster, risks divergence on failover). Partitioning splits data across nodes by range or hash - each shard owns disjoint keys, so queries carrying the shard key stay fast while cross-shard operations scatter-gather.

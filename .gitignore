@@ -28,3 +28,7 @@ Thumbs.db
 
 # Local data
 pgdata/
+
+# Local dev databases
+*.db
+*.sqlite3
