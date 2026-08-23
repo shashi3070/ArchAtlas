@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/edge.schema.json",
+  "title": "ArchitectureEdge",
+  "description": "A typed directed connection between two nodes. Evaluation-relevant edges must carry traffic_type and direction semantics.",
+  "type": "object",
+  "required": ["id", "source", "target"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_\\-.]+$"
+    },
+    "source": {
+      "type": "string",
+      "description": "Id of the source ArchitectureNode."
+    },
+    "target": {
+      "type": "string",
+      "description": "Id of the target ArchitectureNode."
+    },
+    "direction": {
+      "description": "Flow direction semantics. Defaults to unidirectional source->target.",
+      "default": "unidirectional",
+      "enum": ["unidirectional", "bidirectional"]
+    },
+    "protocol": {
+      "type": ["string", "null"],
+      "description": "Optional protocol label (http, grpc, tcp, amqp, native...)."
+    },
+    "traffic_type": {
+      "description": "Semantic traffic classification used by the evaluator.",
+      "default": "sync_request",
+      "enum": [
+        "sync_request",
+        "async_event",
+        "replication",
+        "batch"
+      ]
+    },
+    "properties": {
+      "type": "object",
+      "description": "Edge semantics: pattern (sync|async), delivery (at_most_once|at_least_once|exactly_once), ordering, throughput hints, read/write ratio.",
+      "additionalProperties": true
+    }
+  }
+}

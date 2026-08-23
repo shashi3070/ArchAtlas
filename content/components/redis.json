@@ -1,0 +1,22 @@
+{
+  "type": "redis",
+  "category": "cache",
+  "name": "Redis",
+  "description": "In-memory data store used as a low-latency cache, session store, or lightweight queue.",
+  "version": "0.1.0",
+  "capabilities": ["low_latency_reads", "temporary_storage", "distributed_cache", "atomic_operations"],
+  "helps_with": ["database_read_load", "read_latency", "hot_key_absorption"],
+  "does_not_solve": ["durable_primary_storage", "global_consistency", "large_dataset_storage_beyond_memory"],
+  "risks": ["cache_failure", "stale_data", "eviction_under_memory_pressure", "invalidation_complexity"],
+  "common_patterns": ["cache_aside", "write_through", "ttl_expiry"],
+  "failure_modes": ["node_failure", "network_partition", "hot_key", "memory_exhaustion"],
+  "tradeoffs": ["consistency_vs_freshness", "cost_per_gb_of_ram", "operational_complexity_when_clustered"],
+  "capacity_defaults": {
+    "reads_per_sec_per_node": 100000,
+    "writes_per_sec_per_node": 80000,
+    "default_instances": 1,
+    "default_hit_ratio_assumption": 0.9
+  },
+  "cost_defaults": { "usd_per_node_month": 90 },
+  "palette": { "group": "Cache", "icon": "zap", "color": "#dc2626" }
+}

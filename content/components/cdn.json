@@ -1,0 +1,20 @@
+{
+  "type": "cdn",
+  "category": "edge",
+  "name": "CDN",
+  "description": "Globally distributed edge cache serving static and cacheable content close to users.",
+  "version": "0.1.0",
+  "capabilities": ["edge_caching", "geo_distribution", "tls_termination", "ddos_absorption_basic"],
+  "helps_with": ["global_latency", "origin_offload", "static_asset_delivery", "traffic_spike_absorption"],
+  "does_not_solve": ["dynamic_uncacheable_content", "write_path_scaling"],
+  "risks": ["stale_content_without_invalidation_discipline", "cache_poisoning_if_headers_misconfigured"],
+  "common_patterns": ["static_asset_offload", "cache_control_headers", "origin_shield"],
+  "failure_modes": ["regional_edge_degradation", "origin_overload_on_cache_miss_storms"],
+  "tradeoffs": ["cost_per_gb_egress_vs_origin_savings", "ttl_tuning_complexity"],
+  "capacity_defaults": {
+    "rps_per_pop_effective": 500000,
+    "default_hit_ratio_assumption": 0.8
+  },
+  "cost_defaults": { "usd_per_tb_egress_month": 85 },
+  "palette": { "group": "Edge", "icon": "globe2", "color": "#7c3aed" }
+}

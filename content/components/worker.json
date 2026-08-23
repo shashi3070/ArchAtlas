@@ -1,0 +1,20 @@
+{
+  "type": "worker",
+  "category": "compute",
+  "name": "Worker",
+  "description": "Background processing unit consuming jobs from a queue; enables asynchronous and heavy work off the request path.",
+  "version": "0.1.0",
+  "capabilities": ["async_processing", "batch_execution", "horizontal_scaling"],
+  "helps_with": ["api_latency_reduction", "traffic_spike_absorption_via_queueing", "heavy_job_isolation"],
+  "does_not_solve": ["synchronous_user_facing_latency_requirements", "ordering_guarantees_by_itself"],
+  "risks": ["poison_messages_without_dlq", "consumer_shortage_backlog_growth", "non_idempotent_handlers_duplicate_effects"],
+  "common_patterns": ["competing_consumers", "poll_or_push_from_queue", "idempotency_keys"],
+  "failure_modes": ["worker_crash_mid_job", "starvation_of_low_priority_queues"],
+  "tradeoffs": ["eventual_completion_vs_immediate_response", "more_workers_raise_downstream_load"],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 50,
+    "default_instances": 2
+  },
+  "cost_defaults": { "usd_per_instance_month": 50 },
+  "palette": { "group": "Compute", "icon": "cog", "color": "#4b5563" }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "postgresql",
+  "category": "database",
+  "name": "PostgreSQL",
+  "description": "Relational OLTP database with ACID transactions, rich indexing, read replicas, and ecosystem maturity.",
+  "version": "0.1.0",
+  "capabilities": ["acid_transactions", "relational_queries", "secondary_indexes", "read_replicas"],
+  "helps_with": ["durable_primary_storage", "transactional_integrity", "structured_queries"],
+  "does_not_solve": ["unbounded_horizontal_write_scale_without_sharding", "schemaless_flexibility"],
+  "risks": ["primary_is_write_spof_without_failover", "replication_lag_on_replicas", "connection_ceiling"],
+  "common_patterns": ["primary_with_read_replicas", "connection_pooling", "vertical_then_horizontal_scale"],
+  "failure_modes": ["primary_failure", "disk_exhaustion", "lock_contention", "slow_queries"],
+  "tradeoffs": ["sharding_complexity_vs_single_node_limits", "strong_consistency_limits_availability_during_partition"],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 20000,
+    "safe_writes_per_sec": 5000,
+    "max_connections": 500,
+    "default_replicas": 0
+  },
+  "cost_defaults": { "usd_per_node_month": 140 },
+  "palette": { "group": "Database", "icon": "database", "color": "#0f766e" }
+}

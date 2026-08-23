@@ -1,0 +1,20 @@
+{
+  "type": "rabbitmq",
+  "category": "messaging",
+  "name": "RabbitMQ",
+  "description": "Feature-rich message broker with flexible routing (exchanges/queues), acknowledgements, and per-message TTLs.",
+  "version": "0.1.0",
+  "capabilities": ["flexible_routing", "message_acknowledgement", "priority_queues", "per_message_ttl"],
+  "helps_with": ["task_distribution", "decoupling_workers", "retry_and_dead_letter_flows"],
+  "does_not_solve": ["very_high_throughput_event_replay", "long_term_message_persistence_as_a_log"],
+  "risks": ["queue_backlog_on_slow_consumers", "broker_memory_pressure", "complex_topology_drift"],
+  "common_patterns": ["work_queue", "pub_sub_with_topic_exchange", "dead_letter_exchange"],
+  "failure_modes": ["node_failure", "mirror_split_brain_classic_mode", "connection_churn"],
+  "tradeoffs": ["routing_power_vs_throughput_ceiling_vs_kafka"],
+  "capacity_defaults": {
+    "messages_per_sec_per_node": 50000,
+    "default_instances": 1
+  },
+  "cost_defaults": { "usd_per_node_month": 110 },
+  "palette": { "group": "Messaging", "icon": "mailbox", "color": "#f59e0b" }
+}

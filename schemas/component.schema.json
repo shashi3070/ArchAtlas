@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/component.schema.json",
+  "title": "ComponentCatalogEntry",
+  "description": "A versioned catalog entry: identity, machine-readable knowledge block, capacity/cost assumption defaults, and palette presentation. Knowledge lives here - never in React components.",
+  "type": "object",
+  "required": ["type", "category", "name", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "category": {
+      "enum": [
+        "client",
+        "edge",
+        "traffic",
+        "compute",
+        "cache",
+        "database",
+        "messaging",
+        "storage",
+        "observability",
+        "reliability",
+        "ai_genai"
+      ]
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": ["string", "null"] },
+    "version": {
+      "type": "string",
+      "description": "Semver of this catalog entry.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "helps_with": {
+      "type": "array",
+      "description": "Problems this component can reduce (e.g. database_read_load).",
+      "items": { "type": "string" }
+    },
+    "does_not_solve": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risks": {
+      "type": "array",
+      "description": "New concerns introduced by adding this component.",
+      "items": { "type": "string" }
+    },
+    "common_patterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "failure_modes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tradeoffs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "capacity_defaults": {
+      "type": "object",
+      "description": "Assumed per-unit capacities (safe_reads_per_sec, safe_writes_per_sec, rps_per_instance...). Labeled assumptions; overridable per node instance.",
+      "additionalProperties": true
+    },
+    "cost_defaults": {
+      "type": "object",
+      "description": "Rough monthly cost estimates per unit (usd_per_unit_month). Estimates only.",
+      "additionalProperties": true
+    },
+    "palette": {
+      "title": "PalettePresentation",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "group": { "type": "string" },
+        "icon": { "type": ["string", "null"], "description": "Icon identifier string, rendered by the frontend icon layer." },
+        "color": { "type": ["string", "null"], "pattern": "^#[0-9a-fA-F]{6}$" }
+      }
+    }
+  }
+}

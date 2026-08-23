@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/architecture.schema.json",
+  "title": "ArchitectureGraph",
+  "description": "The canonical, machine-readable system model. The canvas is only a view of this graph.",
+  "type": "object",
+  "required": ["id", "version", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Immutable architecture versions increment this counter."
+    },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "node.schema.json" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "edge.schema.json" }
+    },
+    "groups": {
+      "description": "Visual/logical groupings of nodes (trust boundaries, tiers).",
+      "type": "array",
+      "items": {
+        "title": "ArchitectureGroup",
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "node_ids": { "type": "array", "items": { "type": "string" } },
+          "properties": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": { "$ref": "requirement.schema.json" }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "$ref": "constraint.schema.json" }
+    },
+    "traffic_model": {
+      "title": "TrafficModel",
+      "description": "Declared workload the architecture must handle.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rps": { "type": ["number", "null"], "minimum": 0 },
+        "read_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "write_ratio": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "avg_request_size_bytes": { "type": ["number", "null"], "minimum": 0 },
+        "concurrency": { "type": ["number", "null"], "minimum": 0 },
+        "payload_growth_per_day_bytes": { "type": ["number", "null"], "minimum": 0 },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "deployment_model": {
+      "title": "DeploymentModel",
+      "description": "Where the system runs: regions, environment, cloud abstraction level.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "environment": {
+          "default": "production",
+          "enum": ["local", "staging", "production"]
+        },
+        "regions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "multi_az": { "type": ["boolean", "null"] },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Provenance: author, challenge_id, created_at, labels. Never used by evaluators for correctness."
+    }
+  }
+}

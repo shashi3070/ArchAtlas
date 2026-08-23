@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/requirement.schema.json",
+  "title": "Requirement",
+  "description": "A machine-checkable requirement the architecture must satisfy. RuleResults map onto requirement ids.",
+  "type": "object",
+  "required": ["id", "category", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_\\-.]+$"
+    },
+    "category": {
+      "enum": [
+        "functional",
+        "scale",
+        "performance",
+        "availability",
+        "consistency",
+        "durability",
+        "security",
+        "cost"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "description": "Numeric target or symbolic target (e.g. 'strong', 'global'). Null for purely functional statements.",
+      "type": ["number", "string", "null"]
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "description": "Unit of the target (rps, ms, percent, usd_per_month, ...)."
+    },
+    "priority": {
+      "description": "Weight used by scoring aggregation.",
+      "default": "should",
+      "enum": ["must", "should", "could"]
+    },
+    "validation_rules": {
+      "type": "array",
+      "description": "Machine-checkable expressions, e.g. 'rps >= 100000', 'p95 <= 200ms', 'availability >= 99.99'.",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

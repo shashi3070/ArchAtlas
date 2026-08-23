@@ -1,0 +1,21 @@
+{
+  "type": "kafka",
+  "category": "messaging",
+  "name": "Kafka",
+  "description": "Distributed append-only event log with partitioned, replayable streams and consumer groups.",
+  "version": "0.1.0",
+  "capabilities": ["high_throughput_events", "replayable_log", "partitioned_ordering", "consumer_groups"],
+  "helps_with": ["service_decoupling", "traffic_burst_buffering", "async_processing", "event_sourcing_backbone"],
+  "does_not_solve": ["request_response_semantics", "per_message_ttl_deletion", "complex_routing_topologies"],
+  "risks": ["consumer_lag_under_provisioning", "operational_complexity", "hot_partition_skew", "no_per_key_priority"],
+  "common_patterns": ["event_pipeline", "log_compacted_state_stream", "dead_letter_topic"],
+  "failure_modes": ["broker_failure", "under_replicated_partitions", "consumer_group_rebalance_storm"],
+  "tradeoffs": ["throughput_and_durability_vs_operational_weight", "ordering_only_within_partition"],
+  "capacity_defaults": {
+    "events_per_sec_per_broker": 250000,
+    "default_replication_factor": 3,
+    "default_partitions": 6
+  },
+  "cost_defaults": { "usd_per_broker_month": 220 },
+  "palette": { "group": "Messaging", "icon": "stream", "color": "#ea580c" }
+}

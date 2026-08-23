@@ -1,0 +1,21 @@
+{
+  "type": "api",
+  "category": "compute",
+  "name": "API Service",
+  "description": "Stateless application server exposing business logic over HTTP/RPC. Horizontally scalable.",
+  "version": "0.1.0",
+  "capabilities": ["request_handling", "business_logic", "horizontal_scaling"],
+  "helps_with": ["request_processing", "decoupling_clients_from_storage"],
+  "does_not_solve": ["data_durability", "cross_service_consistency_by_itself"],
+  "risks": ["instance_failure", "resource_saturation_under_load"],
+  "common_patterns": ["stateless_replicas", "twelve_factor"],
+  "failure_modes": ["instance_crash", "cpu_saturation", "memory_pressure", "dependency_timeout"],
+  "tradeoffs": ["more_instances_increase_cost", "scaling_requires_statelessness"],
+  "capacity_defaults": {
+    "rps_per_instance": 1000,
+    "p95_base_ms": 50,
+    "default_instances": 2
+  },
+  "cost_defaults": { "usd_per_instance_month": 60 },
+  "palette": { "group": "Compute", "icon": "server", "color": "#2563eb" }
+}

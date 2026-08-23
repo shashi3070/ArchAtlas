@@ -1,0 +1,20 @@
+{
+  "type": "client",
+  "category": "client",
+  "name": "Client",
+  "description": "End-user entry point: web browser, mobile app, IoT device, or an internal service acting as a caller.",
+  "version": "0.1.0",
+  "capabilities": ["initiates_requests", "renders_responses"],
+  "helps_with": [],
+  "does_not_solve": ["any_server_side_concern"],
+  "risks": ["unbounded_request_generation"],
+  "common_patterns": ["public_user", "internal_service_caller"],
+  "failure_modes": ["offline_client"],
+  "tradeoffs": [],
+  "capacity_defaults": {
+    "concurrent_users_default": 1000,
+    "requests_per_user_per_sec": 0.1
+  },
+  "cost_defaults": {},
+  "palette": { "group": "Client", "icon": "globe", "color": "#64748b" }
+}

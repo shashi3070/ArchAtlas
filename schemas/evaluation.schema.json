@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/evaluation.schema.json",
+  "title": "EvaluationState",
+  "description": "Deterministic, reproducible evaluation output. Same graph + requirements + rule_version must produce identical results.",
+  "type": "object",
+  "required": ["architecture_id", "architecture_version", "rule_version", "summary", "rule_results"],
+  "additionalProperties": false,
+  "properties": {
+    "architecture_id": { "type": "string" },
+    "architecture_version": { "type": "integer", "minimum": 1 },
+    "rule_version": {
+      "type": "string",
+      "description": "Version of the rule pack used; recorded for historical reproducibility."
+    },
+    "component_catalog_version": { "type": ["string", "null"] },
+    "challenge_version": { "type": ["string", "null"] },
+    "evaluated_at": { "type": ["string", "null"], "format": "date-time" },
+    "summary": {
+      "title": "EvaluationSummary",
+      "type": "object",
+      "required": ["dimension_scores"],
+      "additionalProperties": false,
+      "properties": {
+        "overall_status": {
+          "default": "unknown",
+          "enum": ["pass", "warning", "fail", "unknown"]
+        },
+        "dimension_scores": {
+          "type": "array",
+          "items": {
+            "title": "DimensionScore",
+            "type": "object",
+            "required": ["dimension", "score"],
+            "additionalProperties": false,
+            "properties": {
+              "dimension": {
+                "enum": [
+                  "functionality", "scalability", "availability", "latency",
+                  "consistency", "security", "cost", "observability"
+                ]
+              },
+              "score": { "type": "number", "minimum": 0, "maximum": 100 },
+              "status": {
+                "default": "info",
+                "enum": ["pass", "warning", "fail", "info", "unknown"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "rule_results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RuleResult"
+      }
+    },
+    "bottlenecks": {
+      "type": "array",
+      "description": "Capacity-vs-demand findings on specific nodes/paths.",
+      "items": {
+        "title": "BottleneckFinding",
+        "type": "object",
+        "required": ["node_id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "node_id": { "type": "string" },
+          "path": { "type": "array", "items": { "type": "string" } },
+          "demand": { "type": ["number", "null"] },
+          "capacity": { "type": ["number", "null"] },
+          "unit": { "type": ["string", "null"] },
+          "reason": { "type": "string" },
+          "severity": { "default": "warning", "enum": ["info", "warning", "critical"] }
+        }
+      }
+    },
+    "spofs": {
+      "type": "array",
+      "description": "Single points of failure detected on critical paths.",
+      "items": {
+        "title": "SpofFinding",
+        "type": "object",
+        "required": ["node_id", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "node_id": { "type": "string" },
+          "blast_radius": {
+            "enum": ["total", "major", "partial"]
+          },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "requirement_outcomes": {
+      "type": "array",
+      "items": {
+        "title": "RequirementOutcome",
+        "type": "object",
+        "required": ["requirement_id", "status", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "requirement_id": { "type": "string" },
+          "status": {
+            "enum": ["satisfied", "at_risk", "violated", "not_evaluable"]
+          },
+          "confidence": {
+            "enum": ["high", "medium", "low"]
+          },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Recommendation" }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Free-form computed metrics (estimated rps at each hop, utilization ratios).",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "RuleResult": {
+      "title": "RuleResult",
+      "type": "object",
+      "required": ["rule_id", "status", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "pattern": "^[a-z]+\\.[a-z0-9_]+$"
+        },
+        "status": {
+          "enum": ["PASS", "WARNING", "FAIL", "INFO", "UNKNOWN"]
+        },
+        "severity": {
+          "default": "medium",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "description": "Concrete facts: numbers, node properties, requirement ids. Never vibes.",
+          "items": { "type": "string" }
+        },
+        "affected_nodes": { "type": "array", "items": { "type": "string" } },
+        "affected_edges": { "type": "array", "items": { "type": "string" } },
+        "requirement_ids": { "type": "array", "items": { "type": "string" } },
+        "suggested_actions": {
+          "type": "array",
+          "items": {
+            "title": "SuggestedAction",
+            "type": "object",
+            "required": ["action"],
+            "additionalProperties": false,
+            "properties": {
+              "action": { "type": "string" },
+              "rationale": { "type": ["string", "null"] },
+              "tradeoffs": { "type": "array", "items": { "type": "string" } },
+              "alternatives": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "confidence": {
+          "description": "Architectural confidence in this result. LOW/MEDIUM require a stated reason to prevent false precision.",
+          "default": "high",
+          "enum": ["high", "medium", "low"]
+        },
+        "confidence_reason": { "type": ["string", "null"] }
+      }
+    },
+    "Recommendation": {
+      "title": "Recommendation",
+      "type": "object",
+      "required": ["problem", "recommendation", "confidence"],
+      "additionalProperties": false,
+      "properties": {
+        "problem": { "type": "string" },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "recommendation": { "type": "string" },
+        "expected_benefit": { "type": ["string", "null"] },
+        "tradeoffs": { "type": "array", "items": { "type": "string" } },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "related_topics": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

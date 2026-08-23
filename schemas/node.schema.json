@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/node.schema.json",
+  "title": "ArchitectureNode",
+  "description": "A component instance in the canonical architecture graph. Position is presentation-only; evaluators must be position-insensitive.",
+  "type": "object",
+  "required": ["id", "type", "name", "position"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_\\-.]+$"
+    },
+    "type": {
+      "type": "string",
+      "description": "Component catalog type (e.g. 'redis', 'load_balancer'). Must exist in the versioned component catalog.",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "technology": {
+      "type": ["string", "null"],
+      "description": "Optional concrete technology label distinct from the abstract type."
+    },
+    "position": {
+      "type": "object",
+      "required": ["x", "y"],
+      "additionalProperties": false,
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "properties": {
+      "type": "object",
+      "description": "Component-specific configuration (replicas, cache pattern, ttl, partition key...).",
+      "additionalProperties": true
+    },
+    "capacity": {
+      "type": "object",
+      "description": "Effective capacity overrides for this instance; falls back to catalog capacity_defaults.",
+      "additionalProperties": true
+    },
+    "availability": {
+      "type": "object",
+      "description": "Availability configuration: replicas, multi_az, multi_region, failover mode.",
+      "additionalProperties": true
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment placement: region, az, environment.",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://system-design-platform.local/schemas/constraint.schema.json",
+  "title": "Constraint",
+  "description": "A constraint bounding the solution space (budget, residency, consistency class, durability).",
+  "type": "object",
+  "required": ["id", "type", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_\\-.]+$"
+    },
+    "type": {
+      "enum": [
+        "budget",
+        "data_residency",
+        "consistency_class",
+        "durability",
+        "compliance",
+        "operational",
+        "other"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "value": {
+      "description": "Constraint value (number, string, or structured object).",
+      "additionalProperties": true
+    },
+    "severity": {
+      "description": "How binding the constraint is.",
+      "default": "hard",
+      "enum": ["hard", "soft"]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
