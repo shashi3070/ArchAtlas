@@ -17,6 +17,7 @@ import {
 
 import { architecturesApi } from '../api/architectures'
 import { evaluateApi, type EvaluationResult } from '../api/evaluate'
+import { ComponentNode } from '../components/lab/ComponentNode'
 import { EdgeInspector } from '../components/lab/EdgeInspector'
 import { EvaluationPanel, type WorkloadInput } from '../components/lab/EvaluationPanel'
 import { NodeInspector } from '../components/lab/NodeInspector'
@@ -34,6 +35,9 @@ interface SaveState {
   kind: 'idle' | 'saving' | 'saved' | 'error'
   message?: string
 }
+
+// Module-level so the reference stays stable across renders.
+const nodeTypes = { component: ComponentNode }
 
 function Lab() {
   const store = useLab()
@@ -284,6 +288,7 @@ function Lab() {
           <ReactFlow
             nodes={nodes}
             edges={edges}
+            nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}

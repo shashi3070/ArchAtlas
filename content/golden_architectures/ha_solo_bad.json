@@ -1,0 +1,86 @@
+{
+  "id": "golden-ha-solo",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "The Load Balancer",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "App Server",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "The Database",
+      "position": {
+        "x": 780,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "http"
+    },
+    {
+      "id": "e2",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "http"
+    },
+    {
+      "id": "e3",
+      "source": "api",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    }
+  ],
+  "traffic_model": {
+    "rps": 900,
+    "read_ratio": 0.8
+  },
+  "requirements": []
+}

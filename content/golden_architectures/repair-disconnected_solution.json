@@ -1,0 +1,82 @@
+{
+  "id": "sol-repair-disconnected",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Orphan API (fixed)",
+      "position": {
+        "x": 300,
+        "y": 100
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 1500
+      },
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Island DB",
+      "position": {
+        "x": 600,
+        "y": 100
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "source": "c",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "api",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    }
+  ],
+  "traffic_model": {
+    "rps": 600,
+    "read_ratio": 0.6
+  },
+  "requirements": []
+}

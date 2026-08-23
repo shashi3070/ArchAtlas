@@ -1,0 +1,30 @@
+id: repair-disconnected
+title: 'Repair: Nobody Reaches the API'
+difficulty: beginner
+mode: repair
+narrative: A contractor left the deployment half-wired. Components exist but requests go nowhere. Restore
+  a working request path.
+requirements:
+- id: reachable-api
+  category: functional
+  description: Client traffic must reach the API tier at scale
+  priority: must
+  metric: rps
+  value: 500
+  unit: null
+- id: stay-up
+  category: availability
+  description: No single instance can take the service down
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+starting_graph_ref: disconnected
+hints:
+- Trace the request path starting from the client node.
+- A component without an incoming edge is invisible to users.
+- Add the missing client-to-API connection, then re-check redundancy.
+- 'Solution: connect client->API over HTTPS; API already fronts the database.'
+related_topics:
+- http-fundamentals
+version: 1.0.0

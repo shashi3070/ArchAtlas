@@ -1,0 +1,105 @@
+{
+  "id": "sol-ord-1",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Storefront",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Order API",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 1500
+      },
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "pg",
+      "type": "postgresql",
+      "name": "Orders DB",
+      "position": {
+        "x": 780,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e3",
+      "source": "api",
+      "target": "pg",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    }
+  ],
+  "traffic_model": {
+    "rps": 800,
+    "read_ratio": 0.6
+  },
+  "requirements": []
+}

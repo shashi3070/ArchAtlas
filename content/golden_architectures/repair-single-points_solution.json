@@ -1,0 +1,128 @@
+{
+  "id": "sol-repair-spo",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "API Tier",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 1000
+      },
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "redis",
+      "type": "redis",
+      "name": "Read Cache",
+      "position": {
+        "x": 780,
+        "y": -140
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Primary + Standby",
+      "position": {
+        "x": 1040,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "grpc"
+    },
+    {
+      "id": "e3",
+      "source": "api",
+      "target": "redis",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e4",
+      "source": "redis",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    }
+  ],
+  "traffic_model": {
+    "rps": 1200,
+    "read_ratio": 0.8
+  },
+  "requirements": []
+}

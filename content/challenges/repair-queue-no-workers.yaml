@@ -1,0 +1,30 @@
+id: repair-queue-no-workers
+title: 'Repair: Queue With No Consumers'
+difficulty: beginner
+mode: repair
+narrative: Jobs pile up in RabbitMQ while nobody consumes them - someone deployed the producer and forgot
+  the workers. Finish the pipeline.
+requirements:
+- id: jobs-consumed
+  category: scale
+  description: Process at least 1,000 rps of job-producing traffic
+  priority: must
+  metric: rps
+  value: 1000
+  unit: null
+- id: stay-up
+  category: availability
+  description: No single instance can take the service down
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+starting_graph_ref: queue_no_workers
+hints:
+- Follow the async_event edge out of the API - where does it end?
+- A queue without consumers just relocates latency into lag.
+- Wire consumer workers after the queue; make them idempotent.
+- 'Solution: rabbitmq -> idempotent workers (4+ replicas); widen and harden the API tier.'
+related_topics:
+- messaging-queues
+version: 1.0.0

@@ -1,0 +1,47 @@
+id: us-1-shorten-serve
+title: 'URL Shortener I: Shorten & Serve'
+difficulty: beginner
+narrative: TinyLink wants to launch a URL shortener for 1,000 rps of redirect traffic with a durable mapping
+  store. Design the smallest honest system.
+requirements:
+- id: handle-demand
+  category: scale
+  description: Serve at least 1,000 rps of redirects
+  priority: must
+  metric: rps
+  value: 1000
+  unit: null
+- id: stay-up
+  category: availability
+  description: Survive single-instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- demand modeling
+- stateless API tiers
+- cache-aside basics
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 7
+hints:
+- 'Start from the demand model: what does 1,000 rps imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: url-shortener
+  level: 1
+  next_challenge_id: us-2-read-scale
+related_topics:
+- load-balancing
+- databases
+mode: challenge
+version: 1.0.0

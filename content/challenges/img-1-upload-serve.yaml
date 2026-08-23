@@ -1,0 +1,45 @@
+id: img-1-upload-serve
+title: 'Media Gallery I: Upload & Store'
+difficulty: beginner
+narrative: PixDrop lets photographers upload originals that must never be lost. Design the ingest path
+  with durable blob storage behind a small API.
+requirements:
+- id: never-lose-blobs
+  category: durability
+  description: Images stored with 11-nines durability
+  priority: must
+  metric: durability
+  value: 11
+  unit: nines
+- id: ingest-rate
+  category: scale
+  description: Handle at least 500 uploads+views rps
+  priority: should
+  metric: rps
+  value: 500
+  unit: null
+learning_objectives:
+- blob storage offload
+- durability semantics
+allowed_components:
+- client
+- load_balancer
+- api
+- object_storage
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+- 'Start from the demand model: what does uploads that must never be lost imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: media-gallery
+  level: 1
+  next_challenge_id: img-2-viral-cdn
+related_topics:
+- cdn-and-edge
+- databases
+mode: challenge
+version: 1.0.0

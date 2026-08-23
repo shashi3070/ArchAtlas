@@ -1,0 +1,124 @@
+{
+  "id": "sol-img-2",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Clients",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "cdn",
+      "type": "cdn",
+      "name": "Image CDN",
+      "position": {
+        "x": 240,
+        "y": -160
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Gallery API",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 5000
+      },
+      "availability": {
+        "replicas": 8,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "os",
+      "type": "object_storage",
+      "name": "Image Bucket",
+      "position": {
+        "x": 780,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "cdn",
+      "traffic_type": "sync_request"
+    },
+    {
+      "id": "e2",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e3",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e4",
+      "source": "api",
+      "target": "os",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    }
+  ],
+  "traffic_model": {
+    "rps": 40000,
+    "read_ratio": 0.97
+  },
+  "requirements": []
+}

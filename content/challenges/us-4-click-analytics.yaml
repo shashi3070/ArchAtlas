@@ -1,0 +1,54 @@
+id: us-4-click-analytics
+title: 'URL Shortener IV: Click Analytics Firehose'
+difficulty: advanced
+narrative: Marketing wants per-click analytics, but instrumenting the redirect path synchronously doubled
+  its latency. Decouple analytics through a log and keep the hot path lean at 50,000 rps.
+requirements:
+- id: handle-demand
+  category: scale
+  description: Serve at least 50,000 rps on the redirect path
+  priority: must
+  metric: rps
+  value: 50000
+  unit: null
+- id: backup-durability
+  category: durability
+  description: Analytics events land in durable storage
+  priority: should
+  metric: durability
+  value: 11
+  unit: nines
+- id: async-clicks
+  category: functional
+  description: Click events must not block redirects
+  priority: could
+  metric: null
+  value: null
+  unit: null
+learning_objectives:
+- async decoupling
+- backpressure
+- DLQ hygiene
+allowed_components:
+- client
+- cdn
+- load_balancer
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+hints:
+- 'Start from the demand model: what does 50,000 rps + async analytics imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: url-shortener
+  level: 4
+  next_challenge_id: null
+related_topics:
+- messaging-queues
+mode: challenge
+version: 1.0.0

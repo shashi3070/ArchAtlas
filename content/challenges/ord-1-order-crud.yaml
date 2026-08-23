@@ -1,0 +1,51 @@
+id: ord-1-order-crud
+title: 'Order Desk I: The CRUD Baseline'
+difficulty: beginner
+narrative: CrateCart's order desk takes 500 orders per minute at launch. Keep orders durable and the service
+  available through instance loss.
+requirements:
+- id: order-volume
+  category: scale
+  description: Accept at least 500 rps of order traffic
+  priority: must
+  metric: rps
+  value: 500
+  unit: null
+- id: always-open
+  category: availability
+  description: Stay up through instance failure
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+- id: no-lost-orders
+  category: consistency
+  description: Confirmed orders are never lost
+  priority: could
+  metric: null
+  value: null
+  unit: null
+learning_objectives:
+- transactional stores
+- redundancy basics
+allowed_components:
+- client
+- load_balancer
+- api
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+- 'Start from the demand model: what does 500 rps of orders imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: order-processing
+  level: 1
+  next_challenge_id: ord-2-fraud-workers
+related_topics:
+- databases
+mode: challenge
+version: 1.0.0

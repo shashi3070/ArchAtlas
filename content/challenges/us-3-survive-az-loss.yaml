@@ -1,0 +1,53 @@
+id: us-3-survive-az-loss
+title: 'URL Shortener III: Survive an AZ Loss'
+difficulty: advanced
+narrative: A cloud AZ just died and TinyLink's status page stayed green only by luck. Rebuild the design
+  so losing a whole zone is a non-event, and keep backups in durable object storage.
+requirements:
+- id: az-failure-proof
+  category: availability
+  description: Target 99.99% availability posture
+  priority: must
+  metric: availability
+  value: 99.99
+  unit: '%'
+- id: backup-durability
+  category: durability
+  description: Mappings survive regional loss via durable backups
+  priority: must
+  metric: durability
+  value: 11
+  unit: nines
+- id: still-fast
+  category: performance
+  description: Redirects stay under 250ms p95 estimate
+  priority: could
+  metric: p95
+  value: 250
+  unit: ms
+learning_objectives:
+- multi-AZ replication
+- automatic failover
+- durability vs availability
+allowed_components:
+- client
+- cdn
+- load_balancer
+- api
+- redis
+- postgresql
+- object_storage
+hints:
+- 'Start from the demand model: what does AZ loss + 11 nines imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: url-shortener
+  level: 3
+  next_challenge_id: us-4-click-analytics
+related_topics:
+- reliability-patterns
+- consistency-and-cap
+mode: challenge
+version: 1.0.0

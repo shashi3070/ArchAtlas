@@ -1,0 +1,51 @@
+id: img-2-viral-cdn
+title: 'Media Gallery II: Going Viral'
+difficulty: intermediate
+narrative: A celebrity pinned PixDrop. Traffic jumped to 30,000 rps, 97% of it image reads. Serve bytes
+  from the edge instead of your origin.
+requirements:
+- id: viral-scale
+  category: scale
+  description: Serve at least 30,000 rps
+  priority: must
+  metric: rps
+  value: 30000
+  unit: null
+- id: snappy-gallery
+  category: performance
+  description: Gallery pages under 150ms p95 estimate
+  priority: should
+  metric: p95
+  value: 150
+  unit: ms
+- id: edge-caching
+  category: cost
+  description: Most reads should be served by the CDN
+  priority: could
+  metric: null
+  value: null
+  unit: null
+learning_objectives:
+- CDN offload
+- cache hit ratios
+- origin shielding
+allowed_components:
+- client
+- cdn
+- load_balancer
+- api
+- object_storage
+hints:
+- 'Start from the demand model: what does 30,000 rps, 97% reads imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: media-gallery
+  level: 2
+  next_challenge_id: null
+related_topics:
+- cdn-and-edge
+- caching
+mode: challenge
+version: 1.0.0

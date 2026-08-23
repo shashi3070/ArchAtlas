@@ -205,6 +205,14 @@ class EvalContext:
         )
         return cache_to_ds and (compute_to_cache or ds_to_cache)
 
+    def edge_cache_present(self) -> bool:
+        """A CDN directly fronting clients is a read cache at the edge."""
+        cdns = {c["id"] for c in self.nodes_of_type("cdn")}
+        if not cdns:
+            return False
+        return any(e["source"] in {c["id"] for c in self.client_nodes()} for e in self.edges
+                   if e["target"] in cdns)
+
     def queue_consumers(self, queue_node: dict[str, Any]) -> list[dict[str, Any]]:
         consumer_types = ComputeTypes
         return [

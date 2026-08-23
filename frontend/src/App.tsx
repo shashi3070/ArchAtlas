@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import { ChallengesPage } from './pages/ChallengesPage'
+import { ChallengeRunPage } from './pages/ChallengeRunPage'
 import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
 import { LabPage } from './pages/LabPage'
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/learn/:topicId" element={<TopicPage />} />
           <Route path="/lab" element={<LabPage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
+          <Route path="/challenges/:cid" element={<ChallengeRunPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
         </Routes>
       </Layout>

@@ -94,26 +94,38 @@ def _check_rps(ctx: EvalContext, target: float) -> dict[str, Any]:
             "reason": "needs traffic_model.rps and at least one api node",
         }
     api_caps = (ctx.catalog.get("api") or {}).get("capacity_defaults", {})
-    cap = float(api_caps.get("rps_per_instance", 1000))
-    total = cap * ctx.total_instances("api")
+    default_cap = float(api_caps.get("rps_per_instance", 1000))
+    # Per-node capacity overrides win; catalog default is the fallback.
+    total = 0.0
+    fleet: list[str] = []
+    for api in apis:
+        per_instance = float(
+            (api.get("capacity") or {}).get("rps_per_instance", default_cap)
+        )
+        sub = per_instance * ctx.instances(api)
+        total += sub
+        fleet.append(f"{api['id']}: {sub:.0f}")
     if total >= target * 1.2:
         return {
             "status": "satisfied",
             "confidence": "medium",
-            "evidence": [f"API tier rated {total:.0f} rps vs target {target:.0f}"],
+            "evidence": [f"API tier rated {total:.0f} rps vs target {target:.0f}"] + fleet,
             "reason": None,
         }
     if total >= target:
         return {
             "status": "at_risk",
             "confidence": "medium",
-            "evidence": [f"API tier rated {total:.0f} rps - only {total / target:.1f}x target"],
+            "evidence": [
+                f"API tier rated {total:.0f} rps - only {total / target:.1f}x target"
+            ]
+            + fleet,
             "reason": "headroom below 1.2x target",
         }
     return {
         "status": "violated",
         "confidence": "medium",
-        "evidence": [f"API tier rated {total:.0f} rps < target {target:.0f}"],
+        "evidence": [f"API tier rated {total:.0f} rps < target {target:.0f}"] + fleet,
         "reason": None,
     }
 

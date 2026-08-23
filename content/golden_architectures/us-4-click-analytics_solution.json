@@ -1,0 +1,167 @@
+{
+  "id": "sol-us-4",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Clients",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "cdn",
+      "type": "cdn",
+      "name": "CDN",
+      "position": {
+        "x": 240,
+        "y": -160
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Shortener API",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 5000
+      },
+      "availability": {
+        "replicas": 12,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "redis",
+      "type": "redis",
+      "name": "Redirect Cache",
+      "position": {
+        "x": 780,
+        "y": -140
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Mappings DB",
+      "position": {
+        "x": 1040,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "os",
+      "type": "object_storage",
+      "name": "Archive Bucket",
+      "position": {
+        "x": 780,
+        "y": 160
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "cdn",
+      "traffic_type": "sync_request"
+    },
+    {
+      "id": "e2",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e3",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e4",
+      "source": "api",
+      "target": "redis",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e5",
+      "source": "redis",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    },
+    {
+      "id": "e6",
+      "source": "api",
+      "target": "os",
+      "traffic_type": "batch",
+      "protocol": "https"
+    }
+  ],
+  "traffic_model": {
+    "rps": 60000,
+    "read_ratio": 0.95
+  },
+  "requirements": []
+}

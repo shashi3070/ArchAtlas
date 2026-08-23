@@ -1,0 +1,37 @@
+id: repair-single-points
+title: 'Repair: Three Single Points of Failure'
+difficulty: intermediate
+mode: repair
+narrative: The 'highly available' deployment has exactly one load balancer, one app server, and one database.
+  Make the name honest.
+requirements:
+- id: no-spofs
+  category: availability
+  description: Survive any single-instance loss
+  priority: must
+  metric: availability
+  value: 99.9
+  unit: '%'
+- id: demand-ok
+  category: scale
+  description: Handle at least 1,000 rps
+  priority: should
+  metric: rps
+  value: 1000
+  unit: null
+- id: still-fast
+  category: performance
+  description: p95 estimate <= 200ms
+  priority: could
+  metric: p95
+  value: 200
+  unit: ms
+starting_graph_ref: ha_solo_bad
+hints:
+- Run an evaluation and count how many components are load-bearing singletons.
+- Redundancy needs explicit replicas AND a failover mode to count.
+- Pair or replicate every critical tier; add multi-AZ spread on data stores.
+- 'Solution: LB(2) -> API(3) -> Redis(2) -> Postgres(3), multi-AZ with automatic failover.'
+related_topics:
+- reliability-patterns
+version: 1.0.0

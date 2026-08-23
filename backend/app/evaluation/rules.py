@@ -753,6 +753,18 @@ def r_perf_no_cache_high_read(ctx: EvalContext) -> list[dict[str, Any]]:
                 evidence=[f"reads {read_rps_value:.0f}/s ({why})"],
             )
         ]
+    if ctx.edge_cache_present():
+        return [
+            result(
+                "perf.no_cache_high_read",
+                "PASS",
+                "Read-heavy workload is served from an edge CDN.",
+                evidence=[
+                    f"reads {read_rps_value:.0f}/s ({why})",
+                    "cdn receives client traffic directly",
+                ],
+            )
+        ]
     ratio_text = ctx.read_ratio if ctx.read_ratio is not None else "assumed 0.8"
     return [
         result(

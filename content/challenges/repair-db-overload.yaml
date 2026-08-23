@@ -1,0 +1,38 @@
+id: repair-db-overload
+title: 'Repair: The Melting Database'
+difficulty: intermediate
+mode: repair
+narrative: 'Launch day: 80,000 rps hits one lonely MongoDB replica while the API team watches graphs go
+  red. Give the database relief and the service headroom.'
+requirements:
+- id: launch-load
+  category: scale
+  description: Handle at least 80,000 rps
+  priority: must
+  metric: rps
+  value: 80000
+  unit: null
+- id: responsive
+  category: performance
+  description: Keep p95 estimate <= 200ms
+  priority: should
+  metric: p95
+  value: 200
+  unit: ms
+- id: zone-safe
+  category: availability
+  description: Survive instance loss anywhere
+  priority: could
+  metric: availability
+  value: 99.9
+  unit: '%'
+starting_graph_ref: overloaded_db
+hints:
+- Check demand against each tier's rated capacity in the evaluation panel.
+- Reads dominate (85%). What layer answers repeated reads cheaply?
+- Cache in front of the database, replicate both, and widen the API tier.
+- 'Solution: LB pair -> 20x API -> Redis cache cluster -> 3x MongoDB, all multi-AZ.'
+related_topics:
+- caching
+- load-balancing
+version: 1.0.0

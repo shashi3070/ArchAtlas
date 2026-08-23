@@ -1,0 +1,53 @@
+id: ord-2-fraud-workers
+title: 'Order Desk II: Fraud Checks Off the Hot Path'
+difficulty: intermediate
+narrative: Compliance demands fraud screening on every order, but the vendor call adds 400ms. Move screening
+  to async workers fed by a queue with dead-letter handling, keeping checkout fast.
+requirements:
+- id: checkout-throughput
+  category: scale
+  description: Accept at least 2,000 rps of checkouts
+  priority: must
+  metric: rps
+  value: 2000
+  unit: null
+- id: fast-checkout
+  category: performance
+  description: Checkout stays under 150ms p95 estimate
+  priority: should
+  metric: p95
+  value: 150
+  unit: ms
+- id: async-fraud
+  category: functional
+  description: Fraud screening runs off the checkout hot path
+  priority: could
+  metric: null
+  value: null
+  unit: null
+learning_objectives:
+- queue-based decoupling
+- idempotent consumers
+- dead-letter queues
+allowed_components:
+- client
+- load_balancer
+- api
+- postgresql
+- kafka
+- worker
+- rabbitmq
+hints:
+- 'Start from the demand model: what does fraud checks off the hot path imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: order-processing
+  level: 2
+  next_challenge_id: null
+related_topics:
+- messaging-queues
+- reliability-patterns
+mode: challenge
+version: 1.0.0

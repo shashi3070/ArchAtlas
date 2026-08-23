@@ -1,0 +1,38 @@
+id: repair-url-shortener
+title: 'Repair: A Shortener Held Together by Hope'
+difficulty: advanced
+mode: repair
+narrative: This Flask monolith was the founder's weekend project. Now it fronts 30,000 rps. Fix scaling,
+  availability, and durability without changing the product.
+requirements:
+- id: launch-load
+  category: scale
+  description: Handle at least 20,000 rps
+  priority: must
+  metric: rps
+  value: 20000
+  unit: null
+- id: stay-up
+  category: availability
+  description: No single points of failure
+  priority: must
+  metric: availability
+  value: 99.9
+  unit: '%'
+- id: fast-redirects
+  category: performance
+  description: Redirect p95 estimate <= 200ms
+  priority: should
+  metric: p95
+  value: 200
+  unit: ms
+starting_graph_ref: url_shortener_broken
+hints:
+- Inventory the failures first - evaluate before touching anything.
+- One instance of anything is zero instances when it matters.
+- LB pair, wide stateless API tier, cache for reads, replicated Postgres for durability.
+- 'Solution: LB(2) -> API(10) -> Redis(3) -> Postgres(3), all multi-AZ, automatic failover.'
+related_topics:
+- caching
+- reliability-patterns
+version: 1.0.0

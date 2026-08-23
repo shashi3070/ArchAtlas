@@ -11,8 +11,8 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import architectures, components, evaluate, health, progress, topics
-from app.content import loader, topics_loader
+from app.api.routes import architectures, challenges, components, evaluate, health, progress, topics
+from app.content import challenge_loader, loader, topics_loader
 from app.core.config import get_settings
 from app.db import init_db
 
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     loader.load_catalog()
     topics_loader.load_topics()
     topics_loader.load_glossary()
+    challenge_loader.load_challenges()
     init_db()
     yield
 
@@ -47,6 +48,7 @@ def create_app() -> FastAPI:
     app.include_router(progress.router)
     app.include_router(architectures.router)
     app.include_router(evaluate.router)
+    app.include_router(challenges.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:

@@ -1,0 +1,50 @@
+id: us-2-read-scale
+title: 'URL Shortener II: Read Scaling'
+difficulty: intermediate
+narrative: TinyLink grew 20x overnight. Redirects now peak at 20,000 rps and the database is melting.
+  Add read-path relief without losing durability.
+requirements:
+- id: handle-demand
+  category: scale
+  description: Serve at least 20,000 rps
+  priority: must
+  metric: rps
+  value: 20000
+  unit: null
+- id: fast-redirects
+  category: performance
+  description: Keep redirect latency reasonable
+  priority: should
+  metric: p95
+  value: 200
+  unit: ms
+- id: stay-up
+  category: availability
+  description: No single points of failure
+  priority: must
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- cache-aside pattern
+- read/write split
+- hit-ratio economics
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+hints:
+- 'Start from the demand model: what does 20,000 rps, 95% reads imply for each tier?'
+- Every critical tier needs redundancy; declare failover mode explicitly.
+- Size the API tier so capacity >= 1.2x peak rps before adding features.
+- Full rationale lives in the reference solution for this challenge.
+chain:
+  family_id: url-shortener
+  level: 2
+  next_challenge_id: us-3-survive-az-loss
+related_topics:
+- caching
+mode: challenge
+version: 1.0.0

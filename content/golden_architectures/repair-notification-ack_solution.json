@@ -1,0 +1,107 @@
+{
+  "id": "sol-repair-notif",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "API",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 1000
+      },
+      "availability": {
+        "replicas": 4,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "kafka",
+      "type": "kafka",
+      "name": "Notification Bus",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "dlq": true,
+        "partitions": 6
+      },
+      "capacity": {},
+      "availability": {
+        "replicas": 3
+      },
+      "deployment": {}
+    },
+    {
+      "id": "worker",
+      "type": "worker",
+      "name": "Sender Workers",
+      "position": {
+        "x": 780,
+        "y": 0
+      },
+      "properties": {
+        "idempotent_consumer": true
+      },
+      "capacity": {
+        "jobs_per_sec_per_instance": 500
+      },
+      "availability": {
+        "replicas": 4
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "api",
+      "target": "kafka",
+      "traffic_type": "async_event"
+    },
+    {
+      "id": "e3",
+      "source": "kafka",
+      "target": "worker",
+      "traffic_type": "async_event"
+    }
+  ],
+  "traffic_model": {
+    "rps": 2500,
+    "read_ratio": 0.2
+  },
+  "requirements": []
+}

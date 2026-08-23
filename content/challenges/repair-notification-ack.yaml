@@ -1,0 +1,38 @@
+id: repair-notification-ack
+title: 'Repair: Notifications That Never Confirm'
+difficulty: intermediate
+mode: repair
+narrative: Users see spinners because the notification pipeline drops work under load. The queue design
+  is right; everything around it is not. Harden it.
+requirements:
+- id: notify-throughput
+  category: scale
+  description: Handle at least 2,000 rps of notifications
+  priority: must
+  metric: rps
+  value: 2000
+  unit: null
+- id: fast-ack
+  category: performance
+  description: Respond quickly (p95 estimate <= 100ms)
+  priority: should
+  metric: p95
+  value: 100
+  unit: ms
+- id: stay-up
+  category: availability
+  description: Survive instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+starting_graph_ref: notification_async_bad
+hints:
+- The ack path is already sync; the problem is everything else falling over.
+- Kafka without a DLQ silently eats poison messages; workers without idempotency double-send.
+- Replicate every tier; declare automatic failover on critical components.
+- 'Solution: 4x API multi-AZ, Kafka with DLQ + 6 partitions, 4x idempotent sender workers.'
+related_topics:
+- messaging-queues
+- reliability-patterns
+version: 1.0.0
