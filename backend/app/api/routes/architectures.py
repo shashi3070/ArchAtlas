@@ -12,7 +12,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.domain.validate import GraphValidationError, normalize_graph, validate_architecture_document
+from app.domain.validate import (
+    GraphValidationError,
+    normalize_graph,
+    validate_architecture_document,
+)
 from app.persistence.models import ArchitectureVersion, SavedArchitecture
 
 router = APIRouter(prefix="/api/architectures", tags=["architectures"])

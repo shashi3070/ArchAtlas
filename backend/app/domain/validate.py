@@ -58,7 +58,7 @@ def validate_architecture_document(document: Any) -> None:
 
 def normalize_graph(graph: dict[str, Any]) -> dict[str, Any]:
     """Fill semantic defaults the schema permits but callers may omit."""
-    result = json.loads(json.dumps(graph))  # deep copy without mutation surprises
+    result: dict[str, Any] = json.loads(json.dumps(graph))  # deep copy
     for edge in result.get("edges", []):
         edge.setdefault("direction", "unidirectional")
         edge.setdefault("traffic_type", "sync_request")
