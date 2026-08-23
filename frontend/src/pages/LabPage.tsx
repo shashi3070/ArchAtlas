@@ -16,7 +16,9 @@ import {
 } from '@xyflow/react'
 
 import { architecturesApi } from '../api/architectures'
+import { evaluateApi, type EvaluationResult } from '../api/evaluate'
 import { EdgeInspector } from '../components/lab/EdgeInspector'
+import { EvaluationPanel, type WorkloadInput } from '../components/lab/EvaluationPanel'
 import { NodeInspector } from '../components/lab/NodeInspector'
 import { Palette, useComponentCatalog } from '../components/lab/Palette'
 import {
@@ -41,6 +43,10 @@ function Lab() {
   const [saveState, setSaveState] = useState<SaveState>({ kind: 'idle' })
   const [showLibrary, setShowLibrary] = useState(false)
   const [showVersions, setShowVersions] = useState(false)
+  const [showEval, setShowEval] = useState(false)
+  const [evalResult, setEvalResult] = useState<EvaluationResult | null>(null)
+  const [evalLoading, setEvalLoading] = useState(false)
+  const [evalError, setEvalError] = useState<string | null>(null)
   const dragComponent = useRef<CatalogComponent | null>(null)
 
   const { components } = useComponentCatalog()
@@ -55,9 +61,9 @@ function Lab() {
     if (nodes.length === 0) return
     localStorage.setItem(
       'sdp.lab.draft',
-      JSON.stringify({ nodes, edges: store.edges, name: store.archName }),
+      JSON.stringify({ nodes, edges: store.edges, name: store.archName, trafficModel: store.trafficModel }),
     )
-  }, [nodes, store.edges, store.archName])
+  }, [nodes, store.edges, store.archName, store.trafficModel])
 
   const onNodesChange = useCallback(
     (changes: NodeChange<LabNode>[]) =>
@@ -108,14 +114,45 @@ function Lab() {
     [catalogMap, screenToFlowPosition],
   )
 
-  const currentGraph = (): CanonicalArchitectureGraph =>
-    toArchitectureGraph({
+  const currentGraph = (): CanonicalArchitectureGraph => {
+    const { rps, readRatio } = store.trafficModel
+    const trafficModel: Record<string, unknown> = {}
+    if (rps !== null) trafficModel.rps = rps
+    if (readRatio !== null) trafficModel.read_ratio = readRatio
+    return toArchitectureGraph({
       id: store.archId ?? `lab-${Date.now()}`,
       version: 1,
       nodes,
       edges,
       metadata: { source: 'lab' },
+      trafficModel,
     })
+  }
+
+  const runEvaluation = async (workload: WorkloadInput) => {
+    store.setTrafficModel(workload)
+    setEvalLoading(true)
+    setEvalError(null)
+    try {
+      const { rps, readRatio } = workload
+      const trafficModel: Record<string, unknown> = {}
+      if (rps !== null) trafficModel.rps = rps
+      if (readRatio !== null) trafficModel.read_ratio = readRatio
+      const graph = toArchitectureGraph({
+        id: store.archId ?? `lab-${Date.now()}`,
+        version: 1,
+        nodes,
+        edges,
+        metadata: { source: 'lab' },
+        trafficModel,
+      })
+      setEvalResult(await evaluateApi.evaluate(graph, store.archId))
+    } catch (e) {
+      setEvalError((e as Error).message)
+    } finally {
+      setEvalLoading(false)
+    }
+  }
 
   const onSave = async () => {
     setSaveState({ kind: 'saving' })
@@ -207,6 +244,18 @@ function Lab() {
         <button type="button" className="btn ghost" onClick={onExportFile}>
           Export
         </button>
+        <span className="toolbar-sep" />
+        <button
+          type="button"
+          className={`btn ${showEval ? 'primary' : 'ghost'}`}
+          disabled={nodes.length === 0}
+          onClick={() => {
+            setShowEval(!showEval)
+            if (!showEval && !evalResult && !evalLoading) void runEvaluation(store.trafficModel)
+          }}
+        >
+          Evaluate
+        </button>
         {saveState.kind !== 'idle' && (
           <span
             className={`chip ${
@@ -273,6 +322,17 @@ function Lab() {
 
           {store.selectedNodeId && <NodeInspector />}
           {!store.selectedNodeId && store.selectedEdgeId && <EdgeInspector />}
+
+          {showEval && (
+            <EvaluationPanel
+              result={evalResult}
+              loading={evalLoading}
+              error={evalError}
+              workload={store.trafficModel}
+              onClose={() => setShowEval(false)}
+              onEvaluate={(w) => void runEvaluation(w)}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -27,6 +27,7 @@ interface LabState {
   archId: string | null
   archName: string
   dirty: boolean
+  trafficModel: { rps: number | null; readRatio: number | null }
 
   loadGraph: (nodes: LabNode[], edges: LabEdge[], meta?: { id?: string; name?: string }) => void
   commit: (mutate: (draft: { nodes: LabNode[]; edges: LabEdge[] }) => void) => void
@@ -37,6 +38,7 @@ interface LabState {
   selectEdge: (id: string | null) => void
   setArchId: (id: string | null) => void
   setArchName: (name: string) => void
+  setTrafficModel: (model: { rps: number | null; readRatio: number | null }) => void
 }
 
 const clone = <T,>(value: T): T =>
@@ -64,6 +66,7 @@ export const useLab = create<LabState>((set) => ({
   archId: null,
   archName: 'Untitled design',
   dirty: false,
+  trafficModel: { rps: null, readRatio: null },
 
   loadGraph: (nodes, edges, meta) =>
     set((s) => ({
@@ -127,6 +130,7 @@ export const useLab = create<LabState>((set) => ({
   selectEdge: (id) => set({ selectedEdgeId: id, selectedNodeId: null }),
   setArchId: (id) => set({ archId: id }),
   setArchName: (name) => set({ archName: name }),
+  setTrafficModel: (model) => set({ trafficModel: model, dirty: true }),
 }))
 
 export function addNode(component: CatalogComponent, position: { x: number; y: number }): void {

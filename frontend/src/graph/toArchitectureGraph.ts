@@ -125,6 +125,7 @@ export function toArchitectureGraph(input: {
   nodes: FlowNodeLike[]
   edges: FlowEdgeLike[]
   metadata?: Record<string, unknown>
+  trafficModel?: Record<string, unknown>
 }): CanonicalArchitectureGraph {
   return {
     id: input.id,
@@ -134,7 +135,7 @@ export function toArchitectureGraph(input: {
     groups: [],
     requirements: [],
     constraints: [],
-    traffic_model: {},
+    traffic_model: input.trafficModel ?? {},
     deployment_model: {},
     metadata: input.metadata ?? {},
   }
