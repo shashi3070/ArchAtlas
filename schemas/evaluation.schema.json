@@ -7,7 +7,7 @@
   "required": ["architecture_id", "architecture_version", "rule_version", "summary", "rule_results"],
   "additionalProperties": false,
   "properties": {
-    "architecture_id": { "type": "string" },
+    "architecture_id": { "type": ["string", "null"] },
     "architecture_version": { "type": "integer", "minimum": 1 },
     "rule_version": {
       "type": "string",

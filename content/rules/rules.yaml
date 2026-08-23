@@ -2,457 +2,389 @@
 # Source of truth for rule identity and metadata.
 # status: planned | implemented | deprecated   phase: delivery phase that implements it
 version: 0.1.0
-
 rules:
-  # ── Graph integrity (7) ────────────────────────────────────────────────
   - id: graph.disconnected_required_component
-    category: graph
-    name: Disconnected required component
-    priority: high
-    status: planned
-    phase: 3
-    description: A component required by the challenge exists but has no valid connection path.
-
-  - id: graph.invalid_edge
-    category: graph
-    name: Invalid edge
-    priority: high
-    status: planned
-    phase: 3
-    description: Edge references missing nodes or violates catalog compatibility constraints.
-
-  - id: graph.missing_source
-    category: graph
-    name: Missing source
-    priority: medium
-    status: planned
-    phase: 3
-    description: Edge declares a source node id not present in the graph.
-
-  - id: graph.missing_destination
-    category: graph
-    name: Missing destination
-    priority: medium
-    status: planned
-    phase: 3
-    description: Edge declares a target node id not present in the graph.
-
-  - id: graph.inappropriate_cycle
-    category: graph
-    name: Inappropriate cycle
-    priority: medium
-    status: planned
-    phase: 3
-    description: Synchronous request path contains a cycle; only replication/async paths may cycle.
-
-  - id: graph.no_ingress
-    category: graph
-    name: No ingress
-    priority: critical
-    status: planned
-    phase: 3
-    description: Architecture has no entry point reachable from a client.
-
-  - id: graph.no_data_store_required
-    category: graph
-    name: No data store where required
-    priority: critical
-    status: planned
-    phase: 3
-    description: Functional requirements imply persistence but no database/storage exists.
-
-  # ── Scalability (8) ────────────────────────────────────────────────────
-  - id: scale.single_compute_high_traffic
-    category: scale
-    name: Single compute instance under high traffic
-    priority: critical
-    status: planned
-    phase: 3
-    description: One API/worker instance cannot serve declared RPS demand.
-
-  - id: scale.db_write_bottleneck
-    category: scale
-    name: Database write bottleneck
-    priority: critical
-    status: planned
-    phase: 3
-    description: Write demand exceeds primary write capacity with no sharding/queueing.
-
-  - id: scale.db_read_bottleneck
-    category: scale
-    name: Database read bottleneck
-    priority: critical
-    status: planned
-    phase: 3
-    description: Read demand exceeds safe read capacity with no cache or replicas.
-
-  - id: scale.insufficient_worker_capacity
-    category: scale
-    name: Insufficient worker capacity
-    priority: high
-    status: planned
-    phase: 3
-    description: Job arrival rate exceeds aggregate worker consumption rate.
-
-  - id: scale.queue_consumer_shortage
-    category: scale
-    name: Queue consumer shortage
-    priority: high
-    status: planned
-    phase: 3
-    description: Queue exists but consumers are absent or under-provisioned.
-
-  - id: scale.partition_hot_spot
-    category: scale
-    name: Single partition hot spot
-    priority: medium
-    status: planned
-    phase: 3
-    description: Partition/shard configuration routes disproportionate load to one partition.
-
-  - id: scale.missing_load_balancing
-    category: scale
-    name: Missing load balancing
-    priority: high
-    status: planned
-    phase: 3
-    description: Multiple backend instances exist without a distribution layer.
-
-  - id: scale.missing_horizontal_scaling
-    category: scale
-    name: Missing horizontal scaling
-    priority: high
-    status: planned
-    phase: 3
-    description: Compute tier configured as single instance while requirements demand more.
-
-  # ── Availability (6) ───────────────────────────────────────────────────
-  - id: ha.single_database
-    category: availability
-    name: Single database
-    priority: critical
-    status: planned
-    phase: 3
-    description: Sole database instance fails the whole system.
-
-  - id: ha.single_cache
-    category: availability
-    name: Single cache
-    priority: high
-    status: planned
-    phase: 3
-    description: Cache on the critical read path is a single node without failover.
-
-  - id: ha.single_compute_node
-    category: availability
-    name: Single compute node
-    priority: high
-    status: planned
-    phase: 3
-    description: One instance of a critical service; its failure drops availability.
-
-  - id: ha.single_region
-    category: availability
-    name: Single region
-    priority: medium
-    status: planned
-    phase: 3
-    description: Availability targets imply multi-AZ/multi-region but deployment model is single region.
-
-  - id: ha.single_load_balancer
-    category: availability
-    name: Single load balancer
-    priority: high
-    status: planned
-    phase: 3
-    description: Entry point is a lone LB instance without redundancy.
-
-  - id: ha.missing_failover
-    category: availability
-    name: Missing failover
-    priority: critical
-    status: planned
-    phase: 3
-    description: Redundant components exist but no automatic failover mechanism is configured.
-
-  # ── Performance (4) ────────────────────────────────────────────────────
-  - id: perf.sync_expensive_dependency
-    category: performance
-    name: Synchronous expensive dependency
-    priority: high
-    status: planned
-    phase: 3
-    description: Slow dependency sits on synchronous request path (e.g. provider call inline).
-
-  - id: perf.excessive_network_hops
-    category: performance
-    name: Excessive network hops
-    priority: low
-    status: planned
-    phase: 3
-    description: Critical path accumulates too many serial hops for latency target.
-
-  - id: perf.no_cache_high_read
-    category: performance
-    name: No caching for high read workload
-    priority: high
-    status: planned
-    phase: 3
-    description: Read-heavy traffic hits datastore directly though access patterns are cacheable.
-
-  - id: perf.slow_storage_on_critical_path
-    category: performance
-    name: Slow storage on latency-critical path
-    priority: medium
-    status: planned
-    phase: 3
-    description: Latency requirement conflicts with storage class placed inline.
-
-  # ── Consistency (3) ────────────────────────────────────────────────────
-  - id: cons.replica_for_strong_consistency
-    category: consistency
-    name: Replica used for strongly consistent workflow
-    priority: high
-    status: planned
-    phase: 3
-    description: Read-your-writes flow reads from lagging replica.
-
-  - id: cons.cache_stale_strict_requirement
-    category: consistency
-    name: Cache serving stale data under strict requirement
-    priority: high
-    status: planned
-    phase: 3
-    description: Strong freshness requirement conflicts with cache-aside/TTL behavior.
-
-  - id: cons.async_where_sync_required
-    category: consistency
-    name: Asynchronous pipeline where confirmation required
-    priority: critical
-    status: planned
-    phase: 3
-    description: Flow requires synchronous acknowledgment but goes through queue.
-
-  # ── Reliability (5) ────────────────────────────────────────────────────
-  - id: rel.retries_without_timeout
-    category: reliability
-    name: Retries without timeout
-    priority: high
-    status: planned
-    phase: 3
-    description: Retry policy configured on edge lacking timeout bound.
-
-  - id: rel.retries_without_backoff
-    category: reliability
-    name: Retries without backoff
-    priority: medium
-    status: planned
-    phase: 3
-    description: Immediate retries amplify failure pressure.
-
-  - id: rel.retry_amplification
-    category: reliability
-    name: Retry amplification
-    priority: high
-    status: planned
-    phase: 3
-    description: Layered retries multiply load multiplicatively during degradation.
-
-  - id: rel.missing_idempotency
-    category: reliability
-    name: Missing idempotency
-    priority: high
-    status: planned
-    phase: 3
-    description: At-least-once delivery reaches non-idempotent handler.
-
-  - id: rel.queue_without_dlq
-    category: reliability
-    name: Queue without dead-letter handling
-    priority: medium
-    status: planned
-    phase: 3
-    description: Poison messages have nowhere to go; backlog grows forever.
-
-  # ── Security (5) ───────────────────────────────────────────────────────
-  - id: sec.public_database
-    category: security
-    name: Publicly exposed database
-    priority: critical
-    status: planned
-    phase: 3
-    description: Datastore reachable from client tier without private network boundary.
-
-  - id: sec.missing_authentication
-    category: security
-    name: Missing authentication
-    priority: high
-    status: planned
-    phase: 3
-    description: Public-facing API lacks an auth layer.
-
-  - id: sec.missing_authorization
-    category: security
-    name: Missing authorization
-    priority: medium
-    status: planned
-    phase: 3
-    description: Multi-user data flows lack access-control checks between services.
-
-  - id: sec.unencrypted_sensitive_flow
-    category: security
-    name: Unencrypted sensitive flow
-    priority: high
-    status: planned
-    phase: 3
-    description: Sensitive data traverses plaintext edge.
-
-  - id: sec.missing_secrets_management
-    category: security
-    name: Missing secrets management
-    priority: medium
-    status: planned
-    phase: 3
-    description: Credentials embedded in component properties instead of secret store.
-
-  # ── Observability (4) ──────────────────────────────────────────────────
-  - id: obs.no_metrics
-    category: observability
-    name: No metrics
-    priority: medium
-    status: planned
-    phase: 3
-    description: System collects no metrics; failures will be invisible.
-
-  - id: obs.no_logs
-    category: observability
-    name: No logs
-    priority: low
-    status: planned
-    phase: 3
-    description: No structured logging pipeline.
-
-  - id: obs.no_tracing
-    category: observability
-    name: No tracing
-    priority: low
-    status: planned
-    phase: 3
-    description: Distributed system without request tracing across hops.
-
-  - id: obs.no_alerts_critical
-    category: observability
-    name: No alerts for critical system
-    priority: medium
-    status: planned
-    phase: 3
-    description: High-availability targets without any alerting path.
-
-  # ── Edge semantics & patterns (7) ──────────────────────────────────────
-  - id: edge.missing_traffic_type
-    category: graph
-    name: Edge missing traffic type semantics
-    priority: medium
-    status: planned
-    phase: 3
-    description: Evaluation-relevant edge lacks traffic_type/direction semantics.
-
-  - id: edge.cache_not_inline
-    category: performance
-    name: Cache not on read path
-    priority: medium
-    status: planned
-    phase: 3
-    description: Cache present but not connected between reader and datastore; it does nothing.
-
-  - id: edge.queue_unconsumed
-    category: graph
-    name: Queue without consumers connected
-    priority: high
-    status: planned
-    phase: 3
-    description: Broker ingests events but no worker/consumer edge exists downstream.
-
-  - id: edge.cdn_unused_static
-    category: performance
-    name: CDN unused for static content
-    priority: low
-    status: planned
-    phase: 3
-    description: Static-heavy workload served from origin despite CDN presence off-path.
-
-  - id: edge.rate_limiter_absent_public_api
-    category: security
-    name: Rate limiter absent on public API
-    priority: medium
-    status: planned
-    phase: 4
-    description: Unthrottled public ingress invites abuse and retry storms.
-
-  - id: edge.waf_absent_public_edge
-    category: security
-    name: WAF absent at public edge
-    priority: low
-    status: planned
-    phase: 4
-    description: Internet-facing edge without WAF where threat model expects one.
-
-  - id: edge.write_path_through_cache_direct
-    category: consistency
-    name: Direct datastore write bypassing invalidation
-    priority: medium
-    status: planned
-    phase: 4
-    description: Writes bypass cache invalidation discipline; stale reads guaranteed.
-
-  # ── Cost (3) ───────────────────────────────────────────────────────────
-  - id: cost.budget_exceeded
-    category: cost
-    name: Estimated cost exceeds budget constraint
-    priority: medium
-    status: planned
-    phase: 7
-    description: Aggregate estimated monthly cost violates budget constraint.
-
-  - id: cost.overprovisioned_low_traffic
-    category: cost
-    name: Over-provisioned for declared traffic
-    priority: low
-    status: planned
-    phase: 7
-    description: Capacity far exceeds demand; teaching moment about waste.
-
-  - id: cost.multi_region_justification
-    category: cost
-    name: Multi-region without justification
-    priority: low
-    status: planned
-    phase: 7
-    description: Multi-region cost paid without geo/HA requirements demanding it.
-
-  # ── Workload fit (3) ───────────────────────────────────────────────────
-  - id: fit.nosql_for_transactional
-    category: consistency
-    name: NoSQL chosen for strongly transactional workload
-    priority: medium
-    status: planned
-    phase: 4
-    description: Payment-like requirements paired with eventually-consistent store.
-
-  - id: fit.rdbms_for_massive_write_scale
-    category: scale
-    name: Single-node RDBMS for massive write scale
-    priority: high
-    status: planned
-    phase: 4
-    description: Write demand implies sharding/horizontal store; vertical RDBMS alone insufficient.
-
-  - id: fit.search_store_missing_search_req
-    category: functional
-    name: Search requirement without search infrastructure
-    priority: medium
-    status: planned
-    phase: 4
-    description: Full-text/relevance requirements unmet by primary OLTP datastore alone.
-
-# Count check: 7+8+6+4+3+5+5+4+7+3+3 = 55
+  category: graph
+  name: Disconnected required component
+  priority: high
+  status: implemented
+  phase: 3
+  description: A component required by the challenge exists but has no valid connection path.
+- id: graph.invalid_edge
+  category: graph
+  name: Invalid edge
+  priority: high
+  status: implemented
+  phase: 3
+  description: Edge references missing nodes or violates catalog compatibility constraints.
+- id: graph.missing_source
+  category: graph
+  name: Missing source
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Edge declares a source node id not present in the graph.
+- id: graph.missing_destination
+  category: graph
+  name: Missing destination
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Edge declares a target node id not present in the graph.
+- id: graph.inappropriate_cycle
+  category: graph
+  name: Inappropriate cycle
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Synchronous request path contains a cycle; only replication/async paths may cycle.
+- id: graph.no_ingress
+  category: graph
+  name: No ingress
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Architecture has no entry point reachable from a client.
+- id: graph.no_data_store_required
+  category: graph
+  name: No data store where required
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Functional requirements imply persistence but no database/storage exists.
+- id: scale.single_compute_high_traffic
+  category: scale
+  name: Single compute instance under high traffic
+  priority: critical
+  status: implemented
+  phase: 3
+  description: One API/worker instance cannot serve declared RPS demand.
+- id: scale.db_write_bottleneck
+  category: scale
+  name: Database write bottleneck
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Write demand exceeds primary write capacity with no sharding/queueing.
+- id: scale.db_read_bottleneck
+  category: scale
+  name: Database read bottleneck
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Read demand exceeds safe read capacity with no cache or replicas.
+- id: scale.insufficient_worker_capacity
+  category: scale
+  name: Insufficient worker capacity
+  priority: high
+  status: implemented
+  phase: 3
+  description: Job arrival rate exceeds aggregate worker consumption rate.
+- id: scale.queue_consumer_shortage
+  category: scale
+  name: Queue consumer shortage
+  priority: high
+  status: implemented
+  phase: 3
+  description: Queue exists but consumers are absent or under-provisioned.
+- id: scale.partition_hot_spot
+  category: scale
+  name: Single partition hot spot
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Partition/shard configuration routes disproportionate load to one partition.
+- id: scale.missing_load_balancing
+  category: scale
+  name: Missing load balancing
+  priority: high
+  status: implemented
+  phase: 3
+  description: Multiple backend instances exist without a distribution layer.
+- id: scale.missing_horizontal_scaling
+  category: scale
+  name: Missing horizontal scaling
+  priority: high
+  status: implemented
+  phase: 3
+  description: Compute tier configured as single instance while requirements demand more.
+- id: ha.single_database
+  category: availability
+  name: Single database
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Sole database instance fails the whole system.
+- id: ha.single_cache
+  category: availability
+  name: Single cache
+  priority: high
+  status: implemented
+  phase: 3
+  description: Cache on the critical read path is a single node without failover.
+- id: ha.single_compute_node
+  category: availability
+  name: Single compute node
+  priority: high
+  status: implemented
+  phase: 3
+  description: One instance of a critical service; its failure drops availability.
+- id: ha.single_region
+  category: availability
+  name: Single region
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Availability targets imply multi-AZ/multi-region but deployment model is single region.
+- id: ha.single_load_balancer
+  category: availability
+  name: Single load balancer
+  priority: high
+  status: implemented
+  phase: 3
+  description: Entry point is a lone LB instance without redundancy.
+- id: ha.missing_failover
+  category: availability
+  name: Missing failover
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Redundant components exist but no automatic failover mechanism is configured.
+- id: perf.sync_expensive_dependency
+  category: performance
+  name: Synchronous expensive dependency
+  priority: high
+  status: implemented
+  phase: 3
+  description: Slow dependency sits on synchronous request path (e.g. provider call inline).
+- id: perf.excessive_network_hops
+  category: performance
+  name: Excessive network hops
+  priority: low
+  status: implemented
+  phase: 3
+  description: Critical path accumulates too many serial hops for latency target.
+- id: perf.no_cache_high_read
+  category: performance
+  name: No caching for high read workload
+  priority: high
+  status: implemented
+  phase: 3
+  description: Read-heavy traffic hits datastore directly though access patterns are cacheable.
+- id: perf.slow_storage_on_critical_path
+  category: performance
+  name: Slow storage on latency-critical path
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Latency requirement conflicts with storage class placed inline.
+- id: cons.replica_for_strong_consistency
+  category: consistency
+  name: Replica used for strongly consistent workflow
+  priority: high
+  status: implemented
+  phase: 3
+  description: Read-your-writes flow reads from lagging replica.
+- id: cons.cache_stale_strict_requirement
+  category: consistency
+  name: Cache serving stale data under strict requirement
+  priority: high
+  status: implemented
+  phase: 3
+  description: Strong freshness requirement conflicts with cache-aside/TTL behavior.
+- id: cons.async_where_sync_required
+  category: consistency
+  name: Asynchronous pipeline where confirmation required
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Flow requires synchronous acknowledgment but goes through queue.
+- id: rel.retries_without_timeout
+  category: reliability
+  name: Retries without timeout
+  priority: high
+  status: implemented
+  phase: 3
+  description: Retry policy configured on edge lacking timeout bound.
+- id: rel.retries_without_backoff
+  category: reliability
+  name: Retries without backoff
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Immediate retries amplify failure pressure.
+- id: rel.retry_amplification
+  category: reliability
+  name: Retry amplification
+  priority: high
+  status: implemented
+  phase: 3
+  description: Layered retries multiply load multiplicatively during degradation.
+- id: rel.missing_idempotency
+  category: reliability
+  name: Missing idempotency
+  priority: high
+  status: implemented
+  phase: 3
+  description: At-least-once delivery reaches non-idempotent handler.
+- id: rel.queue_without_dlq
+  category: reliability
+  name: Queue without dead-letter handling
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Poison messages have nowhere to go; backlog grows forever.
+- id: sec.public_database
+  category: security
+  name: Publicly exposed database
+  priority: critical
+  status: implemented
+  phase: 3
+  description: Datastore reachable from client tier without private network boundary.
+- id: sec.missing_authentication
+  category: security
+  name: Missing authentication
+  priority: high
+  status: implemented
+  phase: 3
+  description: Public-facing API lacks an auth layer.
+- id: sec.missing_authorization
+  category: security
+  name: Missing authorization
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Multi-user data flows lack access-control checks between services.
+- id: sec.unencrypted_sensitive_flow
+  category: security
+  name: Unencrypted sensitive flow
+  priority: high
+  status: implemented
+  phase: 3
+  description: Sensitive data traverses plaintext edge.
+- id: sec.missing_secrets_management
+  category: security
+  name: Missing secrets management
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Credentials embedded in component properties instead of secret store.
+- id: obs.no_metrics
+  category: observability
+  name: No metrics
+  priority: medium
+  status: implemented
+  phase: 3
+  description: System collects no metrics; failures will be invisible.
+- id: obs.no_logs
+  category: observability
+  name: No logs
+  priority: low
+  status: implemented
+  phase: 3
+  description: No structured logging pipeline.
+- id: obs.no_tracing
+  category: observability
+  name: No tracing
+  priority: low
+  status: implemented
+  phase: 3
+  description: Distributed system without request tracing across hops.
+- id: obs.no_alerts_critical
+  category: observability
+  name: No alerts for critical system
+  priority: medium
+  status: implemented
+  phase: 3
+  description: High-availability targets without any alerting path.
+- id: edge.missing_traffic_type
+  category: graph
+  name: Edge missing traffic type semantics
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Evaluation-relevant edge lacks traffic_type/direction semantics.
+- id: edge.cache_not_inline
+  category: performance
+  name: Cache not on read path
+  priority: medium
+  status: implemented
+  phase: 3
+  description: Cache present but not connected between reader and datastore; it does nothing.
+- id: edge.queue_unconsumed
+  category: graph
+  name: Queue without consumers connected
+  priority: high
+  status: implemented
+  phase: 3
+  description: Broker ingests events but no worker/consumer edge exists downstream.
+- id: edge.cdn_unused_static
+  category: performance
+  name: CDN unused for static content
+  priority: low
+  status: implemented
+  phase: 3
+  description: Static-heavy workload served from origin despite CDN presence off-path.
+- id: edge.rate_limiter_absent_public_api
+  category: security
+  name: Rate limiter absent on public API
+  priority: medium
+  status: planned
+  phase: 4
+  description: Unthrottled public ingress invites abuse and retry storms.
+- id: edge.waf_absent_public_edge
+  category: security
+  name: WAF absent at public edge
+  priority: low
+  status: planned
+  phase: 4
+  description: Internet-facing edge without WAF where threat model expects one.
+- id: edge.write_path_through_cache_direct
+  category: consistency
+  name: Direct datastore write bypassing invalidation
+  priority: medium
+  status: planned
+  phase: 4
+  description: Writes bypass cache invalidation discipline; stale reads guaranteed.
+- id: cost.budget_exceeded
+  category: cost
+  name: Estimated cost exceeds budget constraint
+  priority: medium
+  status: planned
+  phase: 7
+  description: Aggregate estimated monthly cost violates budget constraint.
+- id: cost.overprovisioned_low_traffic
+  category: cost
+  name: Over-provisioned for declared traffic
+  priority: low
+  status: planned
+  phase: 7
+  description: Capacity far exceeds demand; teaching moment about waste.
+- id: cost.multi_region_justification
+  category: cost
+  name: Multi-region without justification
+  priority: low
+  status: planned
+  phase: 7
+  description: Multi-region cost paid without geo/HA requirements demanding it.
+- id: fit.nosql_for_transactional
+  category: consistency
+  name: NoSQL chosen for strongly transactional workload
+  priority: medium
+  status: planned
+  phase: 4
+  description: Payment-like requirements paired with eventually-consistent store.
+- id: fit.rdbms_for_massive_write_scale
+  category: scale
+  name: Single-node RDBMS for massive write scale
+  priority: high
+  status: planned
+  phase: 4
+  description: Write demand implies sharding/horizontal store; vertical RDBMS alone insufficient.
+- id: fit.search_store_missing_search_req
+  category: functional
+  name: Search requirement without search infrastructure
+  priority: medium
+  status: planned
+  phase: 4
+  description: Full-text/relevance requirements unmet by primary OLTP datastore alone.

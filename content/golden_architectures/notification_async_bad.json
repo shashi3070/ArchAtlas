@@ -1,0 +1,110 @@
+{
+  "id": "golden-notif-async",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "API",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "kafka",
+      "type": "kafka",
+      "name": "Notification Bus",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {
+        "dlq": false,
+        "partitions": 3
+      },
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "worker",
+      "type": "worker",
+      "name": "Sender Workers",
+      "position": {
+        "x": 760,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "api",
+      "target": "kafka",
+      "traffic_type": "async_event"
+    },
+    {
+      "id": "e3",
+      "source": "kafka",
+      "target": "worker",
+      "traffic_type": "async_event"
+    }
+  ],
+  "traffic_model": {
+    "rps": 2000,
+    "read_ratio": 0.2
+  },
+  "requirements": [
+    {
+      "id": "sync-confirm",
+      "category": "functional",
+      "description": "Users must receive immediate confirmation that the notification was scheduled",
+      "target": "",
+      "unit": "",
+      "priority": "must",
+      "validation_rules": [
+        "acknowledged synchronously"
+      ]
+    }
+  ]
+}

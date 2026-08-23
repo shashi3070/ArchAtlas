@@ -1,0 +1,142 @@
+{
+  "id": "golden-secure",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 220,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "API Tier",
+      "position": {
+        "x": 440,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "authorization_checks": true,
+        "secrets_managed": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 3000
+      },
+      "availability": {
+        "replicas": 4,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "redis",
+      "type": "redis",
+      "name": "Read Cache",
+      "position": {
+        "x": 660,
+        "y": -120
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Primary + Standby",
+      "position": {
+        "x": 880,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "grpc"
+    },
+    {
+      "id": "e3",
+      "source": "api",
+      "target": "redis",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e4",
+      "source": "redis",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    }
+  ],
+  "traffic_model": {
+    "rps": 8000,
+    "read_ratio": 0.7
+  },
+  "requirements": [
+    {
+      "id": "ha-target",
+      "category": "reliability",
+      "description": "Service stays up through instance loss",
+      "target": "99.95",
+      "unit": "%",
+      "priority": "must",
+      "validation_rules": [
+        "availability >= 99.95"
+      ]
+    }
+  ]
+}

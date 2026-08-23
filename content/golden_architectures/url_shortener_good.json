@@ -1,0 +1,197 @@
+{
+  "id": "golden-url-good",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Web/Mobile Clients",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "cdn",
+      "type": "cdn",
+      "name": "CDN",
+      "position": {
+        "x": 220,
+        "y": 160
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "lb",
+      "type": "load_balancer",
+      "name": "LB Pair",
+      "position": {
+        "x": 220,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Shortener API",
+      "position": {
+        "x": 440,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {
+        "rps_per_instance": 25000
+      },
+      "availability": {
+        "replicas": 6,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "redis",
+      "type": "redis",
+      "name": "Redirect Cache",
+      "position": {
+        "x": 660,
+        "y": -120
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Mappings DB",
+      "position": {
+        "x": 880,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {
+        "replicas": 3,
+        "multi_az": true,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "kafka",
+      "type": "kafka",
+      "name": "Click Events",
+      "position": {
+        "x": 660,
+        "y": 140
+      },
+      "properties": {
+        "dlq": true,
+        "partitions": 12
+      },
+      "capacity": {},
+      "availability": {
+        "replicas": 3
+      },
+      "deployment": {}
+    },
+    {
+      "id": "worker",
+      "type": "worker",
+      "name": "Analytics Workers",
+      "position": {
+        "x": 880,
+        "y": 140
+      },
+      "properties": {
+        "idempotent_consumer": true
+      },
+      "capacity": {
+        "jobs_per_sec_per_instance": 500
+      },
+      "availability": {
+        "replicas": 12
+      },
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "cdn",
+      "traffic_type": "sync_request"
+    },
+    {
+      "id": "e2",
+      "source": "c",
+      "target": "lb",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e3",
+      "source": "lb",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e4",
+      "source": "api",
+      "target": "redis",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e5",
+      "source": "redis",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "tcp"
+    },
+    {
+      "id": "e6",
+      "source": "api",
+      "target": "kafka",
+      "traffic_type": "async_event",
+      "protocol": "tcp"
+    },
+    {
+      "id": "e7",
+      "source": "kafka",
+      "target": "worker",
+      "traffic_type": "async_event"
+    }
+  ],
+  "traffic_model": {
+    "rps": 100000,
+    "read_ratio": 0.95
+  },
+  "requirements": []
+}

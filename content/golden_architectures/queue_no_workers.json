@@ -1,0 +1,74 @@
+{
+  "id": "golden-queue-empty",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Client",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "API",
+      "position": {
+        "x": 260,
+        "y": 0
+      },
+      "properties": {
+        "auth": true,
+        "metrics": true,
+        "logs": true,
+        "tracing": true,
+        "alerts": true
+      },
+      "capacity": {},
+      "availability": {
+        "replicas": 2,
+        "failover": "automatic"
+      },
+      "deployment": {}
+    },
+    {
+      "id": "rabbit",
+      "type": "rabbitmq",
+      "name": "Job Queue",
+      "position": {
+        "x": 520,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "https"
+    },
+    {
+      "id": "e2",
+      "source": "api",
+      "target": "rabbit",
+      "traffic_type": "async_event"
+    }
+  ],
+  "traffic_model": {
+    "rps": 1000,
+    "read_ratio": 0.5
+  },
+  "requirements": []
+}

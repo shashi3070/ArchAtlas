@@ -1,0 +1,76 @@
+{
+  "id": "golden-url-broken",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c",
+      "type": "client",
+      "name": "Browser",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "api",
+      "type": "api",
+      "name": "Flask App",
+      "position": {
+        "x": 300,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    },
+    {
+      "id": "db",
+      "type": "postgresql",
+      "name": "Postgres",
+      "position": {
+        "x": 600,
+        "y": 0
+      },
+      "properties": {},
+      "capacity": {},
+      "availability": {},
+      "deployment": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "c",
+      "target": "api",
+      "traffic_type": "sync_request",
+      "protocol": "http"
+    },
+    {
+      "id": "e2",
+      "source": "api",
+      "target": "db",
+      "traffic_type": "sync_request",
+      "protocol": "http"
+    }
+  ],
+  "traffic_model": {
+    "rps": 50000,
+    "read_ratio": 0.9
+  },
+  "requirements": [
+    {
+      "id": "persist-mappings",
+      "category": "functional",
+      "description": "Shortened URL mappings must be stored persistently",
+      "target": "",
+      "unit": "",
+      "priority": "must",
+      "validation_rules": []
+    }
+  ]
+}
