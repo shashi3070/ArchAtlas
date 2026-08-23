@@ -1113,3 +1113,53 @@ button:disabled {
   font-size: 13px;
   color: #991b1b;
 }
+
+/* ---------- ask-the-mentor panel ---------- */
+.ask-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px 0;
+}
+
+.ask-tab {
+  flex: 1;
+}
+
+.ask-goal {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.ask-runrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+.ask-reply p {
+  margin: 8px 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+.ask-reply {
+  margin-bottom: 10px;
+}
+
+.ask-proposal {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.ask-proposal h4 {
+  margin: 6px 0 2px;
+}

@@ -16,7 +16,9 @@ import {
 } from '@xyflow/react'
 
 import { architecturesApi } from '../api/architectures'
+import type { AgentProposal } from '../api/agent'
 import { evaluateApi, type EvaluationResult } from '../api/evaluate'
+import { AskPanel } from '../components/lab/AskPanel'
 import { ComponentNode } from '../components/lab/ComponentNode'
 import { EdgeInspector } from '../components/lab/EdgeInspector'
 import { EvaluationPanel, type WorkloadInput } from '../components/lab/EvaluationPanel'
@@ -29,7 +31,7 @@ import {
 } from '../graph/fromArchitectureGraph'
 import { autoLayout } from '../graph/layout'
 import { toArchitectureGraph, type CanonicalArchitectureGraph } from '../graph/toArchitectureGraph'
-import { addNode, nextEdgeId, useLab, type CatalogComponent } from '../state/labStore'
+import { addNode, nextEdgeId, nextNodeId, useLab, type CatalogComponent } from '../state/labStore'
 
 interface SaveState {
   kind: 'idle' | 'saving' | 'saved' | 'error'
@@ -48,6 +50,7 @@ function Lab() {
   const [showLibrary, setShowLibrary] = useState(false)
   const [showVersions, setShowVersions] = useState(false)
   const [showEval, setShowEval] = useState(false)
+  const [showAsk, setShowAsk] = useState(false)
   const [evalResult, setEvalResult] = useState<EvaluationResult | null>(null)
   const [evalLoading, setEvalLoading] = useState(false)
   const [evalError, setEvalError] = useState<string | null>(null)
@@ -118,11 +121,11 @@ function Lab() {
     [catalogMap, screenToFlowPosition],
   )
 
-  const currentGraph = (): CanonicalArchitectureGraph => {
-    const { rps, readRatio } = store.trafficModel
+  const graphFromWorkload = (workload: WorkloadInput | null): CanonicalArchitectureGraph => {
+    const wl = workload ?? store.trafficModel
     const trafficModel: Record<string, unknown> = {}
-    if (rps !== null) trafficModel.rps = rps
-    if (readRatio !== null) trafficModel.read_ratio = readRatio
+    if (wl.rps !== null) trafficModel.rps = wl.rps
+    if (wl.readRatio !== null) trafficModel.read_ratio = wl.readRatio
     return toArchitectureGraph({
       id: store.archId ?? `lab-${Date.now()}`,
       version: 1,
@@ -133,15 +136,16 @@ function Lab() {
     })
   }
 
+  const currentGraph = (): CanonicalArchitectureGraph => graphFromWorkload(store.trafficModel)
+
   const runEvaluation = async (workload: WorkloadInput) => {
     store.setTrafficModel(workload)
     setEvalLoading(true)
     setEvalError(null)
     try {
-      const { rps, readRatio } = workload
       const trafficModel: Record<string, unknown> = {}
-      if (rps !== null) trafficModel.rps = rps
-      if (readRatio !== null) trafficModel.read_ratio = readRatio
+      if (workload.rps !== null) trafficModel.rps = workload.rps
+      if (workload.readRatio !== null) trafficModel.read_ratio = workload.readRatio
       const graph = toArchitectureGraph({
         id: store.archId ?? `lab-${Date.now()}`,
         version: 1,
@@ -156,6 +160,93 @@ function Lab() {
     } finally {
       setEvalLoading(false)
     }
+  }
+
+  // Fresh evaluation for AI grounding; shares state with the eval panel.
+  const evaluateForAsk = async (): Promise<EvaluationResult> => {
+    setEvalLoading(true)
+    setEvalError(null)
+    try {
+      const result = await evaluateApi.evaluate(currentGraph(), store.archId)
+      setEvalResult(result)
+      return result
+    } catch (e) {
+      const message = (e as Error).message
+      setEvalError(message)
+      throw new Error(message)
+    } finally {
+      setEvalLoading(false)
+    }
+  }
+
+  const onApplyProposal = (proposal: AgentProposal) => {
+    store.commit(({ nodes: ns, edges: eds }) => {
+      const refToId = new Map<string, string>()
+      const maxX = ns.reduce((m, n) => Math.max(m, n.position.x), 0)
+      proposal.add_nodes.forEach((a, i) => {
+        const comp = catalogMap.get(a.component_type)
+        const id = nextNodeId(a.component_type)
+        refToId.set(a.ref, id)
+        ns.push({
+          id,
+          type: 'component',
+          position: { x: maxX + 140, y: i * 110 },
+          data: {
+            label: a.name || comp?.name || a.component_type,
+            componentType: a.component_type,
+            technology: null,
+            capacity: {},
+            availability: { replicas: Math.max(1, a.replicas ?? 1) },
+            deployment: {},
+            properties: {},
+          },
+        })
+      })
+      const resolve = (ref: string): string | null => {
+        if (refToId.has(ref)) return refToId.get(ref)!
+        return ns.some((n) => n.id === ref) ? ref : null
+      }
+      for (const c of proposal.connect) {
+        const s = resolve(c.source_ref)
+        const t = resolve(c.target_ref)
+        if (!s || !t || s === t) continue
+        eds.push({
+          id: nextEdgeId(),
+          source: s,
+          target: t,
+          animated: c.traffic_type === 'async_event' || c.traffic_type === 'batch',
+          data: {
+            traffic_type:
+              c.traffic_type === 'async_event' ||
+              c.traffic_type === 'replication' ||
+              c.traffic_type === 'batch'
+                ? c.traffic_type
+                : 'sync_request',
+            direction: 'unidirectional',
+            protocol: null,
+          },
+        })
+      }
+      for (const sp of proposal.set_properties) {
+        for (const n of ns) {
+          if (n.data.componentType !== sp.match_component_type) continue
+          if (sp.properties && Object.keys(sp.properties).length > 0) {
+            n.data.properties = { ...(n.data.properties ?? {}), ...sp.properties }
+          }
+          if (sp.availability && Object.keys(sp.availability).length > 0) {
+            n.data.availability = { ...(n.data.availability ?? {}), ...sp.availability }
+          }
+        }
+      }
+      for (const rid of proposal.remove_node_ids) {
+        const idx = ns.findIndex((n) => n.id === rid)
+        if (idx >= 0) ns.splice(idx, 1)
+        for (let i = eds.length - 1; i >= 0; i--) {
+          if (eds[i].source === rid || eds[i].target === rid) eds.splice(i, 1)
+        }
+      }
+    })
+    setShowAsk(false)
   }
 
   const onSave = async () => {
@@ -255,10 +346,22 @@ function Lab() {
           disabled={nodes.length === 0}
           onClick={() => {
             setShowEval(!showEval)
+            if (!showEval) setShowAsk(false)
             if (!showEval && !evalResult && !evalLoading) void runEvaluation(store.trafficModel)
           }}
         >
           Evaluate
+        </button>
+        <button
+          type="button"
+          className={`btn ${showAsk ? 'primary' : 'ghost'}`}
+          disabled={nodes.length === 0}
+          onClick={() => {
+            setShowAsk(!showAsk)
+            if (!showAsk) setShowEval(false)
+          }}
+        >
+          Ask AI
         </button>
         {saveState.kind !== 'idle' && (
           <span
@@ -336,6 +439,15 @@ function Lab() {
               workload={store.trafficModel}
               onClose={() => setShowEval(false)}
               onEvaluate={(w) => void runEvaluation(w)}
+            />
+          )}
+
+          {showAsk && (
+            <AskPanel
+              onExplain={evaluateForAsk}
+              graph={currentGraph}
+              onApply={onApplyProposal}
+              onClose={() => setShowAsk(false)}
             />
           )}
         </div>

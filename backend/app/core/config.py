@@ -20,6 +20,17 @@ class Settings(BaseSettings):
     content_dir: Path | None = None
     database_url: str = "sqlite:///./sdp.db"
 
+    # --- LLM gateway (Phase 5) ---
+    # provider: none | openai | azure | groq | anthropic | gemini | ollama
+    llm_provider: str = "none"
+    llm_api_key: str = ""
+    # Optional endpoint override. Required for azure (deployment root) and
+    # ollama (e.g. http://localhost:11434); ignored otherwise unless set.
+    llm_base_url: str = ""
+    llm_model: str = ""
+    # Per-client-key completed (non-cached) LLM calls per UTC day.
+    llm_daily_limit: int = 200
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

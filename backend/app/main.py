@@ -11,7 +11,16 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import architectures, challenges, components, evaluate, health, progress, topics
+from app.api.routes import (
+    agent,
+    architectures,
+    challenges,
+    components,
+    evaluate,
+    health,
+    progress,
+    topics,
+)
 from app.content import challenge_loader, loader, topics_loader
 from app.core.config import get_settings
 from app.db import init_db
@@ -49,6 +58,7 @@ def create_app() -> FastAPI:
     app.include_router(architectures.router)
     app.include_router(evaluate.router)
     app.include_router(challenges.router)
+    app.include_router(agent.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:
