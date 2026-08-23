@@ -443,6 +443,199 @@ button:disabled {
 .lab-toolbar {
   display: flex;
   align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  flex-wrap: wrap;
+}
+
+.arch-name {
+  width: 200px;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 22px;
+  background: #e2e8f0;
+  margin: 0 4px;
+}
+
+.file-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-btn input[type='file'] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lab-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.palette {
+  width: 210px;
+  overflow-y: auto;
+  border-right: 1px solid #e2e8f0;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.palette-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.palette-error {
+  padding: 12px;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.palette-group {
+  margin-bottom: 12px;
+}
+
+.palette-group-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.palette-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 7px 10px;
+  margin-bottom: 3px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: grab;
+  font-size: 13px;
+}
+
+.palette-item:hover {
+  border-color: #a5b4fc;
+  background: #eef2ff;
+}
+
+.lab-canvas {
+  position: relative;
+  flex: 1;
+}
+
+.inspector {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 240px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 8%);
+  z-index: 5;
+}
+
+.inspector h3 {
+  margin-top: 0;
+  font-size: 14px;
+}
+
+.field {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.field input,
+.field select {
+  display: block;
+  width: 100%;
+  margin-top: 3px;
+  padding: 6px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.small-btn {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.lab-dialog {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 340px;
+  max-width: 480px;
+  max-height: 60vh;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgb(15 23 42 / 25%);
+  padding: 18px 20px;
+  z-index: 20;
+  background: #ffffff;
+}
+
+.lab-dialog h3 {
+  margin-top: 0;
+}
+
+.lib-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.version-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.version-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.react-flow__node-component {
+  border-radius: 10px;
+}
+
+.lab-toolbar {
+  display: flex;
+  align-items: center;
   gap: 10px;
   padding: 8px 14px;
   border-bottom: 1px solid #e2e8f0;
