@@ -1,4 +1,5 @@
 import { useLab } from '../../state/labStore'
+import { markerForDirection } from '../../graph/fromArchitectureGraph'
 
 const TRAFFIC_TYPES = ['sync_request', 'async_event', 'replication', 'batch'] as const
 const DIRECTIONS = ['unidirectional', 'bidirectional'] as const
@@ -17,6 +18,12 @@ export function EdgeInspector() {
       if (target) {
         ;(target.data as Record<string, unknown>)[key] =
           key === 'protocol' ? (value === '' ? null : value) : value
+        if (key === 'direction') {
+          // Keep the on-canvas arrowhead in sync with the direction field.
+          target.markerEnd = markerForDirection(
+            value as 'unidirectional' | 'bidirectional',
+          )
+        }
       }
     })
 
