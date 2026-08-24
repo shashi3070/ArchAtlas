@@ -1,0 +1,47 @@
+{
+  "type": "workflow_engine",
+  "kind": "implementation",
+  "category": "workflow",
+  "name": "Workflow Engine (Temporal)",
+  "description": "Durable execution orchestrating long-lived business flows with replayable state and timers.",
+  "version": "0.1.0",
+  "capabilities": [
+    "durable_execution",
+    "retry_policies",
+    "signal_queries"
+  ],
+  "helps_with": [
+    "saga_compensation_flows",
+    "multi_day_approvals"
+  ],
+  "does_not_solve": [
+    "simple_request_reply",
+    "huge_fanout_parallelism"
+  ],
+  "risks": [
+    "history_size_growth",
+    "worker_versioning_skew"
+  ],
+  "common_patterns": [
+    "saga"
+  ],
+  "failure_modes": [
+    "task_queue_starvation",
+    "workflow_stuck_on_missing_activity"
+  ],
+  "tradeoffs": [
+    "code_as_workflow_vs_infra_defined_dags"
+  ],
+  "capacity_defaults": {
+    "workflows_per_sec": 500,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 300
+  },
+  "palette": {
+    "group": "Workflow",
+    "icon": "box",
+    "color": "#4338ca"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "type": "api_gateway",
+  "kind": "implementation",
+  "category": "traffic",
+  "name": "API Gateway",
+  "description": "Managed edge gateway handling routing, auth, rate limiting, and API versioning in front of backend services.",
+  "version": "0.1.0",
+  "capabilities": [
+    "request_routing",
+    "auth_termination",
+    "rate_limiting",
+    "protocol_translation"
+  ],
+  "helps_with": [
+    "api_surface_management",
+    "cross_cutting_concerns",
+    "client_abstraction"
+  ],
+  "does_not_solve": [
+    "replace_backend_domain_logic",
+    "heavy_data_transformations"
+  ],
+  "risks": [
+    "gateway_bottleneck",
+    "config_propagation_delay",
+    "vendor_lock_in"
+  ],
+  "common_patterns": [
+    "backend_for_frontend",
+    "strangler_fig"
+  ],
+  "failure_modes": [
+    "misconfiguration",
+    "throttling"
+  ],
+  "tradeoffs": [
+    "flexibility_vs_latency",
+    "managed_convenience_vs_cost"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 50000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 350
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}

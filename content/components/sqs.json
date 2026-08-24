@@ -1,0 +1,48 @@
+{
+  "type": "sqs",
+  "kind": "implementation",
+  "category": "messaging",
+  "name": "SQS",
+  "description": "Fully managed bounded-throughput queue with at-least-once delivery and dead-letter support.",
+  "version": "0.1.0",
+  "capabilities": [
+    "managed_queueing",
+    "dlq_support",
+    "visibility_timeouts"
+  ],
+  "helps_with": [
+    "decoupling_producers_consumers",
+    "spiky_work_buffering"
+  ],
+  "does_not_solve": [
+    "sub_ms_delivery",
+    "strict_ordering_fifo_at_scale"
+  ],
+  "risks": [
+    "duplicate_deliveries",
+    "payload_size_limits"
+  ],
+  "common_patterns": [
+    "dead_letter_queue_pattern",
+    "backpressure"
+  ],
+  "failure_modes": [
+    "delivery_duplication",
+    "poison_messages"
+  ],
+  "tradeoffs": [
+    "managed_simplicity_vs_delivery_semantics"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 10000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 50
+  },
+  "palette": {
+    "group": "Messaging",
+    "icon": "box",
+    "color": "#d97706"
+  }
+}

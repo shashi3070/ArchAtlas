@@ -1,0 +1,45 @@
+{
+  "type": "alert_manager",
+  "kind": "implementation",
+  "category": "observability",
+  "name": "Alert Manager",
+  "description": "Routes, deduplicates, groups, and escalates alerts to on-call channels with silences.",
+  "version": "0.1.0",
+  "capabilities": [
+    "alert_grouping",
+    "escalation_policies",
+    "silence_windows"
+  ],
+  "helps_with": [
+    "on_call_noise_reduction",
+    "paging_escalation"
+  ],
+  "does_not_solve": [
+    "metric_storage",
+    "dashboard_rendering"
+  ],
+  "risks": [
+    "route_misconfiguration",
+    "alert_storms"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "notification_provider_outage",
+    "duplicate_pages"
+  ],
+  "tradeoffs": [
+    "signal_quality_vs_page_fatigue"
+  ],
+  "capacity_defaults": {
+    "alerts_per_sec": 100,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 40
+  },
+  "palette": {
+    "group": "Observability",
+    "icon": "box",
+    "color": "#0891b2"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type": "grpc",
+  "kind": "implementation",
+  "category": "communication",
+  "name": "gRPC",
+  "description": "HTTP/2 protobuf RPC framework with streaming, deadlines, and codegen clients.",
+  "version": "0.1.0",
+  "capabilities": [
+    "protobuf_codegen",
+    "bidirectional_streaming",
+    "deadline_propagation"
+  ],
+  "helps_with": [
+    "internal_service_mesh_calls",
+    "polyglot_strong_contracts"
+  ],
+  "does_not_solve": [
+    "browser_native_calls_without_proxy",
+    "human_readable_debugging"
+  ],
+  "risks": [
+    "versioning_discipline",
+    "http2_tuning"
+  ],
+  "common_patterns": [
+    "circuit_breaker"
+  ],
+  "failure_modes": [
+    "deadline_propagation_bugs",
+    "proto_field_reuse_conflicts"
+  ],
+  "tradeoffs": [
+    "efficiency_contract_vs_json_flexibility"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 20000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 20
+  },
+  "palette": {
+    "group": "Communication",
+    "icon": "box",
+    "color": "#4f46e5"
+  }
+}

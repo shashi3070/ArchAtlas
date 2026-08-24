@@ -1,0 +1,49 @@
+{
+  "type": "cassandra",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Cassandra",
+  "description": "Partition-tolerant wide-column store tuned for massive linear write scale and multi-dc replication.",
+  "version": "0.1.0",
+  "capabilities": [
+    "linear_write_scaling",
+    "tunable_consistency",
+    "multi_master_dc"
+  ],
+  "helps_with": [
+    "write_heavy_ingest",
+    "always_available_writes"
+  ],
+  "does_not_solve": [
+    "ad_hoc_joins",
+    "strong_single_partition_consistency"
+  ],
+  "risks": [
+    "partition_hotspots",
+    "compaction_stalls",
+    "repair_overhead"
+  ],
+  "common_patterns": [
+    "event_sourcing"
+  ],
+  "failure_modes": [
+    "gc_pauses",
+    "hinted_handoff_backlogs"
+  ],
+  "tradeoffs": [
+    "availability_and_scale_vs_query_flexibility"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 30000,
+    "safe_writes_per_sec": 40000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 300
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

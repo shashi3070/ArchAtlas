@@ -1,0 +1,46 @@
+{
+  "type": "block_storage",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Block Storage",
+  "description": "Network-attached disk volumes (EBS-style) providing durable raw blocks to compute.",
+  "version": "0.1.0",
+  "capabilities": [
+    "durable_volumes",
+    "snapshots",
+    "provisioned_iops"
+  ],
+  "helps_with": [
+    "database_backing_disks",
+    "boot_volumes"
+  ],
+  "does_not_solve": [
+    "shared_filesystem_semantics",
+    "object_lifecycle_policies"
+  ],
+  "risks": [
+    "volume_attachment_limits",
+    "iops_caps"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "volume_failure",
+    "iops_throttling"
+  ],
+  "tradeoffs": [
+    "performance_predictability_vs_cost"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 50000,
+    "safe_writes_per_sec": 5000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 80
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

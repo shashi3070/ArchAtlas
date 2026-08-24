@@ -1,0 +1,48 @@
+{
+  "type": "elasticsearch",
+  "kind": "implementation",
+  "category": "search_analytics",
+  "name": "Elasticsearch",
+  "description": "Distributed inverted-index search and analytics engine for full-text and log exploration.",
+  "version": "0.1.0",
+  "capabilities": [
+    "full_text_search",
+    "faceting",
+    "near_real_time_indexing"
+  ],
+  "helps_with": [
+    "search_relevance_ranking",
+    "log_exploration"
+  ],
+  "does_not_solve": [
+    "system_of_record",
+    "heavy_transactional_writes"
+  ],
+  "risks": [
+    "index_shard_hotspots",
+    "cluster_split_brain_history"
+  ],
+  "common_patterns": [
+    "cqrs"
+  ],
+  "failure_modes": [
+    "shard_imbalance",
+    "deep_pagination_cost"
+  ],
+  "tradeoffs": [
+    "query_power_vs_index_maintenance_cost"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 12000,
+    "safe_writes_per_sec": 6000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 300
+  },
+  "palette": {
+    "group": "Search & Analytics",
+    "icon": "box",
+    "color": "#0f766e"
+  }
+}

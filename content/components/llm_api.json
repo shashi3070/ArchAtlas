@@ -1,0 +1,50 @@
+{
+  "type": "llm_api",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "LLM Inference API",
+  "description": "Hosted or local large-language-model inference endpoint (OpenAI/Groq/Ollama-compatible).",
+  "version": "0.1.0",
+  "capabilities": [
+    "text_generation",
+    "json_constrained_output",
+    "streaming_tokens"
+  ],
+  "helps_with": [
+    "natural_language_features",
+    "summarization_extraction"
+  ],
+  "does_not_solve": [
+    "deterministic_computation",
+    "primary_data_storage"
+  ],
+  "risks": [
+    "hallucination",
+    "token_costs",
+    "rate_limits",
+    "latency_variance"
+  ],
+  "common_patterns": [
+    "llm_router"
+  ],
+  "failure_modes": [
+    "context_overflow",
+    "provider_5xx",
+    "json_validation_failures"
+  ],
+  "tradeoffs": [
+    "capability_breadth_vs_determinism"
+  ],
+  "capacity_defaults": {
+    "requests_per_sec_per_instance": 1,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 500
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

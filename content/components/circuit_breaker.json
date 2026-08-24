@@ -1,0 +1,41 @@
+{
+  "type": "circuit_breaker",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Circuit Breaker",
+  "description": "Annotation: wrap dependency calls to fail fast when unhealthy, probe to recover.",
+  "version": "0.1.0",
+  "capabilities": [
+    "fail_fast",
+    "half_open_probe",
+    "error_budget"
+  ],
+  "helps_with": [
+    "cascade_prevention",
+    "graceful_degradation"
+  ],
+  "does_not_solve": [
+    "fixing_the_underlying_outage",
+    "message_queue_buffering"
+  ],
+  "risks": [
+    "trip_threshold_tuning",
+    "probe_storms"
+  ],
+  "common_patterns": [
+    "bulkhead",
+    "backpressure"
+  ],
+  "failure_modes": [
+    "flapping_open_closed",
+    "stale_half_open_state"
+  ],
+  "tradeoffs": [
+    "availability_of_caller_vs_completeness_of_callee_work"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

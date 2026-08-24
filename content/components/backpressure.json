@@ -1,0 +1,41 @@
+{
+  "type": "backpressure",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Backpressure",
+  "description": "Annotation: propagate overload signals upstream instead of unbounded buffering.",
+  "version": "0.1.0",
+  "capabilities": [
+    "bounded_buffers",
+    "credit_flow_control",
+    "load_shedding_signals"
+  ],
+  "helps_with": [
+    "memory_safety_under_surges",
+    "fair_degradation"
+  ],
+  "does_not_solve": [
+    "accepting_all_writes_forever",
+    "smoothing_spiky_but_tolerant_queues"
+  ],
+  "risks": [
+    "throughput_reduction_upstream",
+    "timeout_cascades_if_mistuned"
+  ],
+  "common_patterns": [
+    "circuit_breaker",
+    "bulkhead"
+  ],
+  "failure_modes": [
+    "buffer_bloat",
+    "shed_the_wrong_traffic"
+  ],
+  "tradeoffs": [
+    "stability_vs_peak_acceptance"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

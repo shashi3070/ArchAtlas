@@ -1,0 +1,45 @@
+{
+  "type": "reranker",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "Reranker",
+  "description": "Second-stage relevance model reordering candidate results using cross-encoder scoring.",
+  "version": "0.1.0",
+  "capabilities": [
+    "cross_encoder_scoring",
+    "top_k_reorder",
+    "query_doc_interaction"
+  ],
+  "helps_with": [
+    "precision_boost_for_retrieval",
+    "answer_grounding_quality"
+  ],
+  "does_not_solve": [
+    "first_stage_recall_from_corpus",
+    "non_search_rankings"
+  ],
+  "risks": [
+    "latency_per_candidate",
+    "cost_scaling_with_k"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "score_drift_after_model_swap",
+    "candidate_overflow"
+  ],
+  "tradeoffs": [
+    "relevance_gain_vs_added_latency"
+  ],
+  "capacity_defaults": {
+    "requests_per_sec_per_instance": 50,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

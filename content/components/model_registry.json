@@ -1,0 +1,45 @@
+{
+  "type": "model_registry",
+  "kind": "implementation",
+  "category": "ml",
+  "name": "Model Registry",
+  "description": "Catalog of model versions with stage promotion, lineage, and deployment hooks.",
+  "version": "0.1.0",
+  "capabilities": [
+    "version_lineage",
+    "stage_promotion",
+    "artifact_signing"
+  ],
+  "helps_with": [
+    "release_governance_for_models",
+    "rollback_tracking"
+  ],
+  "does_not_solve": [
+    "dataset_blob_storage",
+    "feature_computation"
+  ],
+  "risks": [
+    "artifact_corruption",
+    "promotion_gate_bypass"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "registry_metadata_outage",
+    "tagging_mistakes"
+  ],
+  "tradeoffs": [
+    "governance_vs_velocity"
+  ],
+  "capacity_defaults": {
+    "operations_per_sec": 100,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 50
+  },
+  "palette": {
+    "group": "ML",
+    "icon": "box",
+    "color": "#c026d3"
+  }
+}

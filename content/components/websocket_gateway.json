@@ -1,0 +1,47 @@
+{
+  "type": "websocket_gateway",
+  "kind": "implementation",
+  "category": "realtime",
+  "name": "WebSocket Gateway",
+  "description": "Persistent bidirectional connections hub with room/channel fan-out and reconnect handling.",
+  "version": "0.1.0",
+  "capabilities": [
+    "persistent_connections",
+    "room_fanout",
+    "presence"
+  ],
+  "helps_with": [
+    "chat_collab_live_dashboards",
+    "server_push"
+  ],
+  "does_not_solve": [
+    "one_way_simple_updates",
+    "poll_tolerant_clients"
+  ],
+  "risks": [
+    "connection_count_limits",
+    "sticky_routing_for_handshake"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "conn_table_exhaustion",
+    "zombie_sockets"
+  ],
+  "tradeoffs": [
+    "instant_bidirectionality_vs_connection_costs"
+  ],
+  "capacity_defaults": {
+    "connections_per_instance": 50000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "Realtime",
+    "icon": "box",
+    "color": "#db2777"
+  }
+}

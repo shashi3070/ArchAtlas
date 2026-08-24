@@ -1,0 +1,48 @@
+{
+  "type": "spanner",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Cloud Spanner",
+  "description": "Globally-distributed strongly-consistent relational database with external consistency.",
+  "version": "0.1.0",
+  "capabilities": [
+    "global_strong_consistency",
+    "synchronized_clocks",
+    "sql_joins"
+  ],
+  "helps_with": [
+    "planet_scale_financial_ledgers",
+    "multi_region_acid"
+  ],
+  "does_not_solve": [
+    "cost_sensitive_small_workloads",
+    "on_prem_deployments"
+  ],
+  "risks": [
+    "cost",
+    "vendor_coupling"
+  ],
+  "common_patterns": [
+    "leader_lease_based_replication"
+  ],
+  "failure_modes": [
+    "commit_wait_latency",
+    "regional_imbalance"
+  ],
+  "tradeoffs": [
+    "strong_global_semantics_vs_price"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 30000,
+    "safe_writes_per_sec": 6000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 1200
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

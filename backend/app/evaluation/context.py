@@ -10,10 +10,41 @@ import json
 import re
 from typing import Any
 
-DatastoreTypes = frozenset({"postgresql", "mongodb", "object_storage"})
-ComputeTypes = frozenset({"api", "worker"})
-QueueTypes = frozenset({"kafka", "rabbitmq"})
-CacheTypes = frozenset({"redis"})
+DatastoreTypes = frozenset(
+    {
+        "postgresql",
+        "mongodb",
+        "object_storage",
+        # phase 5.5 additions (additive-only; original behavior frozen)
+        "mysql",
+        "cockroachdb",
+        "spanner",
+        "timescaledb",
+        "cassandra",
+        "dynamodb",
+        "neo4j",
+        "clickhouse",
+        "influxdb",
+        "elasticsearch",
+        "data_warehouse",
+        "vector_database",
+        "block_storage",
+        "file_storage",
+    }
+)
+ComputeTypes = frozenset(
+    {"api", "worker", "serverless_function", "autoscaling_group", "kubernetes"}
+)
+QueueTypes = frozenset({"kafka", "rabbitmq", "sqs", "pubsub", "nats", "kinesis", "event_bus"})
+CacheTypes = frozenset({"redis", "memcached"})
+LBTypes = frozenset({"load_balancer", "reverse_proxy", "global_load_balancer", "api_gateway"})
+ClientTypes = frozenset({"client"})
+EdgeCacheTypes = frozenset({"cdn"})
+# Types whose single-instance deployment counts against availability requirements.
+# Deliberately EXCLUDES worker/queues/serverless (managed or lenient by design).
+RedundancyCriticalTypes = frozenset({"api"}) | LBTypes | (
+    DatastoreTypes - {"object_storage", "block_storage", "file_storage"}
+)
 
 _REQ_RPS_RE = re.compile(r"rps\s*(?:>=|<=|>|<|=)\s*([0-9][0-9_,]*)", re.IGNORECASE)
 
@@ -122,6 +153,15 @@ class EvalContext:
     def catalog_entry(self, node: dict[str, Any]) -> dict[str, Any] | None:
         ctype = str(node.get("type") or "")
         return self.catalog.get(ctype)
+
+    def is_pattern_node(self, node: dict[str, Any]) -> bool:
+        """Pattern nodes are annotations: excluded from capacity/SPOF/reach math."""
+        entry = self.catalog_entry(node)
+        return bool(entry and entry.get("kind") == "pattern")
+
+    def structural_nodes(self) -> list[dict[str, Any]]:
+        """All nodes except pattern annotations."""
+        return [n for n in self.nodes if not self.is_pattern_node(n)]
 
     def availability_target(self) -> float | None:
         """Parse availability target like 'availability >= 99.9' from requirements."""

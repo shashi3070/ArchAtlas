@@ -1,0 +1,45 @@
+{
+  "type": "push_service",
+  "kind": "implementation",
+  "category": "notifications",
+  "name": "Push Notification (FCM)",
+  "description": "Device-targeted mobile/web push delivery through OS vendor pipes.",
+  "version": "0.1.0",
+  "capabilities": [
+    "device_token_targeting",
+    "silent_push",
+    "topic_broadcast"
+  ],
+  "helps_with": [
+    "engagement_pings",
+    "background_sync_nudges"
+  ],
+  "does_not_solve": [
+    "guaranteed_delivery",
+    "email_archival"
+  ],
+  "risks": [
+    "os_level_throttling",
+    "token_churn"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "vendor_quota_rejects",
+    "stale_tokens"
+  ],
+  "tradeoffs": [
+    "reach_vs_delivery_guarantees"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 5000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 15
+  },
+  "palette": {
+    "group": "Notifications",
+    "icon": "box",
+    "color": "#ea580c"
+  }
+}

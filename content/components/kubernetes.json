@@ -1,0 +1,50 @@
+{
+  "type": "kubernetes",
+  "kind": "implementation",
+  "category": "compute",
+  "name": "Kubernetes Cluster",
+  "description": "Container orchestration providing scheduling, self-healing, rolling deploys, and declarative infra.",
+  "version": "0.1.0",
+  "capabilities": [
+    "container_scheduling",
+    "self_healing",
+    "rolling_deploys",
+    "horizontal_autoscaling"
+  ],
+  "helps_with": [
+    "polyglot_microservices_ops",
+    "infra_standardization"
+  ],
+  "does_not_solve": [
+    "removing_need_for_capacity_planning",
+    "stateful_data_semantics"
+  ],
+  "risks": [
+    "control_plane_outages",
+    "resource_overcommit_evictions"
+  ],
+  "common_patterns": [
+    "sidecar",
+    "blue_green_deployment",
+    "bulkhead"
+  ],
+  "failure_modes": [
+    "node_pressure_eviction",
+    "etcd_degradation"
+  ],
+  "tradeoffs": [
+    "flexibility_vs_operational_depth"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 5000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 400
+  },
+  "palette": {
+    "group": "Compute",
+    "icon": "box",
+    "color": "#7c3aed"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type": "neo4j",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Neo4j",
+  "description": "Native graph database with index-free adjacency for deep relationship traversals.",
+  "version": "0.1.0",
+  "capabilities": [
+    "graph_traversals",
+    "cypher_queries",
+    "relationship_algorithms"
+  ],
+  "helps_with": [
+    "social_graphs",
+    "fraud_rings",
+    "recommendation_graphs"
+  ],
+  "does_not_solve": [
+    "high_volume_simple_key_value",
+    "append_only_analytics"
+  ],
+  "risks": [
+    "whole_graph_memory_pressure",
+    "sharding_limits"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "traversal_explosion",
+    "write_contention_on_hot_nodes"
+  ],
+  "tradeoffs": [
+    "relationship_query_power_vs_generic_scale"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 5000,
+    "safe_writes_per_sec": 1500,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 350
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

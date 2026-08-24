@@ -178,7 +178,7 @@ def r_graph_no_ingress(ctx: EvalContext) -> list[dict[str, Any]]:
             )
         ]
     reachable = ctx.reachable_from_clients()
-    non_client = [n for n in ctx.nodes if n.get("type") != "client"]
+    non_client = [n for n in ctx.structural_nodes() if n.get("type") != "client"]
     if non_client and not (reachable & {n["id"] for n in non_client}):
         return [
             result(

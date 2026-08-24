@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from app.evaluation.context import EvalContext
+from app.evaluation.context import ClientTypes, EvalContext, RedundancyCriticalTypes
 
 _RPS_RE = re.compile(r"rps\s*(>=|<=|>|<)\s*([0-9][0-9_,]*)", re.IGNORECASE)
 _P95_RE = re.compile(r"p95\s*(<=|<)\s*([0-9]+)\s*ms", re.IGNORECASE)
@@ -182,11 +182,11 @@ def _check_availability(ctx: EvalContext, target_nines: float) -> dict[str, Any]
     automatic_failover_count = 0
     redundant_critical = 0
     for node in ctx.nodes:
-        if node.get("type") == "client":
+        if node.get("type") in ClientTypes:
             continue
         avail = node.get("availability") or {}
         instances = ctx.instances(node)
-        if node.get("type") in ("postgresql", "mongodb", "api", "load_balancer"):
+        if node.get("type") in RedundancyCriticalTypes:
             if instances >= 2 or avail.get("multi_az"):
                 redundant_critical += 1
                 if avail.get("failover") == "automatic":

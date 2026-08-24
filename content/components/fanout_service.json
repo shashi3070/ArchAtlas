@@ -1,0 +1,47 @@
+{
+  "type": "fanout_service",
+  "kind": "implementation",
+  "category": "realtime",
+  "name": "Fanout Service",
+  "description": "Writes feed events to recipient timelines (push) or merges lazily (pull) at read time.",
+  "version": "0.1.0",
+  "capabilities": [
+    "timeline_write_fanout",
+    "celebrity_pull_fallback",
+    "rank_hooks"
+  ],
+  "helps_with": [
+    "home_feed_materialization",
+    "notification_inboxes"
+  ],
+  "does_not_solve": [
+    "generic_etl",
+    "payment_flows"
+  ],
+  "risks": [
+    "celebrity_fanout_explosion",
+    "fanout_on_write_storms"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "fanout_lag",
+    "partial_timeline_writes"
+  ],
+  "tradeoffs": [
+    "write_time_cost_vs_read_time_complexity"
+  ],
+  "capacity_defaults": {
+    "fanouts_per_sec": 20000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 200
+  },
+  "palette": {
+    "group": "Realtime",
+    "icon": "box",
+    "color": "#db2777"
+  }
+}

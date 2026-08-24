@@ -1,0 +1,47 @@
+{
+  "type": "recommendation_engine",
+  "kind": "implementation",
+  "category": "ml",
+  "name": "Recommendation Engine",
+  "description": "Serves personalized ranked items blending candidate generation and learned scoring.",
+  "version": "0.1.0",
+  "capabilities": [
+    "candidate_generation",
+    "learned_ranking",
+    "exploration_bandits"
+  ],
+  "helps_with": [
+    "feed_personalization",
+    "upsell_ranking"
+  ],
+  "does_not_solve": [
+    "exact_search_retrieval",
+    "transactional_writes"
+  ],
+  "risks": [
+    "feedback_loops_popularity_bias",
+    "feature_staleness"
+  ],
+  "common_patterns": [
+    "fanout_service"
+  ],
+  "failure_modes": [
+    "stale_embeddings",
+    "cold_start_users"
+  ],
+  "tradeoffs": [
+    "personalization_lift_vs_serving_cost"
+  ],
+  "capacity_defaults": {
+    "recs_per_sec": 5000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 300
+  },
+  "palette": {
+    "group": "ML",
+    "icon": "box",
+    "color": "#c026d3"
+  }
+}

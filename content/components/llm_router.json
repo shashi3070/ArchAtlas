@@ -1,0 +1,48 @@
+{
+  "type": "llm_router",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "LLM Gateway/Router",
+  "description": "Proxy in front of LLM providers adding fallbacks, budgets, caching, and metering.",
+  "version": "0.1.0",
+  "capabilities": [
+    "provider_fallback",
+    "response_cache",
+    "usage_metering",
+    "budget_caps"
+  ],
+  "helps_with": [
+    "multi_provider_resilience",
+    "cost_control"
+  ],
+  "does_not_solve": [
+    "training_models",
+    "vector_storage"
+  ],
+  "risks": [
+    "added_hop_latency",
+    "cache_staleness"
+  ],
+  "common_patterns": [
+    "circuit_breaker"
+  ],
+  "failure_modes": [
+    "upstream_quota_exhaustion",
+    "cache_key_collisions"
+  ],
+  "tradeoffs": [
+    "control_visibility_vs_extra_infra"
+  ],
+  "capacity_defaults": {
+    "requests_per_sec_per_instance": 200,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 80
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

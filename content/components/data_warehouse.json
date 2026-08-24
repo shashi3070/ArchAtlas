@@ -1,0 +1,49 @@
+{
+  "type": "data_warehouse",
+  "kind": "concept",
+  "category": "search_analytics",
+  "name": "Data Warehouse",
+  "description": "Analytical store fed by pipelines; columnar MPP scans for BI rather than transactional serving.",
+  "version": "0.1.0",
+  "capabilities": [
+    "columnar_mpp",
+    "etl_elastic_loading",
+    "bi_workloads"
+  ],
+  "helps_with": [
+    "cross_domain_analytics",
+    "historical_trend_queries"
+  ],
+  "does_not_solve": [
+    "millisecond_oltp_lookups",
+    "source_of_truth_writes"
+  ],
+  "risks": [
+    "load_pipeline_lag",
+    "query_queue_noisy_neighbors"
+  ],
+  "common_patterns": [
+    "cqrs",
+    "cdc_pipeline"
+  ],
+  "failure_modes": [
+    "warehouse_saturation",
+    "ingest_pipeline_failure"
+  ],
+  "tradeoffs": [
+    "query_flexibility_vs_freshness_and_cost"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 20000,
+    "safe_writes_per_sec": 2000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 800
+  },
+  "palette": {
+    "group": "Search & Analytics",
+    "icon": "box",
+    "color": "#0f766e"
+  }
+}

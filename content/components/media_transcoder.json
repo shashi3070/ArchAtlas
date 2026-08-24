@@ -1,0 +1,47 @@
+{
+  "type": "media_transcoder",
+  "kind": "implementation",
+  "category": "media",
+  "name": "Media Transcoder",
+  "description": "Async media pipeline converting uploads to renditions (bitrates, formats, thumbnails).",
+  "version": "0.1.0",
+  "capabilities": [
+    "adaptive_bitrate_ladder",
+    "thumbnail_extraction",
+    "async_jobs"
+  ],
+  "helps_with": [
+    "video_audio_normalization",
+    "cdn_ready_renditions"
+  ],
+  "does_not_solve": [
+    "live_low_latency_ingest",
+    "drm_license_decisions"
+  ],
+  "risks": [
+    "transcode_cost_per_minute",
+    "queue_depth_lag"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "codec_worker_oom",
+    "corrupt_input_loops"
+  ],
+  "tradeoffs": [
+    "quality_breadth_vs_compute_cost"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 0.05,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 400
+  },
+  "palette": {
+    "group": "Media",
+    "icon": "box",
+    "color": "#a21caf"
+  }
+}

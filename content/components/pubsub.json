@@ -1,0 +1,47 @@
+{
+  "type": "pubsub",
+  "kind": "implementation",
+  "category": "messaging",
+  "name": "Pub/Sub",
+  "description": "Managed topic-based publish/subscribe with fan-out to independent subscriptions.",
+  "version": "0.1.0",
+  "capabilities": [
+    "topic_fanout",
+    "at_least_once",
+    "ordering_per_key"
+  ],
+  "helps_with": [
+    "event_broadcast_to_many_services",
+    "region_global_distribution"
+  ],
+  "does_not_solve": [
+    "queue_poll_semantics",
+    "large_payload_streaming"
+  ],
+  "risks": [
+    "subscription_backlog_growth",
+    "duplicate_delivery"
+  ],
+  "common_patterns": [
+    "dead_letter_queue_pattern"
+  ],
+  "failure_modes": [
+    "subscriber_slowdown",
+    "quota_exhaustion"
+  ],
+  "tradeoffs": [
+    "fanout_convenience_vs_per_subscriber_backpressure"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 100000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 80
+  },
+  "palette": {
+    "group": "Messaging",
+    "icon": "box",
+    "color": "#d97706"
+  }
+}

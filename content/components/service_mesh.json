@@ -1,0 +1,48 @@
+{
+  "type": "service_mesh",
+  "kind": "concept",
+  "category": "traffic",
+  "name": "Service Mesh",
+  "description": "Dedicated infrastructure layer for service-to-service auth, retries, and telemetry via sidecar proxies.",
+  "version": "0.1.0",
+  "capabilities": [
+    "mtls_everywhere",
+    "traffic_policy",
+    "uniform_telemetry"
+  ],
+  "helps_with": [
+    "microservice_security_posture",
+    "consistent_retry_timeouts"
+  ],
+  "does_not_solve": [
+    "replacing_business_logic",
+    "small_fleet_observability_needs"
+  ],
+  "risks": [
+    "sidecar_resource_overhead",
+    "operational_complexity"
+  ],
+  "common_patterns": [
+    "sidecar",
+    "circuit_breaker"
+  ],
+  "failure_modes": [
+    "proxy_cpu_tax",
+    "upgrade_rollout_risk"
+  ],
+  "tradeoffs": [
+    "platform_capabilities_vs_footprint"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 10000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}

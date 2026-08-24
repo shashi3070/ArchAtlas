@@ -1,0 +1,48 @@
+{
+  "type": "global_load_balancer",
+  "kind": "implementation",
+  "category": "traffic",
+  "name": "Global Load Balancer",
+  "description": "DNS/anycast-level traffic steering across regions based on health, latency, or geo proximity.",
+  "version": "0.1.0",
+  "capabilities": [
+    "geo_routing",
+    "health_based_failover",
+    "anycast"
+  ],
+  "helps_with": [
+    "multi_region_serving",
+    "regional_disaster_failover"
+  ],
+  "does_not_solve": [
+    "fine_grained_request_logic",
+    "session_affinity_within_region"
+  ],
+  "risks": [
+    "failover_flapping",
+    "sticky_session_imbalance"
+  ],
+  "common_patterns": [
+    "active_active_regions",
+    "blue_green_deployment"
+  ],
+  "failure_modes": [
+    "dns_propagation_lag",
+    "health_check_false_positives"
+  ],
+  "tradeoffs": [
+    "latency_optimality_vs_config_complexity"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 1000000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 500
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}

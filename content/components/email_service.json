@@ -1,0 +1,45 @@
+{
+  "type": "email_service",
+  "kind": "implementation",
+  "category": "notifications",
+  "name": "Email Sender (SES)",
+  "description": "Delivers transactional/marketing email with bounce/complaint feedback loops.",
+  "version": "0.1.0",
+  "capabilities": [
+    "template_send",
+    "bounce_webhooks",
+    "suppression_lists"
+  ],
+  "helps_with": [
+    "otp_verification_mail",
+    "receipt_notifications"
+  ],
+  "does_not_solve": [
+    "realtime_chat",
+    "push_to_mobile_devices"
+  ],
+  "risks": [
+    "deliverability_reputation",
+    "rate_quotas"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "spam_trap_listing",
+    "send_quota_exhaustion"
+  ],
+  "tradeoffs": [
+    "reach_vs_instantaneity"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 50,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 20
+  },
+  "palette": {
+    "group": "Notifications",
+    "icon": "box",
+    "color": "#ea580c"
+  }
+}

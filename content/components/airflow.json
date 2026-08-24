@@ -1,0 +1,47 @@
+{
+  "type": "airflow",
+  "kind": "implementation",
+  "category": "processing",
+  "name": "Airflow",
+  "description": "Scheduler/orchestrator expressing data pipelines as DAGs with retries and backfills.",
+  "version": "0.1.0",
+  "capabilities": [
+    "dag_scheduling",
+    "dependency_resolution",
+    "backfill_runs"
+  ],
+  "helps_with": [
+    "multi_stage_pipeline_coordination",
+    "operational_report_refresh"
+  ],
+  "does_not_solve": [
+    "per_event_stream_processing",
+    "sub_minute_triggers"
+  ],
+  "risks": [
+    "scheduler_deadlocks",
+    "long_running_tasks_block_workers"
+  ],
+  "common_patterns": [
+    "workflow_orchestration"
+  ],
+  "failure_modes": [
+    "scheduler_loop_lag",
+    "metastore_contention"
+  ],
+  "tradeoffs": [
+    "orchestration_power_vs_execution_speed"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 10,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 200
+  },
+  "palette": {
+    "group": "Processing",
+    "icon": "box",
+    "color": "#0d9488"
+  }
+}

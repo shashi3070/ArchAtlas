@@ -1,0 +1,47 @@
+{
+  "type": "mcp_server",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "MCP Server",
+  "description": "Model Context Protocol endpoint exposing standardized tools/resources to AI clients.",
+  "version": "0.1.0",
+  "capabilities": [
+    "standardized_tool_schema",
+    "resource_endpoints",
+    "session_mgmt"
+  ],
+  "helps_with": [
+    "tool_interop_across_ai_clients",
+    "capability_marketplaces"
+  ],
+  "does_not_solve": [
+    "general_api_gateway_duties",
+    "high_qps_public_traffic"
+  ],
+  "risks": [
+    "tool_version_churn",
+    "permission_scope_errors"
+  ],
+  "common_patterns": [
+    "tool_orchestrator"
+  ],
+  "failure_modes": [
+    "schema_drift_breaking_clients",
+    "overprivileged_tools"
+  ],
+  "tradeoffs": [
+    "standardization_vs_bespoke_integration_depth"
+  ],
+  "capacity_defaults": {
+    "calls_per_sec": 200,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 60
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

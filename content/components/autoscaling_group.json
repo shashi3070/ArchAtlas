@@ -1,0 +1,47 @@
+{
+  "type": "autoscaling_group",
+  "kind": "implementation",
+  "category": "compute",
+  "name": "Autoscaling Group",
+  "description": "Pool of VM instances that grows and shrinks on demand metrics behind a load balancer.",
+  "version": "0.1.0",
+  "capabilities": [
+    "horizontal_scaling",
+    "instance_health_replacement",
+    "multi_az_spread"
+  ],
+  "helps_with": [
+    "predictable_web_tier_scaling",
+    "batch_fleet_sizing"
+  ],
+  "does_not_solve": [
+    "sub_minute_scale_events",
+    "stateful_local_disk_workloads"
+  ],
+  "risks": [
+    "scale_cooldown_lag",
+    "image_drift"
+  ],
+  "common_patterns": [
+    "bulkhead"
+  ],
+  "failure_modes": [
+    "scaling_thrash",
+    "ami_patching_gaps"
+  ],
+  "tradeoffs": [
+    "elasticity_vs_warm_capacity_cost"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 500,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 150
+  },
+  "palette": {
+    "group": "Compute",
+    "icon": "box",
+    "color": "#7c3aed"
+  }
+}

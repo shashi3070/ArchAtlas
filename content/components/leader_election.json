@@ -1,0 +1,39 @@
+{
+  "type": "leader_election",
+  "kind": "concept",
+  "category": "coordination",
+  "name": "Leader Election",
+  "description": "Consensus-lite mechanism choosing one active coordinator among replicas.",
+  "version": "0.1.0",
+  "capabilities": [
+    "quorum_based_selection",
+    "heartbeat_failure_detection"
+  ],
+  "helps_with": [
+    "singleton_background_workers",
+    "active_passive_failover"
+  ],
+  "does_not_solve": [
+    "multi_leader_writes",
+    "sub_second_failover_guarantees"
+  ],
+  "risks": [
+    "split_brain_leaders",
+    "election_storms"
+  ],
+  "common_patterns": [
+    "consensus_patterns"
+  ],
+  "failure_modes": [
+    "dual_leader_during_partition",
+    "flapping_leaders"
+  ],
+  "tradeoffs": [
+    "fast_failover_vs_safety_margins"
+  ],
+  "palette": {
+    "group": "Coordination",
+    "icon": "box",
+    "color": "#6d28d9"
+  }
+}

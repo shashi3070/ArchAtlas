@@ -4,17 +4,49 @@
   "name": "Object Storage",
   "description": "Durable, highly available blob storage for files, images, backups, and large immutable objects.",
   "version": "0.1.0",
-  "capabilities": ["durable_blob_storage", "unbounded_scale", "presigned_access", "lifecycle_policies"],
-  "helps_with": ["file_media_durability", "static_asset_origin", "backup_archival"],
-  "does_not_solve": ["low_latency_random_access_workloads", "transactional_metadata_queries"],
-  "risks": ["cost_growth_from_unlifecycled_data", "hot_bucket_request_limits"],
-  "common_patterns": ["direct_upload_presigned_urls", "cdn_in_front_for_delivery", "versioned_buckets"],
-  "failure_modes": ["regional_outage_rare", "misconfigured_public_exposure"],
-  "tradeoffs": ["durability_vs_retrieval_latency", "egress_costs_at_scale"],
+  "capabilities": [
+    "durable_blob_storage",
+    "unbounded_scale",
+    "presigned_access",
+    "lifecycle_policies"
+  ],
+  "helps_with": [
+    "file_media_durability",
+    "static_asset_origin",
+    "backup_archival"
+  ],
+  "does_not_solve": [
+    "low_latency_random_access_workloads",
+    "transactional_metadata_queries"
+  ],
+  "risks": [
+    "cost_growth_from_unlifecycled_data",
+    "hot_bucket_request_limits"
+  ],
+  "common_patterns": [
+    "direct_upload_presigned_urls",
+    "cdn_in_front_for_delivery",
+    "versioned_buckets"
+  ],
+  "failure_modes": [
+    "regional_outage_rare",
+    "misconfigured_public_exposure"
+  ],
+  "tradeoffs": [
+    "durability_vs_retrieval_latency",
+    "egress_costs_at_scale"
+  ],
   "capacity_defaults": {
     "reads_per_sec_effective": 5000,
     "durability_nines": 11
   },
-  "cost_defaults": { "usd_per_tb_month": 23 },
-  "palette": { "group": "Storage", "icon": "bucket", "color": "#0369a1" }
+  "cost_defaults": {
+    "usd_per_tb_month": 23
+  },
+  "palette": {
+    "group": "Storage",
+    "icon": "bucket",
+    "color": "#0369a1"
+  },
+  "kind": "implementation"
 }

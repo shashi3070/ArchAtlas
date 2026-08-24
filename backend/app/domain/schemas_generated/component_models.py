@@ -21,6 +21,24 @@ class Category(Enum):
     observability = 'observability'
     reliability = 'reliability'
     ai_genai = 'ai_genai'
+    search_analytics = 'search_analytics'
+    processing = 'processing'
+    identity = 'identity'
+    communication = 'communication'
+    coordination = 'coordination'
+    workflow = 'workflow'
+    business = 'business'
+    notifications = 'notifications'
+    media = 'media'
+    realtime = 'realtime'
+    ml = 'ml'
+    patterns = 'patterns'
+
+
+class Kind(Enum):
+    concept = 'concept'
+    implementation = 'implementation'
+    pattern = 'pattern'
 
 
 class Palette(BaseModel):
@@ -40,6 +58,10 @@ class ComponentCatalogEntry(BaseModel):
     )
     type: constr(pattern=r'^[a-z][a-z0-9_]*$', min_length=1)
     category: Category
+    kind: Kind | None = Field(
+        None,
+        description='Node taxonomy: concept = abstract role, implementation = concrete technology, pattern = behavioral annotation excluded from engine capacity math.',
+    )
     name: constr(min_length=1)
     description: str | None = None
     version: constr(pattern=r'^\d+\.\d+\.\d+$') = Field(

@@ -1,0 +1,47 @@
+{
+  "type": "ledger_service",
+  "kind": "implementation",
+  "category": "business",
+  "name": "Ledger Service",
+  "description": "Append-only double-entry money movement record enforcing balance invariants.",
+  "version": "0.1.0",
+  "capabilities": [
+    "double_entry_append_only",
+    "balance_snapshots",
+    "idempotent_entries"
+  ],
+  "helps_with": [
+    "money_accuracy_audit",
+    "reconciliation_source"
+  ],
+  "does_not_solve": [
+    "card_network_integration",
+    "fraud_scoring"
+  ],
+  "risks": [
+    "write_amp_for_hot_accounts",
+    "storage_growth"
+  ],
+  "common_patterns": [
+    "event_sourcing"
+  ],
+  "failure_modes": [
+    "hot_account_contention",
+    "reconciliation_drift"
+  ],
+  "tradeoffs": [
+    "strict_correctness_vs_throughput"
+  ],
+  "capacity_defaults": {
+    "tps": 5000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 150
+  },
+  "palette": {
+    "group": "Business",
+    "icon": "box",
+    "color": "#16a34a"
+  }
+}

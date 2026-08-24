@@ -1,0 +1,48 @@
+{
+  "type": "payment_gateway",
+  "kind": "implementation",
+  "category": "business",
+  "name": "Payment Gateway",
+  "description": "PCI-scoped third-party processor for cards/wallets with webhooks and idempotent charges.",
+  "version": "0.1.0",
+  "capabilities": [
+    "pci_compliance_offload",
+    "webhooks",
+    "idempotency_keys"
+  ],
+  "helps_with": [
+    "charging_customers",
+    "payouts_reconciliation"
+  ],
+  "does_not_solve": [
+    "internal_ledger_truth",
+    "inventory_logic"
+  ],
+  "risks": [
+    "webhook_delivery_gaps",
+    "dispute_chargebacks"
+  ],
+  "common_patterns": [
+    "saga",
+    "transactional_outbox"
+  ],
+  "failure_modes": [
+    "webhook_loss",
+    "gateway_outage"
+  ],
+  "tradeoffs": [
+    "compliance_offload_vs_vendor_dependency"
+  ],
+  "capacity_defaults": {
+    "tps": 1000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 100
+  },
+  "palette": {
+    "group": "Business",
+    "icon": "box",
+    "color": "#16a34a"
+  }
+}

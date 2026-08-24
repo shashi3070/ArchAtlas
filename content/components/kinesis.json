@@ -1,0 +1,47 @@
+{
+  "type": "kinesis",
+  "kind": "implementation",
+  "category": "messaging",
+  "name": "Kinesis Streams",
+  "description": "Sharded ordered event streams for high-volume telemetry and replayable logs.",
+  "version": "0.1.0",
+  "capabilities": [
+    "ordered_shards",
+    "multi_day_replay",
+    "fanout_enhanced"
+  ],
+  "helps_with": [
+    "clickstream_ingestion",
+    "stream_processing_source"
+  ],
+  "does_not_solve": [
+    "random_access_queuing",
+    "tiny_message_cheaps"
+  ],
+  "risks": [
+    "hot_shards",
+    "shard_resharding_delay"
+  ],
+  "common_patterns": [
+    "cdc_pipeline"
+  ],
+  "failure_modes": [
+    "iterator_age_lag",
+    "hot_partition_throttle"
+  ],
+  "tradeoffs": [
+    "ordering_replay_vs_shard_management"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 50000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "Messaging",
+    "icon": "box",
+    "color": "#d97706"
+  }
+}

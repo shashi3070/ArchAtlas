@@ -13,6 +13,7 @@ export interface LabNode {
   data: {
     label: string
     componentType: string
+    kind?: 'concept' | 'implementation' | 'pattern' | null
     technology?: string | null
     capacity?: Record<string, unknown>
     availability?: Record<string, unknown>
@@ -27,11 +28,33 @@ export interface LabEdge {
   target: string
   animated?: boolean
   label?: string
+  markerEnd?: {
+    type: 'arrowclosed'
+    width?: number
+    height?: number
+    color?: string
+  }
   data: {
     traffic_type: CanonicalArchitectureEdge['traffic_type']
     direction: CanonicalArchitectureEdge['direction']
     protocol: string | null
   }
+}
+
+/** Arrowhead styling shared by every traffic edge on the canvas. */
+export const ARROW_MARKER = {
+  type: 'arrowclosed' as const,
+  width: 26,
+  height: 26,
+  color: '#475569',
+}
+
+/** Unidirectional edges get a large arrowhead so request direction reads
+ * instantly; bidirectional edges flow both ways, so no arrowhead. */
+export function markerForDirection(
+  direction: CanonicalArchitectureEdge['direction'],
+): typeof ARROW_MARKER | undefined {
+  return direction === 'unidirectional' ? { ...ARROW_MARKER } : undefined
 }
 
 export function fromArchitectureNode(node: CanonicalArchitectureNode): LabNode {
@@ -56,7 +79,10 @@ export function fromArchitectureEdge(edge: CanonicalArchitectureEdge): LabEdge {
     id: edge.id,
     source: edge.source,
     target: edge.target,
-    animated: edge.traffic_type === 'async_event' || edge.traffic_type === 'batch',
+    // Every edge carries traffic - animate the flow of requests on all of
+    // them; async/batch get a faster dash via CSS below.
+    animated: true,
+    markerEnd: markerForDirection(edge.direction),
     label:
       edge.traffic_type === 'async_event'
         ? 'async'

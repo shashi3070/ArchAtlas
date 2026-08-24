@@ -1,0 +1,49 @@
+{
+  "type": "cdc_pipeline",
+  "kind": "implementation",
+  "category": "processing",
+  "name": "CDC Pipeline (Debezium)",
+  "description": "Streams row-level change events from database logs to downstream systems with low lag.",
+  "version": "0.1.0",
+  "capabilities": [
+    "log_based_capture",
+    "schema_evolution",
+    "snapshot_plus_stream"
+  ],
+  "helps_with": [
+    "cache_invalidation_feeds",
+    "search_index_sync",
+    "audit_streams"
+  ],
+  "does_not_solve": [
+    "transform_heavy_etl",
+    "cross_database_joins"
+  ],
+  "risks": [
+    "schema_breaking_changes",
+    "connector_restart_replays"
+  ],
+  "common_patterns": [
+    "transactional_outbox",
+    "cqrs"
+  ],
+  "failure_modes": [
+    "replication_slot_bloat",
+    "ddl_incompatibility"
+  ],
+  "tradeoffs": [
+    "freshness_vs_source_db_overhead"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 20000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 150
+  },
+  "palette": {
+    "group": "Processing",
+    "icon": "box",
+    "color": "#0d9488"
+  }
+}

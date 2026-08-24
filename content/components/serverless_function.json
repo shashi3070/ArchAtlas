@@ -1,0 +1,50 @@
+{
+  "type": "serverless_function",
+  "kind": "implementation",
+  "category": "compute",
+  "name": "Serverless Function",
+  "description": "Event-driven ephemeral compute that scales to zero; billed per invocation.",
+  "version": "0.1.0",
+  "capabilities": [
+    "auto_scaling",
+    "event_triggers",
+    "pay_per_use"
+  ],
+  "helps_with": [
+    "spiky_or_rare_workloads",
+    "glue_integration_code"
+  ],
+  "does_not_solve": [
+    "long_running_jobs",
+    "ultra_low_latency_paths",
+    "stateful_connections"
+  ],
+  "risks": [
+    "cold_start_latency",
+    "execution_time_limits",
+    "provider_limits"
+  ],
+  "common_patterns": [
+    "event_driven_architecture"
+  ],
+  "failure_modes": [
+    "cold_starts",
+    "concurrency_quota",
+    "downstream_connection_storms"
+  ],
+  "tradeoffs": [
+    "ops_simplicity_vs_runtime_constraints"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 200,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 30
+  },
+  "palette": {
+    "group": "Compute",
+    "icon": "box",
+    "color": "#7c3aed"
+  }
+}

@@ -13,6 +13,10 @@ export interface CatalogComponent {
   name: string
   description: string
   capabilities: string[]
+  kind?: 'concept' | 'implementation' | 'pattern'
+  helps_with?: string[]
+  does_not_solve?: string[]
+  risks?: string[]
   palette?: { group?: string; icon?: string; color?: string }
   capacity_defaults?: Record<string, unknown>
 }
@@ -45,15 +49,42 @@ const clone = <T,>(value: T): T =>
   typeof structuredClone === 'function' ? structuredClone(value) : JSON.parse(JSON.stringify(value)) as T
 
 let nodeSeq = 0
-export function nextNodeId(componentType: string): string {
-  nodeSeq += 1
-  return `${componentType}-${nodeSeq}`
+let edgeSeq = 0
+
+function maxNumericSuffix(ids: string[], prefix: string): number {
+  let max = 0
+  for (const id of ids) {
+    if (!id.startsWith(prefix)) continue
+    const rest = id.slice(prefix.length)
+    if (/^\d+$/.test(rest)) max = Math.max(max, Number.parseInt(rest, 10))
+  }
+  return max
 }
 
-let edgeSeq = 0
+/**
+ * Ids must stay unique across a session even after loadGraph() brings in
+ * persisted ids like "postgresql-7" / "e-4": counters resume above the
+ * highest suffix currently on the canvas, then skip any remaining clash.
+ */
+export function nextNodeId(componentType: string): string {
+  const prefix = `${componentType}-`
+  const nodes = useLab.getState().nodes
+  let n = Math.max(nodeSeq, maxNumericSuffix(nodes.map((x) => x.id), prefix))
+  do {
+    n += 1
+  } while (nodes.some((x) => x.id === `${prefix}${n}`))
+  nodeSeq = n
+  return `${prefix}${n}`
+}
+
 export function nextEdgeId(): string {
-  edgeSeq += 1
-  return `e-${edgeSeq}`
+  const edges = useLab.getState().edges
+  let n = Math.max(edgeSeq, maxNumericSuffix(edges.map((x) => x.id), 'e-'))
+  do {
+    n += 1
+  } while (edges.some((x) => x.id === `e-${n}`))
+  edgeSeq = n
+  return `e-${n}`
 }
 
 export const useLab = create<LabState>((set) => ({
@@ -143,6 +174,7 @@ export function addNode(component: CatalogComponent, position: { x: number; y: n
       data: {
         label: component.name,
         componentType: component.type,
+        kind: component.kind ?? null,
         technology: null,
         capacity: {},
         availability:

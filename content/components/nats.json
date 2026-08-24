@@ -1,0 +1,47 @@
+{
+  "type": "nats",
+  "kind": "implementation",
+  "category": "messaging",
+  "name": "NATS",
+  "description": "Lightweight high-throughput messaging with core pub/sub, request-reply, and JetStream persistence.",
+  "version": "0.1.0",
+  "capabilities": [
+    "microsecond_pub_sub",
+    "request_reply",
+    "jetstream_persistence"
+  ],
+  "helps_with": [
+    "edge_and_iot_messaging",
+    "low_latency_service_bus"
+  ],
+  "does_not_solve": [
+    "kafka_style_replay_ecosystem",
+    "very_large_retention"
+  ],
+  "risks": [
+    "cluster_raft_health",
+    "stream_limits"
+  ],
+  "common_patterns": [
+    "event_sourcing"
+  ],
+  "failure_modes": [
+    "split_brain_without_quorum",
+    "consumer_lag"
+  ],
+  "tradeoffs": [
+    "footprint_vs_durability_features"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 200000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 60
+  },
+  "palette": {
+    "group": "Messaging",
+    "icon": "box",
+    "color": "#d97706"
+  }
+}

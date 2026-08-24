@@ -1,0 +1,45 @@
+{
+  "type": "log_aggregator",
+  "kind": "implementation",
+  "category": "observability",
+  "name": "Log Aggregator",
+  "description": "Ships structured/unstructured logs to searchable retention with indexing and lifecycle tiers.",
+  "version": "0.1.0",
+  "capabilities": [
+    "log_shipping",
+    "full_text_log_search",
+    "retention_tiers"
+  ],
+  "helps_with": [
+    "incident_forensics",
+    "audit_trail_search"
+  ],
+  "does_not_solve": [
+    "precise_metrics_math",
+    "request_trace_correlation"
+  ],
+  "risks": [
+    "ingest_pipeline_drop_under_load",
+    "indexing_cost"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "pipeline_backpressure",
+    "hot_index_nodes"
+  ],
+  "tradeoffs": [
+    "searchability_vs_retention_cost"
+  ],
+  "capacity_defaults": {
+    "lines_per_sec": 50000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 250
+  },
+  "palette": {
+    "group": "Observability",
+    "icon": "box",
+    "color": "#0891b2"
+  }
+}

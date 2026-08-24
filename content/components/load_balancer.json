@@ -4,17 +4,47 @@
   "name": "Load Balancer",
   "description": "Distributes incoming traffic across multiple backend instances; health-checks and removes unhealthy targets.",
   "version": "0.1.0",
-  "capabilities": ["traffic_distribution", "health_checks", "tls_termination"],
-  "helps_with": ["horizontal_scaling_utilization", "instance_failure_masking"],
-  "does_not_solve": ["backend_capacity_shortage", "data_consistency"],
-  "risks": ["single_lb_is_a_spof_without_redundancy", "uneven_distribution_with_bad_keys"],
-  "common_patterns": ["layer4_passthrough", "layer7_routing", "active_passive_pair"],
-  "failure_modes": ["lb_node_failure", "misconfigured_health_checks"],
-  "tradeoffs": ["added_hop_latency", "managed_lb_cost"],
+  "capabilities": [
+    "traffic_distribution",
+    "health_checks",
+    "tls_termination"
+  ],
+  "helps_with": [
+    "horizontal_scaling_utilization",
+    "instance_failure_masking"
+  ],
+  "does_not_solve": [
+    "backend_capacity_shortage",
+    "data_consistency"
+  ],
+  "risks": [
+    "single_lb_is_a_spof_without_redundancy",
+    "uneven_distribution_with_bad_keys"
+  ],
+  "common_patterns": [
+    "layer4_passthrough",
+    "layer7_routing",
+    "active_passive_pair"
+  ],
+  "failure_modes": [
+    "lb_node_failure",
+    "misconfigured_health_checks"
+  ],
+  "tradeoffs": [
+    "added_hop_latency",
+    "managed_lb_cost"
+  ],
   "capacity_defaults": {
     "rps_per_instance": 100000,
     "default_instances": 2
   },
-  "cost_defaults": { "usd_per_instance_month": 25 },
-  "palette": { "group": "Traffic", "icon": "split", "color": "#0891b2" }
+  "cost_defaults": {
+    "usd_per_instance_month": 25
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "split",
+    "color": "#0891b2"
+  },
+  "kind": "concept"
 }

@@ -11,12 +11,18 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.evaluation.context import DatastoreTypes, EvalContext
+from app.evaluation.context import (
+    CacheTypes,
+    DatastoreTypes,
+    EvalContext,
+    LBTypes,
+    QueueTypes,
+)
 
 
 def detect_spofs(ctx: EvalContext) -> list[dict[str, Any]]:
     spofs: list[dict[str, Any]] = []
-    for node in ctx.nodes:
+    for node in ctx.structural_nodes():
         ntype = str(node.get("type") or "")
         if ntype == "client":
             continue
@@ -43,7 +49,7 @@ def _blast_radius(ctx: EvalContext, node: dict[str, Any]) -> tuple[str, str] | N
     """(what breaks, severity) or None if redundant/not load-bearing."""
     nid = node["id"]
     reachable_without = _reachable_excluding(ctx, nid)
-    critical_types = DatastoreTypes | {"load_balancer", "api"}
+    critical_types = DatastoreTypes | {"api"} | LBTypes
     datastores = [d for d in ctx.nodes_of_type(*DatastoreTypes) if d["id"] != nid]
 
     # If removing this node disconnects every datastore from clients -> total.
@@ -55,12 +61,12 @@ def _blast_radius(ctx: EvalContext, node: dict[str, Any]) -> tuple[str, str] | N
         return ("request serving", "total")
 
     # Sole LB with everything behind it.
-    if node.get("type") == "load_balancer" and len(ctx.nodes_of_type("load_balancer")) == 1:
+    if node.get("type") in LBTypes and len(ctx.nodes_of_type(*LBTypes)) == 1:
         behind = [n for n in ctx.nodes if n.get("type") in critical_types and n["id"] != nid]
         if behind:
             return ("traffic distribution", "major")
 
-    if node.get("type") in ("redis", "kafka", "rabbitmq", "worker"):
+    if node.get("type") in QueueTypes | CacheTypes | {"worker"}:
         return (f"{node.get('type')} services", "partial")
     return None
 

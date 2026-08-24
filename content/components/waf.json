@@ -1,0 +1,47 @@
+{
+  "type": "waf",
+  "kind": "implementation",
+  "category": "traffic",
+  "name": "Web Application Firewall",
+  "description": "Inspects HTTP traffic for injection, XSS, and bot patterns before requests reach services.",
+  "version": "0.1.0",
+  "capabilities": [
+    "request_inspection",
+    "owasp_rule_sets",
+    "bot_filtering"
+  ],
+  "helps_with": [
+    "common_exploit_blocking",
+    "compliance_surface"
+  ],
+  "does_not_solve": [
+    "business_logic_attacks",
+    "insider_threats"
+  ],
+  "risks": [
+    "false_positive_blocking",
+    "latency_overhead"
+  ],
+  "common_patterns": [
+    "defense_in_depth"
+  ],
+  "failure_modes": [
+    "rule_evasion",
+    "regex_backtracking"
+  ],
+  "tradeoffs": [
+    "security_coverage_vs_false_positives"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 20000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 300
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}

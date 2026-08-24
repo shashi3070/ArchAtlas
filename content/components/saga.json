@@ -1,0 +1,41 @@
+{
+  "type": "saga",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Saga",
+  "description": "Annotation: sequence of local transactions with compensating actions instead of XA.",
+  "version": "0.1.0",
+  "capabilities": [
+    "local_transactions",
+    "compensation_steps",
+    "orchestration_or_choreography"
+  ],
+  "helps_with": [
+    "cross_service_atomicity",
+    "long_running_business_flows"
+  ],
+  "does_not_solve": [
+    "single_db_acid_ranges",
+    "analytics_batching"
+  ],
+  "risks": [
+    "compensation_bugs",
+    "intermediate_visible_states"
+  ],
+  "common_patterns": [
+    "transactional_outbox",
+    "workflow_orchestration"
+  ],
+  "failure_modes": [
+    "stuck_saga_steps",
+    "duplicate_compensations"
+  ],
+  "tradeoffs": [
+    "consistency_window_vs_distributed_lock_free_throughput"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

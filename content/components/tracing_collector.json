@@ -1,0 +1,45 @@
+{
+  "type": "tracing_collector",
+  "kind": "implementation",
+  "category": "observability",
+  "name": "Tracing Collector",
+  "description": "Receives distributed traces (OTLP), builds service waterfalls, samples intelligently.",
+  "version": "0.1.0",
+  "capabilities": [
+    "opentelemetry_ingest",
+    "tail_sampling",
+    "service_maps"
+  ],
+  "helps_with": [
+    "latency_root_cause_across_services",
+    "dependency_mapping"
+  ],
+  "does_not_solve": [
+    "metric_aggregations",
+    "log_retention"
+  ],
+  "risks": [
+    "sampling_blind_spots",
+    "collector_backpressure"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "span_drop_under_load",
+    "clock_skew_artifacts"
+  ],
+  "tradeoffs": [
+    "trace_fidelity_vs_overhead"
+  ],
+  "capacity_defaults": {
+    "spans_per_sec": 20000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 200
+  },
+  "palette": {
+    "group": "Observability",
+    "icon": "box",
+    "color": "#0891b2"
+  }
+}

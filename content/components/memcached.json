@@ -1,0 +1,49 @@
+{
+  "type": "memcached",
+  "kind": "implementation",
+  "category": "cache",
+  "name": "Memcached",
+  "description": "Multi-threaded pure in-memory key/value cache; simpler than Redis for basic lookaside caching.",
+  "version": "0.1.0",
+  "capabilities": [
+    "low_latency_reads",
+    "multithreaded_throughput",
+    "lru_eviction"
+  ],
+  "helps_with": [
+    "simple_hot_object_caching",
+    "high_fanout_read_absorption"
+  ],
+  "does_not_solve": [
+    "persistence",
+    "rich_datatypes",
+    "pub_sub"
+  ],
+  "risks": [
+    "no_durability",
+    "flat_namespace_hot_keys"
+  ],
+  "common_patterns": [
+    "cache_aside"
+  ],
+  "failure_modes": [
+    "node_failure",
+    "memory_pressure_eviction"
+  ],
+  "tradeoffs": [
+    "simplicity_vs_feature_richness"
+  ],
+  "capacity_defaults": {
+    "reads_per_sec_per_node": 120000,
+    "writes_per_sec_per_node": 90000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 60
+  },
+  "palette": {
+    "group": "Cache",
+    "icon": "box",
+    "color": "#dc2626"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type": "influxdb",
+  "kind": "implementation",
+  "category": "search_analytics",
+  "name": "InfluxDB",
+  "description": "Purpose-built time-series database with retention policies and downsampling tasks.",
+  "version": "0.1.0",
+  "capabilities": [
+    "timestamp_compaction",
+    "retention_policies",
+    "flux_queries"
+  ],
+  "helps_with": [
+    "infra_metrics_storage",
+    "sensor_streams"
+  ],
+  "does_not_solve": [
+    " relational_joins",
+    "document_storage"
+  ],
+  "risks": [
+    "high_cardinality_tags"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "tsm_compaction_lag",
+    "cardinality_explosion"
+  ],
+  "tradeoffs": [
+    "tsdb_specialization_vs_general_sql"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 8000,
+    "safe_writes_per_sec": 50000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 150
+  },
+  "palette": {
+    "group": "Search & Analytics",
+    "icon": "box",
+    "color": "#0f766e"
+  }
+}

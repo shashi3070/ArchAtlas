@@ -4,18 +4,52 @@
   "name": "MongoDB",
   "description": "Document-oriented NoSQL database with flexible schemas, native sharding, and replica sets.",
   "version": "0.1.0",
-  "capabilities": ["document_model", "horizontal_sharding", "replica_sets", "secondary_indexes"],
-  "helps_with": ["flexible_schema_storage", "write_scaleout_via_sharding", "rapid_iteration"],
-  "does_not_solve": ["multi_document_acid_by_default", "relational_joins_efficiency"],
-  "risks": ["shard_key_misdesign_hotspots", "eventual_consistency_on_secondaries", "unbounded_document_growth"],
-  "common_patterns": ["sharded_cluster", "replica_set_with_primary", "schema_versioning"],
-  "failure_modes": ["primary_stepdown", "balancer_thundering_herd", "working_set_exceeds_ram"],
-  "tradeoffs": ["flexibility_vs_schema_discipline", "sharding_early_vs_migration_pain_later"],
+  "capabilities": [
+    "document_model",
+    "horizontal_sharding",
+    "replica_sets",
+    "secondary_indexes"
+  ],
+  "helps_with": [
+    "flexible_schema_storage",
+    "write_scaleout_via_sharding",
+    "rapid_iteration"
+  ],
+  "does_not_solve": [
+    "multi_document_acid_by_default",
+    "relational_joins_efficiency"
+  ],
+  "risks": [
+    "shard_key_misdesign_hotspots",
+    "eventual_consistency_on_secondaries",
+    "unbounded_document_growth"
+  ],
+  "common_patterns": [
+    "sharded_cluster",
+    "replica_set_with_primary",
+    "schema_versioning"
+  ],
+  "failure_modes": [
+    "primary_stepdown",
+    "balancer_thundering_herd",
+    "working_set_exceeds_ram"
+  ],
+  "tradeoffs": [
+    "flexibility_vs_schema_discipline",
+    "sharding_early_vs_migration_pain_later"
+  ],
   "capacity_defaults": {
     "safe_reads_per_sec": 15000,
     "safe_writes_per_sec": 8000,
     "default_replicas": 0
   },
-  "cost_defaults": { "usd_per_node_month": 130 },
-  "palette": { "group": "Database", "icon": "leaf", "color": "#16a34a" }
+  "cost_defaults": {
+    "usd_per_node_month": 130
+  },
+  "palette": {
+    "group": "Database",
+    "icon": "leaf",
+    "color": "#16a34a"
+  },
+  "kind": "implementation"
 }

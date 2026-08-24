@@ -1,0 +1,48 @@
+{
+  "type": "file_storage",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Shared File Storage",
+  "description": "POSIX-shared network filesystem (EFS/NFS-style) for lift-and-shift workloads and shared scratch.",
+  "version": "0.1.0",
+  "capabilities": [
+    "posix_semantics",
+    "concurrent_mounts",
+    "elastic_capacity"
+  ],
+  "helps_with": [
+    "shared_config_assets",
+    "legacy_app_storage",
+    "ml_training_scratch"
+  ],
+  "does_not_solve": [
+    "object_store_durability_tiers",
+    "block_level_databases"
+  ],
+  "risks": [
+    "throughput_caps_per_mount"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "metadata_server_bottleneck",
+    "stale_nfs_handles"
+  ],
+  "tradeoffs": [
+    "compatibility_vs_performance_ceiling"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 20000,
+    "safe_writes_per_sec": 3000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 90
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

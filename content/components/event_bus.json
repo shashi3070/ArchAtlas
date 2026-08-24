@@ -1,0 +1,47 @@
+{
+  "type": "event_bus",
+  "kind": "implementation",
+  "category": "messaging",
+  "name": "Event Bridge Bus",
+  "description": "Rule-based event router connecting producers to consumers without polling loops.",
+  "version": "0.1.0",
+  "capabilities": [
+    "content_based_routing",
+    "saas_webhook_targets",
+    "schema_registry"
+  ],
+  "helps_with": [
+    "event_driven_scaffolding",
+    "cross_account_decoupling"
+  ],
+  "does_not_solve": [
+    "high_volume_streaming",
+    "ordered_batch_processing"
+  ],
+  "risks": [
+    "rule_evaluation_costs",
+    "delivery_latency_variance"
+  ],
+  "common_patterns": [
+    "dead_letter_queue_pattern"
+  ],
+  "failure_modes": [
+    "rule_misroutes",
+    "target_throttling"
+  ],
+  "tradeoffs": [
+    "integration_breadth_vs_throughput_ceiling"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 5000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 60
+  },
+  "palette": {
+    "group": "Messaging",
+    "icon": "box",
+    "color": "#d97706"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "type": "mysql",
+  "kind": "implementation",
+  "category": "database",
+  "name": "MySQL",
+  "description": "Widely-used relational OLTP database with mature replication and tooling.",
+  "version": "0.1.0",
+  "capabilities": [
+    "acid_transactions",
+    "read_replicas",
+    "secondary_indexes"
+  ],
+  "helps_with": [
+    "structured_relational_data",
+    "moderate_write_oltp"
+  ],
+  "does_not_solve": [
+    "massive_horizontal_writes",
+    "schemaless_ingestion"
+  ],
+  "risks": [
+    "write_ceiling_pre_sharding",
+    "replica_lag"
+  ],
+  "common_patterns": [
+    "cqrs"
+  ],
+  "failure_modes": [
+    "replica_lag",
+    "lock_contention",
+    "connection_limit"
+  ],
+  "tradeoffs": [
+    "operational_familiarity_vs_scale_ceiling"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 12000,
+    "safe_writes_per_sec": 2500,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

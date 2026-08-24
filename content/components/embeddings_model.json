@@ -1,0 +1,45 @@
+{
+  "type": "embeddings_model",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "Embedding Model",
+  "description": "Encodes text/images into vectors for similarity search, clustering, and dedupe.",
+  "version": "0.1.0",
+  "capabilities": [
+    "vector_encoding",
+    "batch_embedding",
+    "multilingual"
+  ],
+  "helps_with": [
+    "semantic_search_indexing",
+    "dedupe_similarity"
+  ],
+  "does_not_solve": [
+    "generating_reasoned_answers",
+    "exact_keyword_match"
+  ],
+  "risks": [
+    "model_version_drift_invalidating_indexes",
+    "cost_per_token"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "dimensionality_mismatch_after_upgrade",
+    "batch_rate_limits"
+  ],
+  "tradeoffs": [
+    "semantic_quality_vs_index_rebuild_cost"
+  ],
+  "capacity_defaults": {
+    "requests_per_sec_per_instance": 100,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 100
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

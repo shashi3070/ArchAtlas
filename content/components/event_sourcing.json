@@ -1,0 +1,41 @@
+{
+  "type": "event_sourcing",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Event Sourcing",
+  "description": "Annotation: persist state as append-only event log; derive current state by replay/projection.",
+  "version": "0.1.0",
+  "capabilities": [
+    "append_only_log",
+    "temporal_queries",
+    "replayability"
+  ],
+  "helps_with": [
+    "full_audit_histories",
+    "debuggable_state_evolution"
+  ],
+  "does_not_solve": [
+    "simple_crud_domains",
+    "random_access_heavy_reads"
+  ],
+  "risks": [
+    "schema_upcasting_old_events",
+    "snapshot_management"
+  ],
+  "common_patterns": [
+    "cqrs",
+    "saga"
+  ],
+  "failure_modes": [
+    "projection_divergence",
+    "gdpr_delete_complexity"
+  ],
+  "tradeoffs": [
+    "auditability_vs_query_and_storage_complexity"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

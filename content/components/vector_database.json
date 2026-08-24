@@ -1,0 +1,49 @@
+{
+  "type": "vector_database",
+  "kind": "implementation",
+  "category": "database",
+  "name": "Vector Database",
+  "description": "Embedding store with approximate nearest-neighbor indexes powering semantic search and RAG.",
+  "version": "0.1.0",
+  "capabilities": [
+    "ann_search",
+    "metadata_filters",
+    "hybrid_keyword_vector"
+  ],
+  "helps_with": [
+    "semantic_retrieval",
+    "dedupe_by_similarity",
+    "rag_context_store"
+  ],
+  "does_not_solve": [
+    "transactional_source_of_truth",
+    "exact_analytics_aggregations"
+  ],
+  "risks": [
+    "recall_vs_latency_tuning",
+    "index_rebuild_costs"
+  ],
+  "common_patterns": [
+    "cache_aside"
+  ],
+  "failure_modes": [
+    "recall_degradation",
+    "index_memory_exhaustion"
+  ],
+  "tradeoffs": [
+    "approximation_quality_vs_speed"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 20000,
+    "safe_writes_per_sec": 5000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 250
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

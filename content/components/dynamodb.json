@@ -1,0 +1,46 @@
+{
+  "type": "dynamodb",
+  "kind": "implementation",
+  "category": "database",
+  "name": "DynamoDB",
+  "description": "Managed serverless key-value store with single-digit-ms latency at any scale.",
+  "version": "0.1.0",
+  "capabilities": [
+    "managed_sharding",
+    "on_demand_capacity",
+    "single_digit_ms_p50"
+  ],
+  "helps_with": [
+    "key_value_at_massive_scale",
+    "serverless_apps"
+  ],
+  "does_not_solve": [
+    "relational_joins",
+    "flexible_secondary_access_patterns"
+  ],
+  "risks": [
+    "hot_partition_keys",
+    "cost_at_high_throughput"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "hot_partitions",
+    "provisioned_throughput_exceeded"
+  ],
+  "tradeoffs": [
+    "predictable_latency_vs_access_pattern_design"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 60000,
+    "safe_writes_per_sec": 40000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 400
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

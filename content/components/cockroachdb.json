@@ -1,0 +1,48 @@
+{
+  "type": "cockroachdb",
+  "kind": "implementation",
+  "category": "database",
+  "name": "CockroachDB",
+  "description": "Distributed SQL database with serializable transactions and horizontal scale out of the box.",
+  "version": "0.1.0",
+  "capabilities": [
+    "distributed_acid",
+    "survives_node_loss",
+    "sql_compatibility"
+  ],
+  "helps_with": [
+    "globally_consistent_oltp",
+    "horizontal_write_scale"
+  ],
+  "does_not_solve": [
+    "very_high_single_row_throughput_vs_oss_rdbms",
+    "heavy_analytics"
+  ],
+  "risks": [
+    "latency_for_cross_range_transactions",
+    "resource_hungry"
+  ],
+  "common_patterns": [
+    "event_sourcing"
+  ],
+  "failure_modes": [
+    "range_hotspotting",
+    "clock_skew_recovery"
+  ],
+  "tradeoffs": [
+    "consistency_guarantees_vs_latency"
+  ],
+  "capacity_defaults": {
+    "safe_reads_per_sec": 20000,
+    "safe_writes_per_sec": 4000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 450
+  },
+  "palette": {
+    "group": "Data",
+    "icon": "box",
+    "color": "#059669"
+  }
+}

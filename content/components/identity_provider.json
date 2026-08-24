@@ -1,0 +1,45 @@
+{
+  "type": "identity_provider",
+  "kind": "implementation",
+  "category": "identity",
+  "name": "Identity Provider (OIDC)",
+  "description": "Centralized authentication issuing tokens via OAuth2/OIDC/SAML for apps and services.",
+  "version": "0.1.0",
+  "capabilities": [
+    "oidc_oauth2",
+    "mfa",
+    "token_introspection"
+  ],
+  "helps_with": [
+    "single_sign_on",
+    "centralized_user_auth"
+  ],
+  "does_not_solve": [
+    "fine_grained_per_request_authorization",
+    "secret_scanning"
+  ],
+  "risks": [
+    "login_outage_blocks_all_apps",
+    "token_revocation_lag"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "idp_downtime_lockout",
+    "jwt_key_rotation_missteps"
+  ],
+  "tradeoffs": [
+    "centralized_trust_vs_blast_radius"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 1000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 200
+  },
+  "palette": {
+    "group": "Identity",
+    "icon": "box",
+    "color": "#be123c"
+  }
+}

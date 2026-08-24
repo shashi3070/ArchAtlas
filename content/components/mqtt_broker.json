@@ -1,0 +1,45 @@
+{
+  "type": "mqtt_broker",
+  "kind": "implementation",
+  "category": "realtime",
+  "name": "MQTT Broker",
+  "description": "Lightweight IoT pub/sub broker with QoS levels, retained messages, and last-will.",
+  "version": "0.1.0",
+  "capabilities": [
+    "qoS_0_1_2",
+    "retained_messages",
+    "last_will_topics"
+  ],
+  "helps_with": [
+    "sensor_fleets",
+    "unstable_network_devices"
+  ],
+  "does_not_solve": [
+    "web_browser_primary_clients",
+    "huge_payload_transfer"
+  ],
+  "risks": [
+    "broker_cluster_state_sync",
+    "wildcard_subscription_abuse"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "bridge_disconnects",
+    "subscription_floods"
+  ],
+  "tradeoffs": [
+    "iot_efficiency_vs_webstack_fit"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 50000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 90
+  },
+  "palette": {
+    "group": "Realtime",
+    "icon": "box",
+    "color": "#db2777"
+  }
+}

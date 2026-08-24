@@ -1,0 +1,41 @@
+{
+  "type": "cqrs",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: CQRS",
+  "description": "Annotation: separate write model from denormalized read projections.",
+  "version": "0.1.0",
+  "capabilities": [
+    "denormalized_reads",
+    "projection_rebuild",
+    "independent_scaling"
+  ],
+  "helps_with": [
+    "read_heavy_scale",
+    "query_shape_freedom"
+  ],
+  "does_not_solve": [
+    "write_heavy_oltp",
+    "strongly_consistent_multi_entity_reads"
+  ],
+  "risks": [
+    "projection_lag",
+    "rebuild_time"
+  ],
+  "common_patterns": [
+    "event_sourcing",
+    "cdc_pipeline"
+  ],
+  "failure_modes": [
+    "laggy_projections",
+    "schema_migration_replays"
+  ],
+  "tradeoffs": [
+    "read_scalability_vs_freshness"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

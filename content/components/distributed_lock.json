@@ -1,0 +1,45 @@
+{
+  "type": "distributed_lock",
+  "kind": "concept",
+  "category": "coordination",
+  "name": "Distributed Lock",
+  "description": "Mutual-exclusion primitive across processes/nodes using leases with expiry fencing.",
+  "version": "0.1.0",
+  "capabilities": [
+    "mutual_exclusion",
+    "lease_expiry",
+    "fencing_tokens"
+  ],
+  "helps_with": [
+    "leader_tasks",
+    "cron_deduplication",
+    "migration_serialization"
+  ],
+  "does_not_solve": [
+    "high_frequency_coordination",
+    "strict_consensus_without_quorum"
+  ],
+  "risks": [
+    "lock_expiry_midwork",
+    "clock_skew_hazards"
+  ],
+  "common_patterns": [
+    "leader_election"
+  ],
+  "failure_modes": [
+    "split_brain_double_holders",
+    "lease_renewal_failure"
+  ],
+  "tradeoffs": [
+    "correctness_vs_availability_of_the_lock_itself"
+  ],
+  "capacity_defaults": {
+    "operations_per_sec": 50000,
+    "default_instances": 1
+  },
+  "palette": {
+    "group": "Coordination",
+    "icon": "box",
+    "color": "#6d28d9"
+  }
+}

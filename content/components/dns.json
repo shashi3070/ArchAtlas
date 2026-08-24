@@ -1,0 +1,47 @@
+{
+  "type": "dns",
+  "kind": "concept",
+  "category": "traffic",
+  "name": "DNS",
+  "description": "Name resolution layer; the first hop of every request and a lever for traffic shaping and failover.",
+  "version": "0.1.0",
+  "capabilities": [
+    "name_resolution",
+    "ttl_control",
+    "weighted_routing"
+  ],
+  "helps_with": [
+    "service_discovery",
+    "simple_geo_steering"
+  ],
+  "does_not_solve": [
+    "sub_second_failover",
+    "per_request_routing"
+  ],
+  "risks": [
+    "propagation_delay",
+    "single_registrar_outage"
+  ],
+  "common_patterns": [
+    "health_based_failover"
+  ],
+  "failure_modes": [
+    "cache_poisoning",
+    "outage_amplification_via_low_ttl"
+  ],
+  "tradeoffs": [
+    "failover_speed_vs_resolver_cache_stickiness"
+  ],
+  "capacity_defaults": {
+    "queries_per_sec": 100000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 10
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}

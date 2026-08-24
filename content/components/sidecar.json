@@ -1,0 +1,40 @@
+{
+  "type": "sidecar",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Sidecar",
+  "description": "Annotation: co-located helper process extending an app with platform concerns.",
+  "version": "0.1.0",
+  "capabilities": [
+    "process_isolation",
+    "language_agnostic_platform",
+    "localhost_hop"
+  ],
+  "helps_with": [
+    "uniform_tls_logging_across_polyglots",
+    "gradual_platform_adoption"
+  ],
+  "does_not_solve": [
+    "replacing_in_process_critical_paths_needing_us_latency"
+  ],
+  "risks": [
+    "per_pod_resource_tax",
+    "version_skew_app_sidecar"
+  ],
+  "common_patterns": [
+    "service_mesh",
+    "circuit_breaker"
+  ],
+  "failure_modes": [
+    "sidecar_crashloop_dragging_pod",
+    "socket_permission_issues"
+  ],
+  "tradeoffs": [
+    "platform_uniformity_vs_resource_overhead"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

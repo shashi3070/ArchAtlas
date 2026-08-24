@@ -1,0 +1,47 @@
+{
+  "type": "moderation_service",
+  "kind": "implementation",
+  "category": "ai_genai",
+  "name": "Content Moderation",
+  "description": "Classifies user/AI content against safety policies before display or action.",
+  "version": "0.1.0",
+  "capabilities": [
+    "policy_classification",
+    "pii_detection",
+    "confidence_thresholds"
+  ],
+  "helps_with": [
+    "guardrailing_generated_text",
+    "compliance_screening"
+  ],
+  "does_not_solve": [
+    "factual_verification",
+    "style_editing"
+  ],
+  "risks": [
+    "false_positives_blocking_users",
+    "evasion_vectors"
+  ],
+  "common_patterns": [
+    "circuit_breaker"
+  ],
+  "failure_modes": [
+    "threshold_miscalibration",
+    "novel_attack_formats"
+  ],
+  "tradeoffs": [
+    "safety_coverage_vs_friction"
+  ],
+  "capacity_defaults": {
+    "requests_per_sec_per_instance": 100,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 100
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

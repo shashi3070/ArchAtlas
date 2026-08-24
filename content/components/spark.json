@@ -1,0 +1,47 @@
+{
+  "type": "spark",
+  "kind": "implementation",
+  "category": "processing",
+  "name": "Apache Spark",
+  "description": "Cluster batch-computation engine for large ETL joins, aggregations, and ML feature builds.",
+  "version": "0.1.0",
+  "capabilities": [
+    "distributed_dataframe",
+    "in_memory_shuffles",
+    "sql_and_ml_libs"
+  ],
+  "helps_with": [
+    "terabyte_etl",
+    "feature_engineering_batches"
+  ],
+  "does_not_solve": [
+    "millisecond_streaming",
+    "serving_layer_queries"
+  ],
+  "risks": [
+    "shuffle_spills",
+    "small_files_problem"
+  ],
+  "common_patterns": [
+    "cqrs"
+  ],
+  "failure_modes": [
+    "executor_oom",
+    "speculative_task_storms"
+  ],
+  "tradeoffs": [
+    "batch_throughput_vs_interactivity"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 5,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 600
+  },
+  "palette": {
+    "group": "Processing",
+    "icon": "box",
+    "color": "#0d9488"
+  }
+}

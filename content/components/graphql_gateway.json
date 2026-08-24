@@ -1,0 +1,47 @@
+{
+  "type": "graphql_gateway",
+  "kind": "implementation",
+  "category": "communication",
+  "name": "GraphQL Gateway",
+  "description": "Single typed endpoint composing data from many services with client-shaped queries.",
+  "version": "0.1.0",
+  "capabilities": [
+    "schema_composition",
+    "query_shaping",
+    "federation"
+  ],
+  "helps_with": [
+    "frontend_data_aggregation",
+    "overfetch_elimination"
+  ],
+  "does_not_solve": [
+    "firehose_streaming",
+    "simple_crud_without_schema_needs"
+  ],
+  "risks": [
+    "resolver_n_plus_one",
+    "query_depth_abuse"
+  ],
+  "common_patterns": [
+    "backend_for_frontend"
+  ],
+  "failure_modes": [
+    "expensive_query_dos",
+    "schema_merge_conflicts"
+  ],
+  "tradeoffs": [
+    "client_flexibility_vs_server_guardrails"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 8000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 120
+  },
+  "palette": {
+    "group": "Communication",
+    "icon": "box",
+    "color": "#4f46e5"
+  }
+}

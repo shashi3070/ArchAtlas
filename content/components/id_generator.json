@@ -1,0 +1,45 @@
+{
+  "type": "id_generator",
+  "kind": "implementation",
+  "category": "coordination",
+  "name": "ID Generator (Snowflake)",
+  "description": "Time-ordered unique ID issuance without central coordination (machine-id + timestamp).",
+  "version": "0.1.0",
+  "capabilities": [
+    "k_ordered_ids",
+    "no_coordination_needed",
+    "embeds_timestamp"
+  ],
+  "helps_with": [
+    "sharded_primary_keys",
+    "sortable_event_ids"
+  ],
+  "does_not_solve": [
+    "cryptographically_random_ids",
+    "sequential_zero_gap_ids"
+  ],
+  "risks": [
+    "clock_rewind_duplicates",
+    "machine_id_exhaustion"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "ntp_step_backwards",
+    "dup_machine_ids"
+  ],
+  "tradeoffs": [
+    "sortability_vs_randomness_tradeoff"
+  ],
+  "capacity_defaults": {
+    "ids_per_sec": 100000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 10
+  },
+  "palette": {
+    "group": "Coordination",
+    "icon": "box",
+    "color": "#6d28d9"
+  }
+}

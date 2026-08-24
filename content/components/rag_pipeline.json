@@ -1,0 +1,47 @@
+{
+  "type": "rag_pipeline",
+  "kind": "concept",
+  "category": "ai_genai",
+  "name": "RAG Pipeline",
+  "description": "Retrieval-augmented generation flow: ingest -> chunk -> embed -> retrieve -> ground the answer.",
+  "version": "0.1.0",
+  "capabilities": [
+    "chunking_strategy",
+    "hybrid_retrieval",
+    "citation_grounding"
+  ],
+  "helps_with": [
+    "knowledge_freshness_without_retraining",
+    "grounded_answers"
+  ],
+  "does_not_solve": [
+    "pure_structured_lookups",
+    "zero_latency_responses"
+  ],
+  "risks": [
+    "retrieval_miss_poisons_answers",
+    "chunk_overlap_tuning"
+  ],
+  "common_patterns": [
+    "cqrs"
+  ],
+  "failure_modes": [
+    "stale_index",
+    "embedding_model_drift"
+  ],
+  "tradeoffs": [
+    "groundedness_vs_pipeline_complexity"
+  ],
+  "capacity_defaults": {
+    "queries_per_sec": 20,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 150
+  },
+  "palette": {
+    "group": "AI",
+    "icon": "box",
+    "color": "#9333ea"
+  }
+}

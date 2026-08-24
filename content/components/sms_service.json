@@ -1,0 +1,45 @@
+{
+  "type": "sms_service",
+  "kind": "implementation",
+  "category": "notifications",
+  "name": "SMS Sender (Twilio)",
+  "description": "Carrier-relayed text messaging with delivery receipts and number management.",
+  "version": "0.1.0",
+  "capabilities": [
+    "global_carrier_reach",
+    "delivery_receipts",
+    "short_codes"
+  ],
+  "helps_with": [
+    "otp_fallback_channel",
+    "critical_alerts_to_users"
+  ],
+  "does_not_solve": [
+    "rich_media",
+    "free_bulk_messaging"
+  ],
+  "risks": [
+    "per_message_cost",
+    "carrier_filtering"
+  ],
+  "common_patterns": [],
+  "failure_modes": [
+    "carrier_spam_filters",
+    "number_reputation"
+  ],
+  "tradeoffs": [
+    "universality_vs_cost"
+  ],
+  "capacity_defaults": {
+    "messages_per_sec": 100,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 25
+  },
+  "palette": {
+    "group": "Notifications",
+    "icon": "box",
+    "color": "#ea580c"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type": "cron_scheduler",
+  "kind": "implementation",
+  "category": "workflow",
+  "name": "Cron Scheduler",
+  "description": "Time-based job triggering with missed-run policies and concurrency guards.",
+  "version": "0.1.0",
+  "capabilities": [
+    "cron_expressions",
+    "missed_run_handling",
+    "job_locking"
+  ],
+  "helps_with": [
+    "periodic_reports",
+    "maintenance_windows"
+  ],
+  "does_not_solve": [
+    "event_triggered_flows",
+    "sub_minute_precise_scheduling"
+  ],
+  "risks": [
+    "overlapping_runs",
+    "timezone_dst_edges"
+  ],
+  "common_patterns": [
+    "leader_election"
+  ],
+  "failure_modes": [
+    "double_fire_after_failover",
+    "skipped_ticks"
+  ],
+  "tradeoffs": [
+    "simplicity_vs_dynamic_scheduling"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec": 1000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 20
+  },
+  "palette": {
+    "group": "Workflow",
+    "icon": "box",
+    "color": "#4338ca"
+  }
+}

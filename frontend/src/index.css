@@ -503,6 +503,34 @@ button:disabled {
   font-size: 13px;
 }
 
+.palette-search {
+  width: calc(100% - 20px);
+  margin: 0 10px 10px;
+  padding: 6px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.palette-search:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: -1px;
+}
+
+.palette-item-pattern {
+  border-style: dashed;
+  border-color: #94a3b8;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.palette-item-icon {
+  display: inline-flex;
+  vertical-align: -2px;
+  margin-right: 7px;
+}
+
+
 .palette-group {
   margin-bottom: 12px;
 }
@@ -541,8 +569,10 @@ button:disabled {
 .inspector {
   position: absolute;
   top: 12px;
-  left: 12px;
+  right: 12px;
   width: 240px;
+  max-height: calc(100% - 24px);
+  overflow-y: auto;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -631,39 +661,77 @@ button:disabled {
 
 /* ---------- canvas component node ---------- */
 .cnode {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 110px;
-  max-width: 210px;
-  padding: 8px 12px;
+  min-width: 120px;
+  max-width: 220px;
+  padding: 8px 10px;
   background: #ffffff;
-  border: 1.5px solid #94a3b8;
+  border: 1.5px solid color-mix(in srgb, var(--nv, #94a3b8) 45%, #cbd5e1);
+  border-left: 3.5px solid var(--nv, #94a3b8);
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgb(15 23 42 / 12%);
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 8%),
+    0 3px 8px rgb(15 23 42 / 10%);
   font-size: 13px;
 }
 
 .cnode-selected {
   border-color: #4f46e5;
+  border-left-color: var(--nv, #4f46e5);
   box-shadow:
     0 0 0 3px rgb(79 70 229 / 16%),
     0 2px 6px rgb(15 23 42 / 12%);
 }
 
-.cnode-badge {
+/* Pattern annotation nodes: dashed slate, non-infra look */
+.cnode-pattern {
+  --nv: #64748b;
+  border: 1.5px dashed #94a3b8;
+  border-left: 3.5px solid #64748b;
+  background: #f8fafc;
+}
+.cnode-pattern .cnode-icon {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+.cnode-pattern .cnode-badge {
+  display: none;
+}
+
+.cnode-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 24px;
+  width: 27px;
+  height: 27px;
   flex-shrink: 0;
-  border-radius: 6px;
-  background: #eef2ff;
-  color: #3730a3;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--nv, #94a3b8) 14%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--nv, #94a3b8) 35%, #ffffff);
+  color: var(--nv, #64748b);
+}
+
+.cnode-badge {
+  position: absolute;
+  top: -7px;
+  right: -6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 5px;
+  height: 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--nv, #64748b) 88%, #000000);
+  color: #ffffff;
   font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 25%);
 }
 
 .cnode-text {
@@ -1049,6 +1117,18 @@ button:disabled {
   overflow: hidden;
 }
 
+/* When the mentor chat is open, slide brief/result left so both stay visible. */
+.chal-panel.shifted {
+  right: 424px;
+}
+
+@media (max-width: 1100px) {
+  .chal-panel.shifted {
+    right: 12px;
+    visibility: hidden;
+  }
+}
+
 .chal-narrative {
   font-size: 13.5px;
   color: #334155;
@@ -1125,18 +1205,115 @@ button:disabled {
   flex: 1;
 }
 
-.ask-goal {
-  display: grid;
-  grid-template-columns: 1fr auto;
+.ask-composer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.ask-composer input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.ask-provider-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
   padding: 10px 14px;
 }
 
-.ask-runrow {
+.ask-provider-row select {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.ask-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 14px;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ask-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ask-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ask-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  max-width: 100%;
+}
+
+.ask-bubble {
+  max-width: 92%;
+  padding: 8px 11px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.ask-bubble-user {
+  align-self: flex-end;
+  background: #eef2ff;
+  color: #312e81;
+}
+
+.ask-bubble-mentor {
+  align-self: flex-start;
+  background: #f1f5f9;
+  color: #0f172a;
+  white-space: pre-wrap;
+}
+
+.ask-bubble-mentor p {
+  margin: 0;
+}
+
+.ask-fix {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.solution-actions {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.solution-preview {
+  height: 300px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+  margin-bottom: 10px;
+  overflow: hidden;
 }
 
 .ask-reply p {
@@ -1162,4 +1339,59 @@ button:disabled {
 
 .ask-proposal h4 {
   margin: 6px 0 2px;
+}
+
+
+/* Right-click context menu on canvas nodes/edges */
+.ctx-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 170px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ctx-item {
+  text-align: left;
+  padding: 7px 11px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.ctx-item:hover {
+  background: #f1f5f9;
+}
+
+.ctx-danger {
+  color: #b91c1c;
+}
+
+.ctx-danger:hover {
+  background: #fef2f2;
+}
+
+/* Thicker traffic edges + faster flow animation for async/batch */
+.react-flow__edge-path {
+  stroke-width: 2.2;
+}
+
+.react-flow__edge.animated .react-flow__edge-path,
+.react-flow__edge-path.animated {
+  stroke-dasharray: 7 5;
+  animation: dashflow 0.55s linear infinite;
+}
+
+@keyframes dashflow {
+  to {
+    stroke-dashoffset: -12;
+  }
 }

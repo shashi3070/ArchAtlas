@@ -1,0 +1,41 @@
+{
+  "type": "transactional_outbox",
+  "kind": "pattern",
+  "category": "patterns",
+  "name": "Pattern: Transactional Outbox",
+  "description": "Annotation: commit domain events in the same DB transaction, relay asynchronously.",
+  "version": "0.1.0",
+  "capabilities": [
+    "atomic_write_publish",
+    "relay_polling",
+    "at_least_once_events"
+  ],
+  "helps_with": [
+    "dual_write_elimination",
+    "reliable_event_emission"
+  ],
+  "does_not_solve": [
+    "sub_ms_event_delivery",
+    "external_api_calls_inside_txn"
+  ],
+  "risks": [
+    "relay_lag",
+    "outbox_table_growth"
+  ],
+  "common_patterns": [
+    "cdc_pipeline",
+    "saga"
+  ],
+  "failure_modes": [
+    "relay_single_instance_contention",
+    "ordering_per_entity_violations"
+  ],
+  "tradeoffs": [
+    "reliability_vs_event_freshness"
+  ],
+  "palette": {
+    "group": "Patterns",
+    "icon": "sparkles",
+    "color": "#64748b"
+  }
+}

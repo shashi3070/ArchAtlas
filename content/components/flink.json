@@ -1,0 +1,47 @@
+{
+  "type": "flink",
+  "kind": "implementation",
+  "category": "processing",
+  "name": "Apache Flink",
+  "description": "Stateful stream processor with exactly-once semantics, windows, and CEP pattern matching.",
+  "version": "0.1.0",
+  "capabilities": [
+    "exactly_once_stateful_streaming",
+    "event_time_windows",
+    "cep"
+  ],
+  "helps_with": [
+    "realtime_aggregations",
+    "fraud_pattern_detection"
+  ],
+  "does_not_solve": [
+    "one_off_batch_reports",
+    "cheap_glue_scripts"
+  ],
+  "risks": [
+    "checkpoint_size_blowups",
+    "backpressure_cascades"
+  ],
+  "common_patterns": [
+    "backpressure"
+  ],
+  "failure_modes": [
+    "checkpoint_timeout",
+    "watermark_skew"
+  ],
+  "tradeoffs": [
+    "stateful_correctness_vs_operational_weight"
+  ],
+  "capacity_defaults": {
+    "jobs_per_sec_per_instance": 50000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 500
+  },
+  "palette": {
+    "group": "Processing",
+    "icon": "box",
+    "color": "#0d9488"
+  }
+}

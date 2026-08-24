@@ -1,0 +1,48 @@
+{
+  "type": "reverse_proxy",
+  "kind": "implementation",
+  "category": "traffic",
+  "name": "Reverse Proxy (Nginx)",
+  "description": "Self-managed L7 proxy for TLS termination, compression, static serving, and upstream load balancing.",
+  "version": "0.1.0",
+  "capabilities": [
+    "tls_termination",
+    "load_distribution",
+    "compression",
+    "static_file_serving"
+  ],
+  "helps_with": [
+    "cheap_edge_termination",
+    "upstream_pooling"
+  ],
+  "does_not_solve": [
+    "global_traffic_management",
+    "advanced_auth_flows"
+  ],
+  "risks": [
+    "connection_exhaustion",
+    "config_errors"
+  ],
+  "common_patterns": [
+    "sidecar"
+  ],
+  "failure_modes": [
+    "fd_exhaustion",
+    "slowloris"
+  ],
+  "tradeoffs": [
+    "control_vs_operational_burden"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 30000,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_node_month": 40
+  },
+  "palette": {
+    "group": "Traffic",
+    "icon": "box",
+    "color": "#2563eb"
+  }
+}
