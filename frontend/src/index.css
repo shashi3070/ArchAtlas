@@ -586,17 +586,24 @@ button:disabled {
   font-size: 14px;
 }
 
-/* On the challenge page the brief/result panel owns the right edge -
-   park node/edge inspectors just left of it so Configure stays visible. */
-.chal-shell .inspector {
-  right: 424px;
-  z-index: 16;
+/* On the challenge page Configure opens as a centered modal above everything */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(15 23 42 / 35%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
 }
 
-@media (max-width: 1100px) {
-  .chal-shell .inspector {
-    right: 12px;
-  }
+.modal-backdrop .inspector {
+  position: relative;
+  right: auto;
+  top: auto;
+  width: 340px;
+  max-height: 82vh;
+  box-shadow: 0 18px 48px rgb(15 23 42 / 30%);
 }
 
 .field {

@@ -467,8 +467,28 @@ function RunChallenge({ cid }: { cid: string }) {
             <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />
           )}
 
-          {store.selectedNodeId && !showAsk && <NodeInspector />}
-          {!store.selectedNodeId && store.selectedEdgeId && !showAsk && <EdgeInspector />}
+          {store.selectedNodeId && !showAsk && (
+            <div
+              className="modal-backdrop"
+              onClick={(e) => {
+                if (e.target === e.currentTarget)
+                  useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+              }}
+            >
+              <NodeInspector />
+            </div>
+          )}
+          {!store.selectedNodeId && store.selectedEdgeId && !showAsk && (
+            <div
+              className="modal-backdrop"
+              onClick={(e) => {
+                if (e.target === e.currentTarget)
+                  useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+              }}
+            >
+              <EdgeInspector />
+            </div>
+          )}
 
           {showAsk && (
             <AskPanel
