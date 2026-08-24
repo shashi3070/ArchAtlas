@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SDP_", env_file=".env", extra="ignore")
 
-    app_name: str = "system-design-platform-api"
+    app_name: str = "archatlas-api"
     app_version: str = "0.1.0"
     environment: str = "local"
     cors_origins: list[str] = [
@@ -30,6 +30,13 @@ class Settings(BaseSettings):
     llm_model: str = ""
     # Per-client-key completed (non-cached) LLM calls per UTC day.
     llm_daily_limit: int = 200
+
+    # Per-provider API keys (win over llm_api_key for that provider).
+    openai_api_key: str = ""
+    azure_api_key: str = ""
+    groq_api_key: str = ""
+    anthropic_api_key: str = ""
+    gemini_api_key: str = ""
 
 
 @lru_cache(maxsize=1)

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "system-design-backend"
+name = "archatlas-backend"
 version = "0.1.0"
 description = "Backend for the interactive system-design learning platform (see PLAN.md)."
 requires-python = ">=3.11"

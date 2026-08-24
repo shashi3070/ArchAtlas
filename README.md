@@ -1,4 +1,4 @@
-# System Design Platform
+# ArchAtlas
 
 Interactive system-design learning platform: **learn → build → evaluate →
 diagnose → modify → re-evaluate → understand**.

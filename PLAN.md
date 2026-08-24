@@ -746,6 +746,25 @@ Work: LLM gateway + 4 provider adapters + routing table + usage ledger + respons
 Deliverables: "Ask AI why" works on every evaluation item; proposals require approval.
 **Exit (`SYSTEM.md` §51):** AI never contradicts deterministic facts without flagging uncertainty; provider swap is config-only (integration test proves same conversation across all 4 adapters).
 
+## Phase 5.5 — Node Library Expansion (≈1–2 weeks)
+
+**Goal:** Grow the component catalog from 11 to ~150–200 nodes over time (launch with ~60–80 high-value), so challenges and the AI tutor can discuss real systems vocabulary. Node ≠ Technology: conceptual components, technology implementations, and architectural patterns are distinct kinds.
+
+**Node kinds:** `concept` (abstract role, e.g. Cache, Message Queue), `implementation` (concrete tech, e.g. Redis, Kafka), `pattern` (behavioral/architectural motif placed as annotation nodes, e.g. Circuit Breaker, Saga). Patterns are visually distinct in canvas/palette and are EXCLUDED from engine capacity/connectivity/SPOF math.
+
+**Metadata schema per node** (extends current catalog JSON): `kind`, `category`, `display_name`, `capabilities`, `helps_with`, `does_not_solve`, `risks`, `common_patterns`, `failure_modes`, `tradeoffs`, `properties` defaults, `capacity_defaults` (implementations only), `cost_defaults`, `palette {group, icon, color}`. The AI tutor consumes `helps_with`/`does_not_solve`/`risks` verbatim; engine consumes `capacity_defaults` + role mapping.
+
+**Engine integration (additive-only rule):** new types join role frozensets (`DatastoreTypes`, `QueueTypes`, `CacheTypes`, `ComputeTypes`, `LBTypes`) so existing rules recognize them; behavior for the original 11 types is frozen (golden fixtures must stay green). Capacity math for alternate computes (serverless/k8s) is a follow-up — the api-tier RPS rule still keys on type `api`.
+
+**Launch categories (~70 new):** Traffic (api_gateway, reverse_proxy, global_load_balancer, waf, dns, service_mesh); Compute (serverless_function, kubernetes, autoscaling_group); Cache (memcached); SQL (mysql, cockroachdb, spanner, timescaledb); NoSQL (cassandra, dynamodb, neo4j); Analytics/Search (clickhouse, elasticsearch, influxdb, data_warehouse); Storage (block_storage, file_storage); Messaging (sqs, pubsub, nats, kinesis, event_bus); Data processing (spark, flink, airflow, cdc_pipeline); Auth (identity_provider, secrets_manager); Observability (metrics_collector, log_aggregator, tracing_collector, alert_manager); Service comm (grpc, graphql_gateway); Coordination (distributed_lock, leader_election, id_generator); Workflow (workflow_engine, cron_scheduler); Payments (payment_gateway, ledger_service); Notifications (email_service, push_service, sms_service); Media (media_transcoder); Realtime (websocket_gateway, mqtt_broker); Feed (fanout_service); AI (llm_api, embeddings_model, vector_database, reranker, llm_router); RAG/Agents (rag_pipeline, tool_orchestrator, mcp_server, moderation_service); ML infra (recommendation_engine, feature_store, model_registry); Patterns (circuit_breaker, saga, cqrs, transactional_outbox, sidecar, backpressure, bulkhead, event_sourcing).
+
+**Palette UX:** grouped by category (new groups ordered after existing), search box filters across name/capabilities/category; pattern group rendered last with distinct styling.
+
+**Follow-on within this phase:** expand glossary terms for new concepts; extend challenge packs + learning modules to exercise the new nodes; regenerate golden solutions via scripts; capacity model for serverless/managed computes.
+
+Deliverables: ~75-node launch library live in palette + tutor-aware metadata.
+**Exit:** all golden fixtures pass unchanged; every new node renders with correct group/badge; palette search finds nodes by capability keyword.
+
 ## Phase 6 — Interview Agent (≈2 weeks)
 
 **Goal:** Simulated system-design interviews.
