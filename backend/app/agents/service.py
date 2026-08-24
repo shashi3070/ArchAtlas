@@ -16,6 +16,8 @@ from app.agents.context import (
     requirements_block,
 )
 from app.agents.prompts import (
+    CHAT_SYSTEM,
+    CHAT_USER,
     CRITIQUE_USER,
     EXPLAIN_USER,
     HINT_USER,
@@ -69,15 +71,22 @@ def _call(
     owner_key: str | None,
     user: str,
     max_tokens: int,
+    system: str = MENTOR_SYSTEM,
+    provider_id: str = "",
+    model_override: str = "",
+    json_mode: bool = False,
 ) -> tuple[str, bool]:
     completion, cache_hit = gateway.complete(
         db,
         task=task,
         owner_key=owner_key,
-        system=MENTOR_SYSTEM,
+        system=system,
         user=user,
         prompt_version=PROMPT_VERSION,
         max_tokens=max_tokens,
+        provider_id=provider_id,
+        model_override=model_override,
+        json_mode=json_mode,
     )
     return completion.text, cache_hit
 
@@ -131,7 +140,7 @@ def explain_result(
         task="explain",
         owner_key=owner_key,
         user=EXPLAIN_USER.format(evidence=evaluation_context(result)),
-        max_tokens=700,
+        max_tokens=1500,
     )
     return {
         "task": "explain",
@@ -160,7 +169,12 @@ def critique_graph(
         overview=graph_overview(graph),
     )
     text, cache_hit = _call(
-        get_gateway(), db, task="critique", owner_key=owner_key, user=user, max_tokens=800
+        get_gateway(),
+        db,
+        task="critique",
+        owner_key=owner_key,
+        user=user,
+        max_tokens=2200,
     )
     return {"task": "critique", "source": "llm", "text": text, "cache_hit": cache_hit}
 
@@ -185,7 +199,12 @@ def challenge_hint(
         revealed="\n".join(f"- {h}" for h in revealed) or "(none)",
     )
     text, cache_hit = _call(
-        get_gateway(), db, task="hint", owner_key=owner_key, user=user, max_tokens=150
+        get_gateway(),
+        db,
+        task="hint",
+        owner_key=owner_key,
+        user=user,
+        max_tokens=600,
     )
     return {"task": "hint", "source": "llm", "text": text, "cache_hit": cache_hit}
 
@@ -199,7 +218,13 @@ def propose_diff(
         overview=graph_overview(graph),
     )
     text, cache_hit = _call(
-        get_gateway(), db, task="proposal", owner_key=owner_key, user=user, max_tokens=900
+        get_gateway(),
+        db,
+        task="proposal",
+        owner_key=owner_key,
+        user=user,
+        max_tokens=2600,
+        json_mode=True,
     )
     return {
         "task": "proposal",
@@ -212,20 +237,129 @@ def propose_diff(
 def parse_proposal(text: str) -> GraphDiffProposal:
     """Parse the model's JSON (tolerating markdown fences) into a validated
     proposal. Anything unparseable raises AgentError - never guess."""
-    cleaned = text.strip()
-    if cleaned.startswith("```"):
-        stripped = cleaned.strip("`")
-        # drop an optional language tag on the first line
-        parts = stripped.split("\n", 1)
-        cleaned = parts[1] if len(parts) == 2 else parts[0]
-    start, end = cleaned.find("{"), cleaned.rfind("}")
-    if start < 0 or end <= start:
-        raise AgentError("proposal response contained no JSON object")
-    try:
-        data = json.loads(cleaned[start : end + 1])
-    except json.JSONDecodeError as exc:
-        raise AgentError(f"proposal JSON was invalid: {exc}") from exc
+    data = _extract_json_object(text)
     try:
         return GraphDiffProposal.model_validate(data)
     except ValidationError as exc:
         raise AgentError(f"proposal did not match schema: {exc.error_count()} error(s)") from exc
+
+
+class ChatMessage(BaseModel):
+    role: str = Field(pattern="^(user|assistant)$")
+    content: str = Field(min_length=1, max_length=4000)
+
+
+class ChatReply(BaseModel):
+    """Strict chat contract: conversational answer + optional machine-usable
+    fix so the canvas can render recommended changes, plus clickable
+    follow-up suggestions for the learner."""
+
+    reply: str = ""
+    suggest: list[str] = Field(default_factory=list)
+    fix: GraphDiffProposal = Field(default_factory=GraphDiffProposal)
+
+
+def _clean_suggestions(raw: list[str]) -> list[str]:
+    out: list[str] = []
+    for item in raw[:4]:
+        text = str(item).strip()[:120]
+        if text:
+            out.append(text)
+    return out
+
+
+_FALLBACK_SUGGESTIONS = [
+    "Explain the FAIL findings in simple terms",
+    "How do I remove the single points of failure?",
+    "Propose one concrete improvement to this design",
+]
+
+
+def _extract_json_object(text: str) -> dict[str, Any]:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        stripped = cleaned.strip("`")
+        parts = stripped.split("\n", 1)
+        cleaned = parts[1] if len(parts) == 2 else parts[0]
+    start, end = cleaned.find("{"), cleaned.rfind("}")
+    if start < 0 or end <= start:
+        raise AgentError("response contained no JSON object")
+    try:
+        data: dict[str, Any] = json.loads(cleaned[start : end + 1])
+        return data
+    except json.JSONDecodeError as exc:
+        raise AgentError(f"JSON was invalid: {exc}") from exc
+
+
+def chat(
+    db: Any,
+    owner_key: str | None,
+    *,
+    result: dict[str, Any],
+    graph: dict[str, Any],
+    messages: list[dict[str, Any]],
+    goal: str = "",
+    provider_id: str = "",
+    model_override: str = "",
+) -> dict[str, Any]:
+    """Full-context mentor chat: canvas graph + fresh evaluation evidence go
+    in; a strict {reply, fix} JSON comes out. The fix is proposal-only."""
+    history_lines: list[str] = []
+    for m in messages[:-1][-8:]:
+        who = "learner" if m.get("role") == "user" else "mentor"
+        history_lines.append(f"{who}: {str(m.get('content', ''))[:500]}")
+    latest = messages[-1]["content"] if messages else ""
+
+    user = CHAT_USER.format(
+        evidence=evaluation_context(result),
+        overview=graph_overview(graph),
+        goal_line=f"LEARNER GOAL: {goal}" if goal else "",
+        history="\n".join(history_lines) or "(new conversation)",
+        message=latest,
+    )
+    text, cache_hit = _call(
+        get_gateway(),
+        db,
+        task="chat",
+        owner_key=owner_key,
+        system=CHAT_SYSTEM,
+        user=user,
+        max_tokens=3200,
+        provider_id=provider_id,
+        model_override=model_override,
+        json_mode=True,
+    )
+    data: dict[str, Any] | None = None
+    try:
+        data = _extract_json_object(text)
+    except AgentError:
+        data = None
+    parsed: ChatReply | None = None
+    if data is not None:
+        try:
+            parsed = ChatReply.model_validate(data)
+        except ValidationError:
+            parsed = None
+    if parsed is None:
+        # Conversational graceful degradation: a mentor answer that is not
+        # strict JSON still reaches the learner; only machine-usable fixes
+        # require the schema. Empty responses remain an error.
+        reply_text = text.strip()
+        if not reply_text:
+            raise AgentError("model returned an empty chat reply")
+        return {
+            "task": "chat",
+            "reply": reply_text,
+            "suggest": list(_FALLBACK_SUGGESTIONS),
+            "fix": GraphDiffProposal().model_dump(),
+            "raw": text,
+            "cache_hit": cache_hit,
+        }
+    return {
+        "task": "chat",
+        "reply": parsed.reply,
+        "suggest": _clean_suggestions(parsed.suggest) or list(_FALLBACK_SUGGESTIONS),
+        "fix": parsed.fix.model_dump(),
+        "raw": text,
+        "cache_hit": cache_hit,
+    }

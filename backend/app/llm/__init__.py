@@ -10,7 +10,9 @@ from app.llm.gateway import (
     Gateway,
     LLMRateLimited,
     LLMUnavailable,
+    build_named_provider,
     get_gateway,
+    list_providers,
     reset_gateway_for_tests,
 )
 from app.llm.providers import Completion, LLMProviderError, Provider
@@ -22,6 +24,8 @@ __all__ = [
     "LLMRateLimited",
     "LLMUnavailable",
     "Provider",
+    "build_named_provider",
     "get_gateway",
+    "list_providers",
     "reset_gateway_for_tests",
 ]

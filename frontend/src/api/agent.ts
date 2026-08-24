@@ -42,10 +42,70 @@ export interface ProposalReply {
   cache_hit: boolean
 }
 
+export interface ChatMessageInput {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface ChatReply {
+  task: string
+  reply: string
+  suggest?: string[]
+  fix: AgentProposal
+  raw: string
+  cache_hit: boolean
+}
+
+export interface ProviderInfo {
+  id: string
+  label: string
+  requires_key: boolean
+  key_present: boolean
+  default_model: string
+  active: boolean
+}
+
+export interface ProvidersReply {
+  active: string
+  providers: ProviderInfo[]
+}
+
+/** Result of applying a proposal onto the canvas. */
+export interface ApplyReport {
+  applied: number
+  skipped: string[]
+}
+
+export interface ProviderModelsReply {
+  provider: string
+  models: string[]
+  default_model: string
+  error: string | null
+}
+
 export const agentApi = {
   explain: (result: unknown) => api.post<AgentReply>('/api/agent/explain', { result }),
   critique: (graph: CanonicalArchitectureGraph) =>
     api.post<AgentReply>('/api/agent/critique', { graph }),
   proposal: (graph: CanonicalArchitectureGraph, goal: string) =>
     api.post<ProposalReply>('/api/agent/proposal', { graph, goal }),
+  providers: () => api.get<ProvidersReply>('/api/agent/providers'),
+  models: (providerId: string) =>
+    api.get<ProviderModelsReply>(
+      `/api/agent/models?provider=${encodeURIComponent(providerId)}`,
+    ),
+  chat: (
+    graph: CanonicalArchitectureGraph,
+    messages: ChatMessageInput[],
+    providerId: string,
+    goal = '',
+    model = '',
+  ) =>
+    api.post<ChatReply>('/api/agent/chat', {
+      graph,
+      messages,
+      provider_id: providerId,
+      goal,
+      model,
+    }),
 }

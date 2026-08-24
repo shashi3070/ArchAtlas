@@ -22,7 +22,9 @@ class LLMProviderError(RuntimeError):
 class Provider(Protocol):
     name: str
 
-    def complete(self, system: str, user: str, *, max_tokens: int) -> Completion: ...
+    def complete(
+        self, system: str, user: str, *, max_tokens: int, json_mode: bool = False
+    ) -> Completion: ...
 
 
 _TIMEOUT = httpx.Timeout(60.0)
@@ -52,23 +54,34 @@ class OpenAICompatProvider:
     model: str
     azure: bool = False
 
-    def complete(self, system: str, user: str, *, max_tokens: int) -> Completion:
+    def complete(
+        self, system: str, user: str, *, max_tokens: int, json_mode: bool = False
+    ) -> Completion:
         headers = {"Content-Type": "application/json"}
         if self.azure:
             headers["api-key"] = self.api_key
         else:
             headers["Authorization"] = f"Bearer {self.api_key}"
+        body: dict[str, Any] = {
+            "model": self.model,
+            "max_tokens": max_tokens,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        }
+        if json_mode:
+            # OpenAI-compatible JSON mode (OpenAI, Groq, Azure): guarantees the
+            # content is a single valid JSON object - critical for {reply, fix}.
+            body["response_format"] = {"type": "json_object"}
+            if "gpt-oss" in self.model.lower():
+                # Reasoning tokens share the completion budget on gpt-oss;
+                # keep them small so the JSON document always fits.
+                body["reasoning_effort"] = "low"
         data = _post(
             f"{self.base_url.rstrip('/')}/chat/completions",
             headers,
-            {
-                "model": self.model,
-                "max_tokens": max_tokens,
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-            },
+            body,
         )
         try:
             text = data["choices"][0]["message"]["content"]
@@ -89,7 +102,9 @@ class AnthropicProvider:
     base_url: str = "https://api.anthropic.com/v1"
     model: str = "claude-3-5-haiku-latest"
 
-    def complete(self, system: str, user: str, *, max_tokens: int) -> Completion:
+    def complete(
+        self, system: str, user: str, *, max_tokens: int, json_mode: bool = False
+    ) -> Completion:
         data = _post(
             f"{self.base_url.rstrip('/')}/messages",
             headers={
@@ -121,7 +136,9 @@ class GeminiProvider:
     base_url: str = "https://generativelanguage.googleapis.com/v1beta"
     model: str = "gemini-2.0-flash"
 
-    def complete(self, system: str, user: str, *, max_tokens: int) -> Completion:
+    def complete(
+        self, system: str, user: str, *, max_tokens: int, json_mode: bool = False
+    ) -> Completion:
         data = _post(
             f"{self.base_url.rstrip('/')}/models/{self.model}:generateContent?key={self.api_key}",
             headers={"Content-Type": "application/json"},
@@ -152,7 +169,9 @@ class OllamaProvider:
     base_url: str = "http://localhost:11434"
     model: str = "llama3.1"
 
-    def complete(self, system: str, user: str, *, max_tokens: int) -> Completion:
+    def complete(
+        self, system: str, user: str, *, max_tokens: int, json_mode: bool = False
+    ) -> Completion:
         data = _post(
             f"{self.base_url.rstrip('/')}/api/chat",
             headers={"Content-Type": "application/json"},
