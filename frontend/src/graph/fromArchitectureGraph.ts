@@ -10,6 +10,7 @@ export interface LabNode {
   id: string
   type: 'component'
   position: { x: number; y: number }
+  selected?: boolean
   data: {
     label: string
     componentType: string

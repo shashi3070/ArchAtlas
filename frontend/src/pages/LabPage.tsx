@@ -220,12 +220,13 @@ function Lab() {
     const src = useLab.getState().nodes.find((n) => n.id === id)
     if (!src) return
     const newId = nextNodeId(src.data.componentType)
+    const clone = structuredClone(src)
+    clone.id = newId
+    clone.selected = true
+    clone.position = { x: src.position.x + 40, y: src.position.y + 48 }
     store.commit(({ nodes }) => {
-      nodes.push({
-        ...structuredClone(src),
-        id: newId,
-        position: { x: src.position.x + 40, y: src.position.y + 48 },
-      })
+      for (const n of nodes) n.selected = false
+      nodes.push(clone)
     })
     useLab.setState({ selectedNodeId: newId, selectedEdgeId: null })
   }

@@ -343,7 +343,7 @@ function RunChallenge({ cid }: { cid: string }) {
   )
 
   return (
-    <div className="lab-shell">
+    <div className="lab-shell chal-shell">
       <div className="lab-toolbar">
         <Link to="/challenges" className="btn ghost" aria-label="back to challenges">
           â† Challenges
@@ -467,8 +467,8 @@ function RunChallenge({ cid }: { cid: string }) {
             <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />
           )}
 
-          {store.selectedNodeId && <NodeInspector />}
-          {!store.selectedNodeId && store.selectedEdgeId && <EdgeInspector />}
+          {store.selectedNodeId && !showAsk && <NodeInspector />}
+          {!store.selectedNodeId && store.selectedEdgeId && !showAsk && <EdgeInspector />}
 
           {showAsk && (
             <AskPanel

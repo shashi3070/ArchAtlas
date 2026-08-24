@@ -586,6 +586,19 @@ button:disabled {
   font-size: 14px;
 }
 
+/* On the challenge page the brief/result panel owns the right edge -
+   park node/edge inspectors just left of it so Configure stays visible. */
+.chal-shell .inspector {
+  right: 424px;
+  z-index: 16;
+}
+
+@media (max-width: 1100px) {
+  .chal-shell .inspector {
+    right: 12px;
+  }
+}
+
 .field {
   display: block;
   font-size: 12px;
