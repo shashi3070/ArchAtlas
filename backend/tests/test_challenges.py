@@ -201,20 +201,29 @@ def test_challenge_endpoints(client):  # client fixture from conftest
 def test_submit_scores_and_counts_attempts(client):
     cid = "us-1-shorten-serve"
     graph = _solution(cid)
-    first = client.post(f"/api/challenges/{cid}/submit", json={"graph": graph}).json()
+    key = {"X-Client-Key": "attempt-counter"}
+    first = client.post(
+        f"/api/challenges/{cid}/submit", json={"graph": graph}, headers=key
+    ).json()
     assert first["passed"] is True
     assert first["attempt"] == 1
-    second = client.post(f"/api/challenges/{cid}/submit", json={"graph": graph}).json()
+    second = client.post(
+        f"/api/challenges/{cid}/submit", json={"graph": graph}, headers=key
+    ).json()
     assert second["attempt"] == 2
 
-    history = client.get(f"/api/challenges/{cid}/submissions").json()
+    history = client.get(f"/api/challenges/{cid}/submissions", headers=key).json()
     assert [h["attempt"] for h in history] == [1, 2]
     assert all(h["passed"] for h in history)
 
 
 def test_submit_rejects_invalid_graph(client):
     bad = {"id": "x", "version": 1, "nodes": [{"id": "n1"}], "edges": []}
-    res = client.post("/api/challenges/us-1-shorten-serve/submit", json={"graph": bad})
+    res = client.post(
+        "/api/challenges/us-1-shorten-serve/submit",
+        json={"graph": bad},
+        headers={"X-Client-Key": "bad-graph"},
+    )
     assert res.status_code == 422
 
 
@@ -222,7 +231,40 @@ def test_submit_reports_failed_design(client):
     ch = challenge_loader.get_challenge("us-2-read-scale")
     assert ch is not None
     start = challenge_loader.load_starting_graph("overloaded_db")  # unrelated mess
-    res = client.post("/api/challenges/us-2-read-scale/submit", json={"graph": start})
+    res = client.post(
+        "/api/challenges/us-2-read-scale/submit",
+        json={"graph": start},
+        headers={"X-Client-Key": "failed-design"},
+    )
     assert res.status_code == 200
     body = res.json()
     assert body["passed"] is False
+
+
+# ---------------- reference-solution reveal (spoiler-gated) ----------------
+
+def test_solution_locked_until_first_attempt(client):
+    res = client.get("/api/challenges/us-1-shorten-serve/solution")
+    assert res.status_code == 403
+    assert "at least one attempt" in res.json()["detail"]
+
+
+def test_solution_unlocks_after_attempt(client):
+    graph = _solution("us-1-shorten-serve")
+    submitted = client.post(
+        "/api/challenges/us-1-shorten-serve/submit",
+        json={"graph": graph},
+        headers={"X-Client-Key": "solver-1"},
+    )
+    assert submitted.status_code == 200
+
+    res = client.get(
+        "/api/challenges/us-1-shorten-serve/solution",
+        headers={"X-Client-Key": "solver-1"},
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["graph"]["nodes"], "solution graph missing nodes"
+    assert isinstance(body["score"], (int, float))
+    assert body["evaluation"]["score"] == pytest.approx(body["score"])
+    assert body["evaluation"]["passed"] is True

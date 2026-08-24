@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import {
   Background,
   Controls,
@@ -16,16 +16,19 @@ import {
 } from '@xyflow/react'
 
 import { architecturesApi } from '../api/architectures'
-import type { AgentProposal } from '../api/agent'
+import type { ApplyReport, AgentProposal } from '../api/agent'
 import { evaluateApi, type EvaluationResult } from '../api/evaluate'
 import { AskPanel } from '../components/lab/AskPanel'
 import { ComponentNode } from '../components/lab/ComponentNode'
+import { ContextMenu, type MenuItem } from '../components/lab/ContextMenu'
 import { EdgeInspector } from '../components/lab/EdgeInspector'
 import { EvaluationPanel, type WorkloadInput } from '../components/lab/EvaluationPanel'
 import { NodeInspector } from '../components/lab/NodeInspector'
 import { Palette, useComponentCatalog } from '../components/lab/Palette'
+import { applyProposalToStore } from '../graph/applyProposal'
 import {
   fromArchitectureGraph,
+  markerForDirection,
   type LabEdge,
   type LabNode,
 } from '../graph/fromArchitectureGraph'
@@ -94,15 +97,18 @@ function Lab() {
 
   const onConnect = useCallback(
     (connection: Connection) =>
-      store.commit(({ edges: eds }) => {
-        addEdge(
+      store.commit((draft) => {
+        // addEdge returns a NEW array - assign it back or the edge vanishes.
+        draft.edges = addEdge(
           {
             ...connection,
             id: nextEdgeId(),
+            markerEnd: markerForDirection('unidirectional'),
+            animated: true,
             data: { traffic_type: 'sync_request', direction: 'unidirectional', protocol: null },
           },
-          eds as unknown as FlowEdge[],
-        )
+          draft.edges as unknown as FlowEdge[],
+        ) as unknown as LabEdge[]
       }),
     [store],
   )
@@ -162,92 +168,8 @@ function Lab() {
     }
   }
 
-  // Fresh evaluation for AI grounding; shares state with the eval panel.
-  const evaluateForAsk = async (): Promise<EvaluationResult> => {
-    setEvalLoading(true)
-    setEvalError(null)
-    try {
-      const result = await evaluateApi.evaluate(currentGraph(), store.archId)
-      setEvalResult(result)
-      return result
-    } catch (e) {
-      const message = (e as Error).message
-      setEvalError(message)
-      throw new Error(message)
-    } finally {
-      setEvalLoading(false)
-    }
-  }
-
-  const onApplyProposal = (proposal: AgentProposal) => {
-    store.commit(({ nodes: ns, edges: eds }) => {
-      const refToId = new Map<string, string>()
-      const maxX = ns.reduce((m, n) => Math.max(m, n.position.x), 0)
-      proposal.add_nodes.forEach((a, i) => {
-        const comp = catalogMap.get(a.component_type)
-        const id = nextNodeId(a.component_type)
-        refToId.set(a.ref, id)
-        ns.push({
-          id,
-          type: 'component',
-          position: { x: maxX + 140, y: i * 110 },
-          data: {
-            label: a.name || comp?.name || a.component_type,
-            componentType: a.component_type,
-            technology: null,
-            capacity: {},
-            availability: { replicas: Math.max(1, a.replicas ?? 1) },
-            deployment: {},
-            properties: {},
-          },
-        })
-      })
-      const resolve = (ref: string): string | null => {
-        if (refToId.has(ref)) return refToId.get(ref)!
-        return ns.some((n) => n.id === ref) ? ref : null
-      }
-      for (const c of proposal.connect) {
-        const s = resolve(c.source_ref)
-        const t = resolve(c.target_ref)
-        if (!s || !t || s === t) continue
-        eds.push({
-          id: nextEdgeId(),
-          source: s,
-          target: t,
-          animated: c.traffic_type === 'async_event' || c.traffic_type === 'batch',
-          data: {
-            traffic_type:
-              c.traffic_type === 'async_event' ||
-              c.traffic_type === 'replication' ||
-              c.traffic_type === 'batch'
-                ? c.traffic_type
-                : 'sync_request',
-            direction: 'unidirectional',
-            protocol: null,
-          },
-        })
-      }
-      for (const sp of proposal.set_properties) {
-        for (const n of ns) {
-          if (n.data.componentType !== sp.match_component_type) continue
-          if (sp.properties && Object.keys(sp.properties).length > 0) {
-            n.data.properties = { ...(n.data.properties ?? {}), ...sp.properties }
-          }
-          if (sp.availability && Object.keys(sp.availability).length > 0) {
-            n.data.availability = { ...(n.data.availability ?? {}), ...sp.availability }
-          }
-        }
-      }
-      for (const rid of proposal.remove_node_ids) {
-        const idx = ns.findIndex((n) => n.id === rid)
-        if (idx >= 0) ns.splice(idx, 1)
-        for (let i = eds.length - 1; i >= 0; i--) {
-          if (eds[i].source === rid || eds[i].target === rid) eds.splice(i, 1)
-        }
-      }
-    })
-    setShowAsk(false)
-  }
+  const onApplyProposal = (proposal: AgentProposal): ApplyReport =>
+    applyProposalToStore(proposal, catalogMap)
 
   const onSave = async () => {
     setSaveState({ kind: 'saving' })
@@ -269,6 +191,80 @@ function Lab() {
     store.commit((draft) => {
       draft.nodes = autoLayout(draft.nodes, draft.edges.map((e) => ({ source: e.source, target: e.target })))
     })
+
+  // Right-click menus for nodes/edges (delete + jump to the inspector).
+  const [menu, setMenu] = useState<{
+    x: number
+    y: number
+    items: MenuItem[]
+  } | null>(null)
+
+  const deleteNodeById = (id: string) =>
+    store.commit(({ nodes: ns, edges: eds }) => {
+      const idx = ns.findIndex((n) => n.id === id)
+      if (idx >= 0) ns.splice(idx, 1)
+      for (let i = eds.length - 1; i >= 0; i--) {
+        if (eds[i].source === id || eds[i].target === id) eds.splice(i, 1)
+      }
+      useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+    })
+
+  const deleteEdgeById = (id: string) =>
+    store.commit(({ edges: eds }) => {
+      const idx = eds.findIndex((e) => e.id === id)
+      if (idx >= 0) eds.splice(idx, 1)
+      useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+    })
+
+  const duplicateNode = (id: string) => {
+    const src = useLab.getState().nodes.find((n) => n.id === id)
+    if (!src) return
+    const newId = nextNodeId(src.data.componentType)
+    store.commit(({ nodes }) => {
+      nodes.push({
+        ...structuredClone(src),
+        id: newId,
+        position: { x: src.position.x + 40, y: src.position.y + 48 },
+      })
+    })
+    useLab.setState({ selectedNodeId: newId, selectedEdgeId: null })
+  }
+
+  const onNodeContextMenu = useCallback(
+    (event: ReactMouseEvent, node: { id: string }) => {
+      event.preventDefault()
+      store.selectNode(node.id)
+      const items: MenuItem[] = [
+        {
+          label: 'Configureâ€¦',
+          onSelect: () => setMenu(null),
+        },
+        { label: 'Duplicate', onSelect: () => duplicateNode(node.id) },
+        { label: 'Delete', danger: true, onSelect: () => deleteNodeById(node.id) },
+      ]
+      setMenu({ x: event.clientX, y: event.clientY, items })
+    },
+    [store],
+  )
+
+  const onEdgeContextMenu = useCallback(
+    (event: ReactMouseEvent, edge: { id: string }) => {
+      event.preventDefault()
+      store.selectEdge(edge.id)
+      setMenu({
+        x: event.clientX,
+        y: event.clientY,
+        items: [
+          {
+            label: 'Edit traffic / directionâ€¦',
+            onSelect: () => setMenu(null),
+          },
+          { label: 'Delete', danger: true, onSelect: () => deleteEdgeById(edge.id) },
+        ],
+      })
+    },
+    [store],
+  )
 
   const onExportFile = () => {
     const blob = new Blob([JSON.stringify(currentGraph(), null, 2)], {
@@ -306,10 +302,10 @@ function Lab() {
           aria-label="architecture name"
         />
         <button type="button" className="btn ghost" disabled={past.length === 0} onClick={store.undo}>
-          ↶ Undo
+          â†¶ Undo
         </button>
         <button type="button" className="btn ghost" disabled={future.length === 0} onClick={store.redo}>
-          ↷ Redo
+          â†· Redo
         </button>
         <button type="button" className="btn ghost" onClick={onAutoLayout}>
           Auto-layout
@@ -319,7 +315,7 @@ function Lab() {
           Save
         </button>
         <button type="button" className="btn ghost" onClick={() => setShowLibrary(true)}>
-          Open…
+          Openâ€¦
         </button>
         <button type="button" className="btn ghost" onClick={() => setShowVersions(true)}>
           Versions
@@ -369,13 +365,13 @@ function Lab() {
               saveState.kind === 'error' ? 'chip-off' : saveState.kind === 'saved' ? 'chip-ok' : ''
             }`}
           >
-            {saveState.kind === 'saving' && 'Saving…'}
+            {saveState.kind === 'saving' && 'Savingâ€¦'}
             {saveState.kind === 'saved' && 'Saved'}
             {saveState.kind === 'error' && `Error: ${saveState.message}`}
           </span>
         )}
         <span className={`chip ${nodes.length === 0 ? 'chip-off' : ''}`}>
-          {nodes.length} nodes · {edges.length} connections
+          {nodes.length} nodes Â· {edges.length} connections
         </span>
       </div>
 
@@ -402,10 +398,18 @@ function Lab() {
             }}
             onNodeClick={(_, node) => store.selectNode(node.id)}
             onPaneClick={() => {
+              setMenu(null)
               store.selectNode(null)
               store.selectEdge(null)
             }}
             onEdgeClick={(_, edge) => store.selectEdge(edge.id)}
+            onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
+            onPaneContextMenu={(e) => {
+              e.preventDefault()
+              setMenu(null)
+            }}
+            onMoveStart={() => setMenu(null)}
             onNodeDragStop={() => {
               // Commit final positions into history once per drag.
               useLab.setState((s) => ({
@@ -421,6 +425,10 @@ function Lab() {
             <MiniMap pannable />
           </ReactFlow>
 
+          {menu && (
+            <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />
+          )}
+
           {showLibrary && (
             <SavedArchitecturesDialog onClose={() => setShowLibrary(false)} />
           )}
@@ -428,8 +436,8 @@ function Lab() {
             <VersionsDialog archId={store.archId} onClose={() => setShowVersions(false)} />
           )}
 
-          {store.selectedNodeId && <NodeInspector />}
-          {!store.selectedNodeId && store.selectedEdgeId && <EdgeInspector />}
+          {store.selectedNodeId && !showAsk && <NodeInspector />}
+          {!store.selectedNodeId && store.selectedEdgeId && !showAsk && <EdgeInspector />}
 
           {showEval && (
             <EvaluationPanel
@@ -444,7 +452,6 @@ function Lab() {
 
           {showAsk && (
             <AskPanel
-              onExplain={evaluateForAsk}
               graph={currentGraph}
               onApply={onApplyProposal}
               onClose={() => setShowAsk(false)}

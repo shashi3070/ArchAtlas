@@ -4,6 +4,7 @@ Submissions are graded by the deterministic engine (see app.challenges.scoring)
 and stored as an append-only attempt history per client key.
 """
 
+import json
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -121,6 +122,42 @@ def my_submissions(
         }
         for r in rows
     ]
+
+
+@router.get("/{cid}/solution")
+def reference_solution(
+    cid: str, db: DbSession, x_client_key: str | None = Header(default=None)
+) -> dict[str, Any]:
+    """Reference design + its graded breakdown. Spoiler-gated: unlocked only
+    after the caller has made at least one submission attempt."""
+    challenge = _require(cid)
+    attempted = (
+        db.query(SubmissionRecord)
+        .filter(
+            SubmissionRecord.owner_key == x_client_key,
+            SubmissionRecord.challenge_id == cid,
+        )
+        .count()
+    )
+    if attempted == 0:
+        raise HTTPException(
+            status_code=403,
+            detail="submit at least one attempt before revealing the solution",
+        )
+    path = challenge_loader.solution_path(cid)
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="no reference solution available")
+    graph = json.loads(path.read_text(encoding="utf-8"))
+    report = grade_submission(challenge, graph)
+    return {
+        "challenge_id": cid,
+        "graph": graph,
+        "score": report["score"],
+        "passed": report["passed"],
+        "breakdown": report["breakdown"],
+        "findings": report["findings"],
+        "evaluation": report,
+    }
 
 
 def _dump(value: Any) -> str:

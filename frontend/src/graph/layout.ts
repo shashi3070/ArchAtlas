@@ -1,18 +1,23 @@
 /**
- * Deterministic layered auto-layout (no external dependency).
+ * Deterministic layered auto-layout, vertical top-to-bottom.
  *
- * Roots = nodes with no incoming edges (clients/ingress). Depth = longest
- * path from any root. Nodes are placed in columns by depth, stacked within
- * a column by stable id order so output is reproducible.
+ * Level 0 = nodes with no incoming edges (clients/ingress). A node's level
+ * is its longest-path distance from any root, so every node sits on the
+ * first row where ALL of its inputs have already appeared - which is what
+ * makes same-level siblings share one horizontal row.
+ *
+ * Within a row, nodes are ordered by barycenter (average x of their
+ * predecessors from earlier rows) to reduce edge crossings; ties fall back
+ * to stable id order so output is reproducible.
  */
 
 interface Positioned {
   id: string
-  position: { x: number; y: number }
+  position: { x: number }
 }
 
-const COL_WIDTH = 260
-const ROW_HEIGHT = 120
+const COL_WIDTH = 220
+const ROW_HEIGHT = 150
 
 export function autoLayout<T extends Positioned>(
   nodes: T[],
@@ -22,28 +27,29 @@ export function autoLayout<T extends Positioned>(
 
   const ids = new Set(nodes.map((n) => n.id))
   const outgoing = new Map<string, string[]>()
-  const incomingCount = new Map<string, number>()
+  const incoming = new Map<string, string[]>()
   for (const id of ids) {
     outgoing.set(id, [])
-    incomingCount.set(id, 0)
+    incoming.set(id, [])
   }
   for (const e of edges) {
     if (!ids.has(e.source) || !ids.has(e.target)) continue
+    if (e.source === e.target) continue
     outgoing.get(e.source)!.push(e.target)
-    incomingCount.set(e.target, (incomingCount.get(e.target) ?? 0) + 1)
+    incoming.get(e.target)!.push(e.source)
   }
 
-  // Longest-path depth via repeated relaxation (graphs are small).
-  const depth = new Map<string, number>()
-  for (const id of ids) depth.set(id, 0)
+  // Longest-path level via repeated relaxation (graphs are small).
+  const level = new Map<string, number>()
+  for (const id of ids) level.set(id, 0)
   for (let iter = 0; iter < nodes.length; iter++) {
     let changed = false
     for (const [src, dsts] of outgoing) {
       for (const dst of dsts) {
-        const candidate = (depth.get(src) ?? 0) + 1
-        if ((depth.get(dst) ?? 0) < candidate) {
-          // Cycle guard: cap depth at node count to keep layout finite.
-          depth.set(dst, Math.min(candidate, nodes.length))
+        const candidate = (level.get(src) ?? 0) + 1
+        if ((level.get(dst) ?? 0) < candidate) {
+          // Cycle guard: cap at node count so relaxation always terminates.
+          level.set(dst, Math.min(candidate, nodes.length))
           changed = true
         }
       }
@@ -51,18 +57,44 @@ export function autoLayout<T extends Positioned>(
     if (!changed) break
   }
 
-  const byDepth = new Map<number, string[]>()
+  const rows = new Map<number, string[]>()
   for (const node of [...nodes].sort((a, b) => a.id.localeCompare(b.id))) {
-    const d = Math.min(depth.get(node.id) ?? 0, maxColumn(nodes.length))
-    const list = byDepth.get(d) ?? []
+    const d = Math.min(level.get(node.id) ?? 0, Math.max(0, nodes.length - 1))
+    const list = rows.get(d) ?? []
     list.push(node.id)
-    byDepth.set(d, list)
+    rows.set(d, list)
   }
 
   const positions = new Map<string, { x: number; y: number }>()
-  for (const [d, list] of [...byDepth.entries()].sort((a, b) => a[0] - b[0])) {
-    list.forEach((id, row) => {
-      positions.set(id, { x: d * COL_WIDTH, y: row * ROW_HEIGHT })
+  const sortedLevels = [...rows.keys()].sort((a, b) => a - b)
+  const widestRow = Math.max(
+    ...sortedLevels.map((d) => rows.get(d)!.length),
+  )
+  const centerX = ((widestRow - 1) / 2) * COL_WIDTH
+
+  for (const d of sortedLevels) {
+    const list = rows.get(d)!
+    // Barycenter ordering against already-placed predecessors.
+    if (d > 0) {
+      const score = new Map<string, number>()
+      for (const id of list) {
+        const preds = incoming.get(id)!.filter((p) => positions.has(p))
+        score.set(
+          id,
+          preds.length === 0
+            ? Number.MAX_SAFE_INTEGER // push source-less nodes to the row's end
+            : preds.reduce((sum, p) => sum + positions.get(p)!.x, 0) / preds.length,
+        )
+      }
+      list.sort(
+        (a, b) => score.get(a)! - score.get(b)! || a.localeCompare(b),
+      )
+    }
+    list.forEach((id, col) => {
+      positions.set(id, {
+        x: centerX + (col - (list.length - 1) / 2) * COL_WIDTH,
+        y: d * ROW_HEIGHT,
+      })
     })
   }
 
@@ -70,8 +102,4 @@ export function autoLayout<T extends Positioned>(
     ...n,
     position: positions.get(n.id) ?? n.position,
   }))
-}
-
-function maxColumn(count: number): number {
-  return Math.max(0, count - 1)
 }

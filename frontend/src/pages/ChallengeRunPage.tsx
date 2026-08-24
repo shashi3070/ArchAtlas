@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   Background,
@@ -20,14 +20,20 @@ import {
   type ChallengeDetail,
   type HintLadder,
   type ScoredSubmission,
+  type SolutionReply,
   type SubmissionSummary,
 } from '../api/challenges'
+import { agentApi, type AgentReply } from '../api/agent'
+import { AskPanel } from '../components/lab/AskPanel'
 import { ComponentNode } from '../components/lab/ComponentNode'
+import { ContextMenu, type MenuItem } from '../components/lab/ContextMenu'
 import { EdgeInspector } from '../components/lab/EdgeInspector'
 import { NodeInspector } from '../components/lab/NodeInspector'
 import { Palette, useComponentCatalog } from '../components/lab/Palette'
+import { applyProposalToStore } from '../graph/applyProposal'
 import {
   fromArchitectureGraph,
+  markerForDirection,
   type LabEdge,
   type LabNode,
 } from '../graph/fromArchitectureGraph'
@@ -61,6 +67,11 @@ function RunChallenge({ cid }: { cid: string }) {
   const [submitting, setSubmitting] = useState(false)
   const [history, setHistory] = useState<SubmissionSummary[]>([])
   const [hintLadder, setHintLadder] = useState<HintLadder | null>(null)
+  const [solution, setSolution] = useState<SolutionReply | null>(null)
+  const [showSolution, setShowSolution] = useState(false)
+  const [explainSolution, setExplainSolution] = useState<AgentReply | null>(null)
+  const [resultExplain, setResultExplain] = useState<AgentReply | null>(null)
+  const [showAsk, setShowAsk] = useState(false)
   const [panel, setPanel] = useState<'brief' | 'result'>('brief')
   const dragComponent = useRef<CatalogComponent | null>(null)
   const readyRef = useRef(false)
@@ -155,15 +166,18 @@ function RunChallenge({ cid }: { cid: string }) {
 
   const onConnect = useCallback(
     (connection: Connection) =>
-      store.commit(({ edges: eds }) => {
-        addEdge(
+      store.commit((draft) => {
+        // addEdge returns a NEW array - assign it back or the edge vanishes.
+        draft.edges = addEdge(
           {
             ...connection,
             id: nextEdgeId(),
+            markerEnd: markerForDirection('unidirectional'),
+            animated: true,
             data: { traffic_type: 'sync_request', direction: 'unidirectional', protocol: null },
           },
-          eds as unknown as FlowEdge[],
-        )
+          draft.edges as unknown as FlowEdge[],
+        ) as unknown as LabEdge[]
       }),
     [store],
   )
@@ -214,6 +228,55 @@ function RunChallenge({ cid }: { cid: string }) {
     }
   }
 
+  const loadSolution = async () => {
+    if (solution) {
+      setShowSolution(true)
+      return
+    }
+    try {
+      const s = await challengesApi.solution(cid)
+      setSolution(s)
+      setShowSolution(true)
+    } catch (e) {
+      setPageError((e as Error).message)
+    }
+  }
+
+  const explainTheSolution = async () => {
+    try {
+      let s = solution
+      if (!s) {
+        s = await challengesApi.solution(cid)
+        setSolution(s)
+      }
+      setExplainSolution(await agentApi.explain(s.evaluation))
+    } catch (e) {
+      setPageError((e as Error).message)
+    }
+  }
+
+  // Mentor explanation of the learner's own submission, grounded in the
+  // graded report the engine produced for that attempt.
+  const explainTheResult = async () => {
+    if (!result) return
+    try {
+      setResultExplain(
+        await agentApi.explain({
+          summary: result._engine_summary ?? {
+            overall_status: result.passed ? 'pass' : 'fail',
+          },
+          score: result.score,
+          rule_results: result.findings,
+          spofs: result.spofs ?? [],
+          bottlenecks: result.bottlenecks ?? [],
+          recommendations: result.recommendations ?? [],
+        }),
+      )
+    } catch (e) {
+      setPageError((e as Error).message)
+    }
+  }
+
   if (pageError && !detail) {
     return (
       <main className="page">
@@ -227,11 +290,63 @@ function RunChallenge({ cid }: { cid: string }) {
 
   const revealed = hintLadder?.hints ?? []
 
+  // Right-click menus (same behaviour as the free-practice lab).
+  const [menu, setMenu] = useState<{ x: number; y: number; items: MenuItem[] } | null>(null)
+
+  const deleteNodeById = (id: string) =>
+    store.commit(({ nodes: ns, edges: eds }) => {
+      const idx = ns.findIndex((n) => n.id === id)
+      if (idx >= 0) ns.splice(idx, 1)
+      for (let i = eds.length - 1; i >= 0; i--) {
+        if (eds[i].source === id || eds[i].target === id) eds.splice(i, 1)
+      }
+      useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+    })
+
+  const deleteEdgeById = (id: string) =>
+    store.commit(({ edges: eds }) => {
+      const idx = eds.findIndex((e) => e.id === id)
+      if (idx >= 0) eds.splice(idx, 1)
+      useLab.setState({ selectedNodeId: null, selectedEdgeId: null })
+    })
+
+  const onNodeContextMenu = useCallback(
+    (event: ReactMouseEvent, node: { id: string }) => {
+      event.preventDefault()
+      store.selectNode(node.id)
+      setMenu({
+        x: event.clientX,
+        y: event.clientY,
+        items: [
+          { label: 'Configureâ€¦', onSelect: () => setMenu(null) },
+          { label: 'Delete', danger: true, onSelect: () => deleteNodeById(node.id) },
+        ],
+      })
+    },
+    [store],
+  )
+
+  const onEdgeContextMenu = useCallback(
+    (event: ReactMouseEvent, edge: { id: string }) => {
+      event.preventDefault()
+      store.selectEdge(edge.id)
+      setMenu({
+        x: event.clientX,
+        y: event.clientY,
+        items: [
+          { label: 'Edit traffic / directionâ€¦', onSelect: () => setMenu(null) },
+          { label: 'Delete', danger: true, onSelect: () => deleteEdgeById(edge.id) },
+        ],
+      })
+    },
+    [store],
+  )
+
   return (
     <div className="lab-shell">
       <div className="lab-toolbar">
         <Link to="/challenges" className="btn ghost" aria-label="back to challenges">
-          ← Challenges
+          â† Challenges
         </Link>
         <strong>{detail?.title ?? cid}</strong>
         {detail && (
@@ -247,7 +362,7 @@ function RunChallenge({ cid }: { cid: string }) {
           disabled={past.length === 0}
           onClick={store.undo}
         >
-          ↶ Undo
+          â†¶ Undo
         </button>
         <button
           type="button"
@@ -255,7 +370,7 @@ function RunChallenge({ cid }: { cid: string }) {
           disabled={future.length === 0}
           onClick={store.redo}
         >
-          ↷ Redo
+          â†· Redo
         </button>
         <span className={`chip ${nodes.length === 0 ? 'chip-off' : ''}`}>
           {nodes.length} nodes{detail?.constraints?.find((c) => c.key === 'max_nodes')
@@ -280,11 +395,18 @@ function RunChallenge({ cid }: { cid: string }) {
         </button>
         <button
           type="button"
+          className={`btn ${showAsk ? 'primary' : 'ghost'}`}
+          onClick={() => setShowAsk((v) => !v)}
+        >
+          Ask AI
+        </button>
+        <button
+          type="button"
           className="btn primary"
           disabled={nodes.length === 0 || submitting}
           onClick={() => void onSubmit()}
         >
-          {submitting ? 'Grading…' : 'Submit'}
+          {submitting ? 'Gradingâ€¦' : 'Submit'}
         </button>
         {result && (
           <span className={`chip ${result.passed ? 'chip-ok' : 'chip-off'}`}>
@@ -316,10 +438,18 @@ function RunChallenge({ cid }: { cid: string }) {
             }}
             onNodeClick={(_, node) => store.selectNode(node.id)}
             onPaneClick={() => {
+              setMenu(null)
               store.selectNode(null)
               store.selectEdge(null)
             }}
             onEdgeClick={(_, edge) => store.selectEdge(edge.id)}
+            onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
+            onPaneContextMenu={(e) => {
+              e.preventDefault()
+              setMenu(null)
+            }}
+            onMoveStart={() => setMenu(null)}
             onNodeDragStop={() => {
               useLab.setState((s) => ({
                 past: [...s.past.slice(-49), { nodes: s.nodes, edges: s.edges }],
@@ -333,11 +463,36 @@ function RunChallenge({ cid }: { cid: string }) {
             <Controls />
           </ReactFlow>
 
+          {menu && (
+            <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />
+          )}
+
           {store.selectedNodeId && <NodeInspector />}
           {!store.selectedNodeId && store.selectedEdgeId && <EdgeInspector />}
 
+          {showAsk && (
+            <AskPanel
+              scope={`challenge.${cid}`}
+              graph={() =>
+                toArchitectureGraph({
+                  id: `challenge-${cid}`,
+                  version: 1,
+                  nodes: store.nodes,
+                  edges: store.edges,
+                  metadata: { source: 'challenge' },
+                  trafficModel: {},
+                })
+              }
+              onApply={(p) => applyProposalToStore(p, catalogMap.current)}
+              onClose={() => setShowAsk(false)}
+            />
+          )}
+
           {panel === 'brief' && detail && (
-            <aside className="chal-panel" aria-label="challenge brief">
+            <aside
+              className={`chal-panel${showAsk ? ' shifted' : ''}`}
+              aria-label="challenge brief"
+            >
               <div className="eval-panel-head">
                 <h3>Brief</h3>
               </div>
@@ -406,10 +561,13 @@ function RunChallenge({ cid }: { cid: string }) {
           )}
 
           {panel === 'result' && result && (
-            <aside className="chal-panel" aria-label="submission result">
+            <aside
+              className={`chal-panel${showAsk ? ' shifted' : ''}`}
+              aria-label="submission result"
+            >
               <div className="eval-panel-head">
                 <h3>
-                  Result · attempt {result.attempt} · {Math.round(result.score)}%
+                  Result Â· attempt {result.attempt} Â· {Math.round(result.score)}%
                 </h3>
               </div>
               <div className="eval-scroll">
@@ -420,6 +578,24 @@ function RunChallenge({ cid }: { cid: string }) {
                       ? 'Not passed - the evaluator found a blocking failure.'
                       : `Not passed - score below 70% or a must-have requirement is violated.`}
                 </div>
+
+                <div className="solution-actions">
+                  <button
+                    type="button"
+                    className="btn ghost small-btn"
+                    onClick={() => void explainTheResult()}
+                  >
+                    Explain this result
+                  </button>
+                </div>
+                {resultExplain && (
+                  <div className="ask-reply">
+                    {resultExplain.source === 'deterministic' && (
+                      <span className="chip">deterministic summary</span>
+                    )}
+                    <p>{resultExplain.text}</p>
+                  </div>
+                )}
 
                 {result.constraint_violations.length > 0 && (
                   <>
@@ -464,6 +640,54 @@ function RunChallenge({ cid }: { cid: string }) {
                       </div>
                     ))}
                   </>
+                )}
+
+                <div className="solution-actions">
+                  <button
+                    type="button"
+                    className="btn ghost small-btn"
+                    onClick={() => void loadSolution()}
+                  >
+                    {showSolution ? 'Hide solution' : 'Show solution graph'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn ghost small-btn"
+                    onClick={() => void explainTheSolution()}
+                  >
+                    Explain solution
+                  </button>
+                </div>
+
+                {showSolution && solution && (
+                  <>
+                    <p className="muted small">
+                      Reference design Â· scores {Math.round(solution.score)}%
+                    </p>
+                    <div className="solution-preview">
+                      <ReactFlow
+                        nodes={fromArchitectureGraph(solution.graph).nodes}
+                        edges={fromArchitectureGraph(solution.graph).edges}
+                        nodeTypes={nodeTypes}
+                        fitView
+                        nodesDraggable={false}
+                        nodesConnectable={false}
+                        elementsSelectable={false}
+                        zoomOnScroll={false}
+                      >
+                        <Background />
+                      </ReactFlow>
+                    </div>
+                  </>
+                )}
+
+                {explainSolution && (
+                  <div className="ask-reply">
+                    {explainSolution.source === 'deterministic' && (
+                      <span className="chip">deterministic summary</span>
+                    )}
+                    <p>{explainSolution.text}</p>
+                  </div>
                 )}
 
                 {history.length > 0 && (

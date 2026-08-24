@@ -82,6 +82,9 @@ export interface ScoredSubmission {
   findings: ScoredFinding[]
   spofs: Array<Record<string, unknown>>
   bottlenecks: Array<Record<string, unknown>>
+  recommendations?: string[]
+  /** Internal engine summary {overall_status, ...} used to ground explain. */
+  _engine_summary?: Record<string, unknown>
   attempt: number
   evaluated_at: string
 }
@@ -93,6 +96,16 @@ export interface SubmissionSummary {
   created_at: string | null
 }
 
+export interface SolutionReply {
+  challenge_id: string
+  graph: CanonicalArchitectureGraph
+  score: number
+  passed: boolean
+  breakdown: ScoredRequirement[]
+  findings: ScoredFinding[]
+  evaluation: Record<string, unknown>
+}
+
 export const challengesApi = {
   list: () => api.get<ChallengeSummary[]>('/api/challenges'),
   get: (cid: string) => api.get<ChallengeDetail>(`/api/challenges/${cid}`),
@@ -102,6 +115,7 @@ export const challengesApi = {
     api.post<ScoredSubmission>(`/api/challenges/${cid}/submit`, { graph }),
   submissions: (cid: string) =>
     api.get<SubmissionSummary[]>(`/api/challenges/${cid}/submissions`),
+  solution: (cid: string) => api.get<SolutionReply>(`/api/challenges/${cid}/solution`),
 }
 
 export interface ChallengeDraft {
