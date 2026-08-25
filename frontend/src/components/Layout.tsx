@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../state/auth'
+import { getAvatarColor, getInitials } from '../utils/avatar'
 
 const LINKS = [
   { to: '/', label: 'Home', end: true },
@@ -42,19 +43,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
               className="user-avatar-btn"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              {user.picture ? (
-                <img src={user.picture} alt="" className="user-avatar-img" />
-              ) : (
-                <span className="user-avatar-placeholder">
-                  {user.name?.[0]?.toUpperCase() || user.email[0]?.toUpperCase()}
-                </span>
-              )}
+              <span
+                className="user-avatar-circle"
+                style={{ background: getAvatarColor(user.name || user.email) }}
+              >
+                {getInitials(user.name || user.email)}
+              </span>
               <span className="user-name">{user.name || user.email}</span>
             </button>
 
             {menuOpen && (
               <div className="user-dropdown">
                 <div className="user-dropdown-header">
+                  <div
+                    className="user-dropdown-avatar"
+                    style={{ background: getAvatarColor(user.name || user.email) }}
+                  >
+                    {getInitials(user.name || user.email)}
+                  </div>
                   <strong>{user.name}</strong>
                   <span className="user-email">{user.email}</span>
                   <span className={`user-tier-badge ${user.tier}`}>
@@ -65,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <div className="user-dropdown-rate">
                     <span>API: {user.rate_limit.used_today}/{user.rate_limit.daily_limit} used</span>
                     {user.rate_limit.cooldown_seconds > 0 && (
-                      <span> &middot; Cooldown: {user.rate_limit.cooldown_seconds}s</span>
+                      <span> &middot; {user.rate_limit.cooldown_seconds}s cooldown</span>
                     )}
                   </div>
                 )}

@@ -7,7 +7,7 @@ Tokens carry: sub, email, name, picture, tier, exp, iat.
 import time
 from typing import Any
 
-from jose import jwt
+import jwt as pyjwt
 
 _DEFAULT_SECRET = "change-me-in-production"
 _DEFAULT_ALGORITHM = "HS256"
@@ -27,7 +27,7 @@ def create_access_token(
         "iat": now,
         "exp": now + expires_in,
     }
-    return jwt.encode(claims, secret, algorithm=_DEFAULT_ALGORITHM)
+    return pyjwt.encode(claims, secret, algorithm=_DEFAULT_ALGORITHM)
 
 
 def decode_access_token(token: str, secret: str = "") -> dict[str, Any]:
@@ -37,4 +37,4 @@ def decode_access_token(token: str, secret: str = "") -> dict[str, Any]:
     Raises JWTError on any verification failure.
     """
     secret = secret or _DEFAULT_SECRET
-    return jwt.decode(token, secret, algorithms=[_DEFAULT_ALGORITHM])
+    return pyjwt.decode(token, secret, algorithms=[_DEFAULT_ALGORITHM])

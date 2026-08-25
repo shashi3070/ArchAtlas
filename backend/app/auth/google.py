@@ -1,25 +1,24 @@
-"""Google OAuth token verification (no SDK - httpx only).
+"""Google OAuth token verification (no SDK - httpx + PyJWT).
 
 Verifies Google ID tokens by fetching Google's public JWKS and validating
 the JWT signature, expiry, issuer, and audience.
 """
 
 import time
-from typing import Any
 
 import httpx
-from jose import jwt
+import jwt as pyjwt
 
 _GOOGLE_JWKS_URL = "https://www.googleapis.com/oauth2/v3/certs"
-_GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/tokeninfo"
-_GOOGLE_ISSUERS = {"https://accounts.google.com", "accounts.google.com"}
+_GOOGLE_TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
+_GOOGLE_ISSUER = "https://accounts.google.com"
 
-_jwks_cache: dict[str, Any] = {}
+_jwks_cache: dict[str, list[dict]] = []
 _jwks_fetched_at: float = 0.0
 _JWKS_TTL = 3600.0  # 1 hour
 
 
-def _fetch_jwks() -> dict[str, Any]:
+def _fetch_jwks() -> list[dict]:
     """Fetch Google's public signing keys (cached for 1 hour)."""
     global _jwks_cache, _jwks_fetched_at
     now = time.monotonic()
@@ -27,12 +26,12 @@ def _fetch_jwks() -> dict[str, Any]:
         return _jwks_cache
     resp = httpx.get(_GOOGLE_JWKS_URL, timeout=10.0)
     resp.raise_for_status()
-    _jwks_cache = resp.json()
+    _jwks_cache = resp.json().get("keys", [])
     _jwks_fetched_at = now
     return _jwks_cache
 
 
-def verify_google_token(id_token: str, client_id: str) -> dict[str, Any]:
+def verify_google_token(id_token: str, client_id: str) -> dict[str, str]:
     """Verify a Google ID token and return the decoded payload.
 
     Returns a dict with at minimum: sub, email, name, picture.
@@ -41,10 +40,9 @@ def verify_google_token(id_token: str, client_id: str) -> dict[str, Any]:
     if not client_id:
         raise ValueError("Google OAuth client ID not configured")
 
-    # Strategy 1: Verify locally using JWKS (preferred - no extra HTTP call)
+    # Strategy 1: Verify locally using JWKS (preferred)
     try:
-        payload = _verify_with_jwks(id_token, client_id)
-        return payload
+        return _verify_with_jwks(id_token, client_id)
     except Exception:
         pass
 
@@ -52,14 +50,14 @@ def verify_google_token(id_token: str, client_id: str) -> dict[str, Any]:
     return _verify_with_tokeninfo(id_token, client_id)
 
 
-def _verify_with_jwks(id_token: str, client_id: str) -> dict[str, Any]:
-    """Verify using Google's public JWKS."""
+def _verify_with_jwks(id_token: str, client_id: str) -> dict[str, str]:
+    """Verify using Google's public JWKS via PyJWT."""
     jwks = _fetch_jwks()
-    header = jwt.get_unverified_header(id_token)
+    header = pyjwt.get_unverified_header(id_token)
     kid = header.get("kid")
 
     key_data = None
-    for key in jwks.get("keys", []):
+    for key in jwks:
         if key.get("kid") == kid:
             key_data = key
             break
@@ -67,13 +65,13 @@ def _verify_with_jwks(id_token: str, client_id: str) -> dict[str, Any]:
     if key_data is None:
         raise ValueError("No matching key found in Google JWKS")
 
-    public_key = jwt.algorithms.RSAAlgorithm.from_jwk(key_data)
-    payload: dict[str, Any] = jwt.decode(
+    public_key = pyjwt.algorithms.RSAAlgorithm.from_jwk(key_data)
+    payload: dict[str, str] = pyjwt.decode(
         id_token,
         public_key,
         algorithms=["RS256"],
         audience=client_id,
-        issuer=_GOOGLE_ISSUERS,
+        issuer=_GOOGLE_ISSUER,
     )
 
     if "sub" not in payload or "email" not in payload:
@@ -82,10 +80,10 @@ def _verify_with_jwks(id_token: str, client_id: str) -> dict[str, Any]:
     return payload
 
 
-def _verify_with_tokeninfo(id_token: str, client_id: str) -> dict[str, Any]:
+def _verify_with_tokeninfo(id_token: str, client_id: str) -> dict[str, str]:
     """Fallback: verify via Google's tokeninfo endpoint."""
     resp = httpx.get(
-        _GOOGLE_TOKEN_URL,
+        _GOOGLE_TOKENINFO_URL,
         params={"id_token": id_token},
         timeout=10.0,
     )
@@ -95,8 +93,11 @@ def _verify_with_tokeninfo(id_token: str, client_id: str) -> dict[str, Any]:
     payload = resp.json()
     if payload.get("aud") != client_id:
         raise ValueError("Token audience mismatch")
-    if payload.get("email_verified") != "true":
+
+    # tokeninfo doesn't return email_verified as bool — it's a string
+    if payload.get("email_verified") not in ("true", True):
         raise ValueError("Email not verified by Google")
+
     if "sub" not in payload or "email" not in payload:
         raise ValueError("Token missing required claims")
 

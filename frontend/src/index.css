@@ -1241,10 +1241,40 @@ button:disabled {
 
 .ask-composer input {
   flex: 1;
-  padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 13px;
+}
+
+/* ── Ask panel login gate ─────────────────────────────── */
+
+.ask-login-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  flex: 1;
+}
+
+.ask-login-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.ask-login-gate h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.ask-login-gate p {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
 }
 
 .ask-provider-row {
@@ -2085,6 +2115,32 @@ button:disabled {
   border-radius: 50%;
 }
 
+.user-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-dropdown-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
 .user-avatar-placeholder {
   width: 28px;
   height: 28px;
@@ -2185,4 +2241,217 @@ button:disabled {
 
 .user-dropdown-logout:hover {
   background: #fef2f2;
+}
+
+/* ── Mobile responsive ─────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    margin-left: 0;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .topbar-spacer {
+    display: none;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-dropdown {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 12px;
+    width: auto;
+    border-radius: 16px;
+  }
+
+  /* Page content */
+  .page {
+    padding: 16px !important;
+  }
+
+  .page-title {
+    font-size: 22px !important;
+  }
+
+  /* Login */
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .login-tier-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .google-signin-btn,
+  .google-btn-wrapper div {
+    width: 100% !important;
+  }
+
+  .google-signin-btn {
+    width: 100% !important;
+  }
+
+  /* Lab toolbar */
+  .lab-toolbar {
+    flex-wrap: wrap;
+    gap: 6px !important;
+    padding: 8px 12px !important;
+  }
+
+  .lab-toolbar .btn {
+    font-size: 12px !important;
+    padding: 5px 8px !important;
+  }
+
+  .toolbar-sep {
+    display: none;
+  }
+
+  .arch-name {
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+
+  /* Lab body */
+  .lab-body {
+    flex-direction: column;
+  }
+
+  .lab-canvas {
+    min-height: 50vh;
+  }
+
+  /* Palette */
+  .palette-panel {
+    max-height: 35vh;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    width: 100% !important;
+  }
+
+  .palette-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+
+  /* Panels (Ask, Eval, Inspector) */
+  .ask-panel,
+  .eval-panel,
+  .inspector-panel {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-height: 55vh;
+    bottom: 8px;
+    top: auto !important;
+    border-radius: 12px;
+  }
+
+  /* Dialogs */
+  .lab-dialog {
+    margin: 16px !important;
+    max-width: calc(100% - 32px) !important;
+  }
+
+  /* Topics grid */
+  .topic-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Challenge grid */
+  .challenge-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px !important;
+    text-align: center;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Score bars */
+  .score-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .score-bar {
+    width: 100%;
+  }
+
+  /* Table-like elements */
+  .props-table,
+  .sizing-table {
+    font-size: 12px;
+  }
+
+  /* Guide modal */
+  .guide-modal-content {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 6px 8px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .login-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .login-title {
+    font-size: 17px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+  }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   agentApi,
@@ -8,6 +9,7 @@ import {
   type ProviderInfo,
   type ProvidersReply,
 } from '../../api/agent'
+import { useAuth } from '../../state/auth'
 import type { CanonicalArchitectureGraph } from '../../graph/toArchitectureGraph'
 
 interface Props {
@@ -56,11 +58,12 @@ function loadChat(scope: string): ChatEntry[] {
 }
 
 export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const [providers, setProviders] = useState<ProvidersReply | null>(null)
   const [providerId, setProviderId] = useState('')
   const [models, setModels] = useState<string[] | null>(null)
   const [modelChoice, setModelChoice] = useState('')
-  // Resumes the previous conversation for this scope, if any.
   const [messages, setMessages] = useState<ChatEntry[]>(() => loadChat(scope))
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
@@ -78,7 +81,7 @@ export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
         )
       }
     } catch {
-      /* storage full/blocked - chat simply won't persist */
+      /* storage full/blocked */
     }
   }, [messages, scope])
 
@@ -93,7 +96,6 @@ export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
       .catch(() => setProviders({ active: 'none', providers: [] }))
   }, [])
 
-  // Live model list whenever the provider changes; '' means provider default.
   useEffect(() => {
     if (!providerId) {
       setModels(null)
@@ -111,9 +113,7 @@ export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
       .catch(() => {
         if (!cancelled) setModels([])
       })
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [providerId])
 
   useEffect(() => {
@@ -156,7 +156,14 @@ export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
         },
       ])
     } catch (e) {
-      setError((e as Error).message)
+      const msg = (e as Error).message || 'Unknown error'
+      if (msg.includes('429') || msg.toLowerCase().includes('rate limit')) {
+        setError(
+          'Rate limit reached. The free tier has limited tokens per minute. Try again in ~50s or switch to a smaller model.',
+        )
+      } else {
+        setError(msg)
+      }
     } finally {
       setBusy(false)
     }
@@ -167,6 +174,35 @@ export function AskPanel({ graph, onApply, onClose, scope = 'lab' }: Props) {
     setMessages([])
     setError(null)
     setInput('')
+  }
+
+  // ── Login gate: show sign-in prompt if not authenticated ──
+  if (!user) {
+    return (
+      <aside className="eval-panel" aria-label="ask the mentor">
+        <div className="eval-panel-head">
+          <h3>Ask the mentor</h3>
+          <button type="button" className="btn ghost small-btn" onClick={onClose}>
+            Close
+          </button>
+        </div>
+        <div className="ask-login-gate">
+          <div className="ask-login-icon">🔒</div>
+          <h4>Sign in required</h4>
+          <p>You need to sign in to use the AI mentor chat.</p>
+          <button
+            type="button"
+            className="btn primary"
+            onClick={() => navigate('/login')}
+          >
+            Sign in with Google
+          </button>
+          <p className="muted small" style={{ marginTop: 12 }}>
+            Free tier: 100 AI requests/day &middot; 10s cooldown
+          </p>
+        </div>
+      </aside>
+    )
   }
 
   return (
