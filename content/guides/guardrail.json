@@ -1,0 +1,63 @@
+{
+  "s": "Safety and compliance layers that validate, filter, and constrain LLM inputs and outputs to prevent harmful, biased, off-topic, or policy-violating content.",
+  "w": "Guardrails intercept requests before they reach the LLM and responses before they reach the user. Input guardrails check for prompt injection, jailbreak attempts, PII exposure, and topic restrictions. Output guardrails scan for toxicity, hallucinated facts, policy violations, sensitive data leakage, and format compliance. Rules are defined as configurable policies (block, warn, transform, redact). Guardrails can use lightweight classifiers for speed or full LLM calls for nuanced evaluation. They operate as middleware in the request/response pipeline with sub-100ms latency requirements.",
+  "use": [
+    "Preventing prompt injection and jailbreak attacks on production LLM applications",
+    "Redacting PII (names, emails, SSNs) from LLM inputs and outputs",
+    "Ensuring LLM responses comply with brand safety and content policies",
+    "Filtering harmful, biased, or off-topic content before it reaches users"
+  ],
+  "avoid": [
+    "Overly restrictive guardrails that block legitimate use cases (false positive rate matters)",
+    "Guardrails as the sole safety layer - defense in depth requires multiple controls",
+    "Deep inspection guardrails on every request where latency budget is tight"
+  ],
+  "after": [
+    "ai_gateway",
+    "ai_gateway_llm",
+    "api",
+    "ai_agent"
+  ],
+  "to": [
+    "llm",
+    "ai_agent",
+    "evaluation_service"
+  ],
+  "props": {
+    "action_on_violation": "What to do: block, warn, redact, or substitute with safe response",
+    "policy_set": "Which guardrail rules to enforce for this request path",
+    "detection_threshold": "Confidence threshold for flagging violations"
+  },
+  "size": {
+    "default_instances": 2,
+    "p99_latency_ms": "<100ms for classifier-based, <500ms for LLM-based",
+    "throughput": "~1k-10k requests/sec per instance"
+  },
+  "world": [
+    "Guardrails AI (guardrailsai.com)",
+    "NeMo Guardrails (NVIDIA)",
+    "Azure AI Content Safety",
+    "AWS Bedrock Guardrails",
+    "Lakera Guard"
+  ],
+  "pat": [
+    {
+      "n": "Layered Defense",
+      "d": "Fast classifiers for high-volume pre-filtering, LLM-based checks on borderline cases, human review for ambiguous violations."
+    },
+    {
+      "n": "Redact-and-Replace",
+      "d": "Detect PII or sensitive content, redact in input, pass sanitized version to LLM, restore in output if needed."
+    }
+  ],
+  "pits": [
+    "Over-blocking legitimate content frustrates users - track false positive rates and tune thresholds",
+    "Guardrail latency adding to total response time - place fast checks first, slow checks async",
+    "Adversarial attacks evolving faster than guardrail rules - continuous red teaming needed"
+  ],
+  "tips": [
+    "Layer guardrails: fast regex/rule-based checks first, ML classifiers second, LLM judges third",
+    "Log all guardrail actions for post-hoc analysis and policy refinement",
+    "Treat guardrails as product features, not just engineering concerns - user trust depends on them"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "s": "External capabilities that AI agents can invoke to interact with the real world - APIs, databases, code interpreters, file systems, and other services beyond the LLM's native text generation.",
+  "w": "Tools extend LLM capabilities beyond text generation. Each tool has a schema definition (name, description, parameters, return type) that the LLM uses to decide when and how to invoke it. The tool execution layer handles authentication, input validation, API calls, error handling, and result formatting. Tools can be stateful (maintaining connections to external services) or stateless (pure function transforms). Security policies restrict which tools agents can access and what parameters are permitted.",
+  "use": [
+    "Agents needing to query live data (search APIs, databases, file systems)",
+    "Code execution and data analysis within agent workflows",
+    "External API calls for real-world actions (sending emails, making purchases)",
+    "Retrieval-augmented generation combining search with LLM reasoning"
+  ],
+  "avoid": [
+    "Tasks that can be solved with pure LLM reasoning (tool calls add latency and failure modes)",
+    "Frequently changing external APIs without versioned tool definitions",
+    "Tools with unpredictable latency that can blow through agent time budgets"
+  ],
+  "after": [
+    "ai_agent",
+    "ai_gateway",
+    "api"
+  ],
+  "to": [
+    "llm",
+    "api",
+    "vector_database",
+    "elasticsearch",
+    "object_storage",
+    "postgresql",
+    "ai_gateway"
+  ],
+  "props": {
+    "timeout_ms": "Maximum execution time before tool call is abandoned",
+    "max_retries": "Retry count for transient failures",
+    "permission_level": "Scope of actions the tool is authorized to perform"
+  },
+  "size": {
+    "default_instances": 2,
+    "tool_calls_per_task": "~3-20 depending on agent complexity",
+    "p99_latency_ms": "~500-5000 depending on external service"
+  },
+  "world": [
+    "OpenAI function calling / tool use",
+    "LangChain tool abstractions",
+    "Anthropic MCP (Model Context Protocol)",
+    "Semantic Kernel plugins",
+    "CrewAI tool definitions"
+  ],
+  "pat": [
+    {
+      "n": "Schema-Driven Invocation",
+      "d": "Define tools as JSON schemas, let LLM select tool + parameters from schema, validate output before returning to agent."
+    },
+    {
+      "n": "Circuit Breaker",
+      "d": "Track tool failure rates, temporarily disable tools that exceed failure thresholds to prevent cascading failures."
+    }
+  ],
+  "pits": [
+    "Overly permissive tool schemas allowing agents to perform destructive actions",
+    "Missing tool result size limits causing context window overflow",
+    "Tool hallucination where LLM invents parameters not in the schema",
+    "Unbounded tool call loops where agent repeatedly calls failing tools"
+  ],
+  "tips": [
+    "Keep tool descriptions concise but precise - the LLM uses them for selection decisions",
+    "Implement sandboxed execution for code interpreter tools to prevent system compromise",
+    "Return structured (not free-text) results from tools for reliable downstream processing"
+  ]
+}

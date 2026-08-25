@@ -1,0 +1,56 @@
+{
+  "type": "llm",
+  "category": "ai_genai",
+  "name": "LLM Service",
+  "description": "Large Language Model inference service that generates text, code, or embeddings from natural language prompts with configurable parameters.",
+  "version": "0.1.0",
+  "capabilities": [
+    "text_generation",
+    "code_generation",
+    "natural_language_understanding",
+    "multi_turn_conversation"
+  ],
+  "helps_with": [
+    "natural_language_processing",
+    "content_generation",
+    "semantic_understanding"
+  ],
+  "does_not_solve": [
+    "real_time_data_access",
+    "domain_specific_accuracy_without_fine_tuning"
+  ],
+  "risks": [
+    "high_compute_cost",
+    "hallucination",
+    "latency_spikes_under_load"
+  ],
+  "common_patterns": [
+    "streaming_responses",
+    "batch_inference",
+    "prompt_caching"
+  ],
+  "failure_modes": [
+    "gpu_memory_exhaustion",
+    "model_loading_failure",
+    "token_limit_exceeded"
+  ],
+  "tradeoffs": [
+    "model_size_vs_latency",
+    "cost_vs_quality",
+    "context_window_vs_throughput"
+  ],
+  "capacity_defaults": {
+    "tokens_per_sec": 4000,
+    "p95_base_ms": 500,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 500
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "MessageSquare",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

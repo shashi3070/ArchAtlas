@@ -1,0 +1,58 @@
+id: ai-llm-observability
+title: "LLM Observability"
+difficulty: intermediate
+mode: challenge
+narrative: "Design an observability platform for LLM calls. Must capture traces, token usage, latency, cost, and quality scores for every request. Must support 1M traces/day with sub-second query latency."
+requirements:
+- id: trace-volume
+  category: scale
+  description: Ingest and store 1M traces per day
+  priority: must
+  metric: daily_traces
+  value: 1000000
+  unit: traces
+- id: query-latency
+  category: performance
+  description: Trace queries return within 1 second
+  priority: must
+  metric: query_latency_ms
+  value: 1000
+  unit: ms
+- id: token-tracking
+  category: functional
+  description: Track input/output tokens and cost for every LLM call
+  priority: must
+  metric: token_tracking_coverage
+  value: 100
+  unit: '%'
+- id: quality-scoring
+  category: functional
+  description: Attach quality scores to traces for analysis
+  priority: should
+  metric: quality_score_coverage
+  value: 100
+  unit: '%'
+learning_objectives:
+- LLM trace collection and storage
+- High-volume log ingestion pipelines
+- Cost and token attribution
+- Observability dashboard design
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- elasticsearch
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'Instrument the LLM client library to emit trace events (request, response, tokens, latency) to Kafka.'
+  - 'Write hot traces to Elasticsearch for real-time dashboards; archive cold traces to S3 after 7 days.'
+  - 'Use a trace schema with fields: trace_id, model, tokens_in, tokens_out, latency_ms, cost_usd, quality_score.'
+related_topics:
+- llm-observability
+- distributed-tracing
+- cost-attribution
+version: 1.0.0

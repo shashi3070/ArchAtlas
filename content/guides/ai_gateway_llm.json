@@ -1,0 +1,62 @@
+{
+  "s": "The LLM-specific configuration and routing layer within an AI gateway that handles model selection, prompt caching, token budgeting, and provider-specific protocol translation.",
+  "w": "Extends the base ai_gateway with LLM-specific intelligence. Manages model registry with capabilities, pricing, and context limits. Translates between unified API and provider-specific formats (OpenAI chat completions, Anthropic messages, Cohere generate). Implements prompt caching using prefix matching or semantic similarity. Enforces token-level budgets (input + output tokens separately). Supports streaming with SSE pass-through and token counting in real-time. Provides model fallback chains when primary provider is degraded or rate-limited.",
+  "use": [
+    "Multi-provider deployments where application code should not know provider details",
+    "Cost optimization through prompt caching and intelligent model routing",
+    "Token budget enforcement preventing runaway spend on agentic workloads",
+    "A/B testing and gradual rollout of new model versions"
+  ],
+  "avoid": [
+    "Single-model deployments with one provider (direct API is simpler)",
+    "Workloads where prompt caching is not applicable (highly dynamic prompts)",
+    "Scenarios requiring sub-10ms added latency where gateway overhead matters"
+  ],
+  "after": [
+    "ai_gateway",
+    "ai_agent",
+    "api"
+  ],
+  "to": [
+    "llm",
+    "model_router",
+    "guardrail"
+  ],
+  "props": {
+    "prompt_cache_ttl": "How long cached prompt responses remain valid",
+    "max_output_tokens": "Per-request output token cap",
+    "model_selection_strategy": "How to pick model: cheapest, fastest, highest quality, or round-robin"
+  },
+  "size": {
+    "default_instances": 2,
+    "cached_prompt_ratio": "~20-50% for typical workloads",
+    "streaming_throughput": "~500 tokens/sec per connection"
+  },
+  "world": [
+    "Portkey prompt caching layer",
+    "LiteLLM model abstraction",
+    "OpenRouter model routing",
+    "Martian model router",
+    "Anthropic prompt caching"
+  ],
+  "pat": [
+    {
+      "n": "Prompt Prefix Caching",
+      "d": "Identify shared prompt prefixes across requests and cache the KV computation server-side, reducing TTFB for common system prompts."
+    },
+    {
+      "n": "Model Fallback Chain",
+      "d": "If primary model returns 429 or 503, automatically retry with next model in priority list within latency budget."
+    }
+  ],
+  "pits": [
+    "Stale cache serving outdated responses - implement TTL and invalidation for prompt caches",
+    "Token counting mismatches between gateway and provider causing budget overruns",
+    "Streaming latency added by per-chunk processing - use zero-copy pass-through where possible"
+  ],
+  "tips": [
+    "Prompt caching is highest-ROI optimization for LLM gateways - most workloads share system prompts",
+    "Track input vs output token costs separately - output tokens are typically 3-4x more expensive",
+    "Use model selection to match task complexity: small model for classification, large for complex reasoning"
+  ]
+}

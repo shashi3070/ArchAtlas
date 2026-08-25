@@ -1,0 +1,62 @@
+{
+  "s": "An intelligent routing layer that selects the optimal LLM for each request based on task type, cost, latency, quality requirements, and provider availability.",
+  "w": "Model routers analyze incoming requests and select the best model to handle them. Classification models categorize request complexity (simple FAQ vs complex reasoning), then route to appropriately sized models. Simple tasks go to small, cheap models (GPT-4o-mini, Haiku); complex tasks go to larger models (GPT-4o, Opus). Routers can also consider real-time factors: current provider latency, rate limit headroom, cost per token, and user tier. The router maintains a model registry with capabilities, pricing, and performance profiles, updating routing decisions dynamically.",
+  "use": [
+    "Cost optimization by routing simple requests to cheaper models",
+    "Latency optimization by routing to fastest available provider",
+    "Quality optimization by matching task complexity to model capability",
+    "Load balancing across multiple model providers and endpoints"
+  ],
+  "avoid": [
+    "Single-model deployments where routing adds unnecessary complexity",
+    "Scenarios where uniform model quality is required regardless of cost",
+    "Real-time routing decisions adding unacceptable latency to time-sensitive requests"
+  ],
+  "after": [
+    "ai_gateway",
+    "ai_gateway_llm",
+    "api"
+  ],
+  "to": [
+    "llm",
+    "evaluation_service",
+    "guardrail"
+  ],
+  "props": {
+    "routing_strategy": "How to select model: rule-based, classifier-based, or cost-optimized",
+    "quality_threshold": "Minimum quality score below which requests are escalated to larger model",
+    "cost_cap_per_request": "Maximum spend allowed per single request"
+  },
+  "size": {
+    "default_instances": 2,
+    "routing_decisions_per_sec": "~1k-10k",
+    "classification_latency_ms": "<50ms"
+  },
+  "world": [
+    "Martian model routing",
+    "Unify.ai model router",
+    "OpenRouter model selection",
+    "Amazon Bedrock cross-model routing",
+    "Portkey AI model routing"
+  ],
+  "pat": [
+    {
+      "n": "Complexity Classification",
+      "d": "Use a small classifier to score request complexity, route to matching model tier (small/medium/large)."
+    },
+    {
+      "n": "Cascade Routing",
+      "d": "Try smallest model first, escalate to larger model only if confidence is below threshold."
+    }
+  ],
+  "pits": [
+    "Classification errors routing complex tasks to small models producing poor outputs",
+    "Routing latency negating cost savings for simple, time-sensitive requests",
+    "Model registry going stale as providers release new models with different capabilities"
+  ],
+  "tips": [
+    "Measure cost-per-quality-unit, not just cost per token - cheaper models may require more retries",
+    "Log routing decisions for analysis: which model was chosen, why, and what the outcome was",
+    "Start with simple rule-based routing, add ML-based classification only when rules are insufficient"
+  ]
+}

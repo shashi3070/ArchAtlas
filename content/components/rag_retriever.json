@@ -1,0 +1,55 @@
+{
+  "type": "rag_retriever",
+  "category": "ai_genai",
+  "name": "RAG Retriever",
+  "description": "Retrieval-Augmented Generation service that fetches relevant context from external knowledge sources to ground LLM responses with factual, up-to-date information.",
+  "version": "0.1.0",
+  "capabilities": [
+    "context_retrieval",
+    "query_expansion",
+    "chunk_ranking",
+    "source_attribution"
+  ],
+  "helps_with": [
+    "grounding_llm_responses",
+    "reducing_hallucination",
+    "knowledge_access"
+  ],
+  "does_not_solve": [
+    "model_training",
+    "real_time_data_streaming"
+  ],
+  "risks": [
+    "retrieval_latency",
+    "irrelevant_context_pollution",
+    "stale_knowledge"
+  ],
+  "common_patterns": [
+    "query_rewriting",
+    "multi_stage_retrieval",
+    "context_window_management"
+  ],
+  "failure_modes": [
+    "index_unavailable",
+    "poor_retrieval_quality",
+    "context_overflow"
+  ],
+  "tradeoffs": [
+    "retrieval_depth_vs_latency",
+    "chunk_size_vs_relevance"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 2000,
+    "p95_base_ms": 100,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 100
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Search",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

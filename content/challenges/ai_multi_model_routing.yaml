@@ -1,0 +1,57 @@
+id: ai-multi-model-routing
+title: "Multi-Model Routing"
+difficulty: advanced
+mode: challenge
+narrative: "Design a model routing system that selects between cheap/fast models and expensive/powerful models based on query complexity. Target: 60% cost reduction while maintaining quality for 95% of queries."
+requirements:
+- id: cost-reduction
+  category: cost
+  description: Achieve 60% cost reduction vs always using the premium model
+  priority: must
+  metric: cost_reduction
+  value: 60
+  unit: '%'
+- id: quality-maintenance
+  category: performance
+  description: Maintain output quality for 95% of queries compared to premium model
+  priority: must
+  metric: quality_score
+  value: 95
+  unit: '%'
+- id: routing-latency
+  category: performance
+  description: Routing decision completes within 100ms
+  priority: must
+  metric: routing_latency_ms
+  value: 100
+  unit: ms
+- id: fallback-quality
+  category: availability
+  description: Escalate to premium model when cheap model confidence is low
+  priority: should
+  metric: escalation_accuracy
+  value: 90
+  unit: '%'
+learning_objectives:
+- Query complexity classification
+- Cost-quality tradeoff optimization
+- Model performance benchmarking
+- Dynamic routing with feedback loops
+allowed_components:
+- api
+- redis
+- postgresql
+- worker
+- kafka
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Classify queries using a small classifier model or rule-based heuristics (length, question type, domain).'
+  - 'Track per-model quality scores using automated evals; adjust routing thresholds weekly.'
+  - 'Implement a feedback loop where premium-model outputs fine-tune the complexity classifier.'
+related_topics:
+- model-routing
+- cost-optimization
+- llm-evaluation
+version: 1.0.0

@@ -8,6 +8,7 @@ const LINKS = [
   { to: '/learn', label: 'Learn' },
   { to: '/lab', label: 'Lab' },
   { to: '/simulate', label: 'Simulate' },
+  { to: '/chaos', label: 'Chaos' },
   { to: '/challenges', label: 'Challenges' },
   { to: '/interview', label: 'Interview' },
   { to: '/glossary', label: 'Glossary' },

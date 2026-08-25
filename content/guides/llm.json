@@ -1,0 +1,68 @@
+{
+  "s": "Large language model inference endpoints that generate text, perform reasoning, and power natural language understanding for AI applications.",
+  "w": "LLMs are transformer-based neural networks trained on massive text corpora. Inference involves tokenizing input, computing self-attention across all tokens, and generating output tokens autoregressively. Deployment options include hosted APIs (OpenAI, Anthropic, Google), managed endpoints (Azure, Bedrock, Vertex), or self-hosted (vLLM, TGI, llama.cpp). Key scaling dimensions: concurrent requests, context window length, output token throughput, and time-to-first-token (TTFT). KV-cache reuse, continuous batching, and quantization optimize inference efficiency.",
+  "use": [
+    "Natural language understanding, generation, and reasoning tasks",
+    "Content generation: writing, summarization, translation, code generation",
+    "RAG pipelines where LLM synthesizes retrieved context into answers",
+    "Agent backends providing the reasoning core for multi-step workflows"
+  ],
+  "avoid": [
+    "Deterministic tasks better solved by traditional software (calculations, lookups)",
+    "High-throughput, low-latency requirements where ML inference overhead is prohibitive",
+    "Scenarios where hallucination risk outweighs generative capability benefits"
+  ],
+  "after": [
+    "ai_gateway",
+    "ai_gateway_llm",
+    "model_router",
+    "api",
+    "rag_retriever"
+  ],
+  "to": [
+    "ai_tool",
+    "ai_agent",
+    "guardrail",
+    "evaluation_service",
+    "api"
+  ],
+  "props": {
+    "model": "Which model to use: GPT-4, Claude, Llama, etc.",
+    "temperature": "Sampling temperature (0 = deterministic, 1 = creative)",
+    "max_tokens": "Maximum output tokens to generate",
+    "context_window": "Maximum input token length"
+  },
+  "size": {
+    "default_instances": 2,
+    "tokens_per_sec": "~100-1000 depending on model size",
+    "concurrent_requests": "~10-100 per GPU or managed endpoint"
+  },
+  "world": [
+    "OpenAI GPT-4o / o1",
+    "Anthropic Claude 3.5",
+    "Google Gemini 1.5",
+    "Meta Llama 3 (self-hosted via vLLM)",
+    "Mistral Large"
+  ],
+  "pat": [
+    {
+      "n": "Streaming Response",
+      "d": "Stream tokens as SSE chunks for immediate user feedback rather than waiting for full generation."
+    },
+    {
+      "n": "Structured Output",
+      "d": "Use JSON mode or function calling to constrain LLM output to parseable formats for downstream processing."
+    }
+  ],
+  "pits": [
+    "Hallucination - LLMs generate plausible but incorrect information, requiring grounding via RAG or verification",
+    "Context window limits - long prompts may silently truncate, losing critical information",
+    "Cost escalation with complex prompts - input token costs multiply with long system prompts and tool results",
+    "Rate limits on hosted APIs causing cascading failures without proper backoff"
+  ],
+  "tips": [
+    "Always implement streaming for user-facing responses - TTFT matters more than total time",
+    "Use structured output (JSON mode) when LLM output feeds downstream systems",
+    "Monitor cost per request at the gateway level - complex agent loops can 10x expected spend"
+  ]
+}

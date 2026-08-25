@@ -1,0 +1,56 @@
+{
+  "type": "ai_gateway",
+  "category": "ai_genai",
+  "name": "AI Gateway",
+  "description": "Unified entry point for AI model requests that provides routing, rate limiting, authentication, and observability across all LLM and generative AI services.",
+  "version": "0.1.0",
+  "capabilities": [
+    "request_routing",
+    "rate_limiting",
+    "authentication",
+    "observability",
+    "caching"
+  ],
+  "helps_with": [
+    "unified_ai_access",
+    "model_fallback",
+    "usage_tracking"
+  ],
+  "does_not_solve": [
+    "model_quality_or_accuracy",
+    "training_data_management"
+  ],
+  "risks": [
+    "single_point_of_failure",
+    "added_latency_per_request",
+    "cost_overhead"
+  ],
+  "common_patterns": [
+    "proxy_pattern",
+    "circuit_breaker",
+    "retry_with_fallback"
+  ],
+  "failure_modes": [
+    "gateway_overload",
+    "upstream_model_unavailable",
+    "rate_limit_exhaustion"
+  ],
+  "tradeoffs": [
+    "centralized_control_vs_single_point_of_failure",
+    "added_latency_vs_observability"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 5000,
+    "p95_base_ms": 15,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 200
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Brain",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

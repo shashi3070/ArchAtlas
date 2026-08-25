@@ -1,0 +1,65 @@
+{
+  "s": "Neural network models that convert text, images, or other data into dense vector representations for similarity search, clustering, and retrieval.",
+  "w": "Embedding models transform input data into fixed-length numerical vectors where semantic similarity maps to geometric proximity. Text embedding models (e.g., OpenAI ada-002, Cohere embed, sentence-transformers) encode text into 768-3072 dimensional vectors. Models are served via dedicated inference endpoints with batching support for throughput. Vectors are stored in vector databases and retrieved via approximate nearest neighbor (ANN) search. Model selection trades off quality, dimensionality, latency, and cost.",
+  "use": [
+    "Semantic search over document corpora",
+    "Retrieval-augmented generation (RAG) pipeline indexing",
+    "Similarity matching for recommendations and deduplication",
+    "Clustering and classification of unstructured text"
+  ],
+  "avoid": [
+    "Exact keyword matching scenarios where BM25 or TF-IDF are sufficient",
+    "Highly domain-specific text where general-purpose embeddings underperform",
+    "Real-time applications where embedding latency per query is unacceptable"
+  ],
+  "after": [
+    "api",
+    "ai_gateway",
+    "worker",
+    "api_gateway"
+  ],
+  "to": [
+    "vector_database",
+    "rag_retriever",
+    "llm",
+    "elasticsearch"
+  ],
+  "props": {
+    "dimensions": "Vector dimensionality (768, 1024, 3072)",
+    "batch_size": "Number of texts encoded per inference call",
+    "model_variant": "Specific model: small (fast/cheap) vs large (high quality)"
+  },
+  "size": {
+    "default_instances": 2,
+    "embeddings_per_sec": "~100-1000 depending on model size and batch",
+    "vector_size_bytes": "~4-12 KB per vector depending on dimensions"
+  },
+  "world": [
+    "OpenAI text-embedding-3-small/large",
+    "Cohere embed-v3",
+    "Sentence-Transformers (all-MiniLM-L6-v2)",
+    "Google Vertex AI embedding",
+    "Voyage AI embeddings"
+  ],
+  "pat": [
+    {
+      "n": "Offline Batch Indexing",
+      "d": "Embed documents asynchronously in large batches, store vectors in DB, serve queries with single-document embedding."
+    },
+    {
+      "n": "Dual Encoder with Reranker",
+      "d": "Use fast embedding model for candidate retrieval, then a cross-encoder reranker for precision on top-k results."
+    }
+  ],
+  "pits": [
+    "Embedding drift when upgrading models without re-indexing existing vectors",
+    "Dimension mismatch between embedding model output and vector DB index configuration",
+    "Batch size too large causing OOM on embedding inference servers",
+    "Ignoring max token limits - truncation silently degrades embedding quality"
+  ],
+  "tips": [
+    "Measure embedding quality with domain-specific benchmarks, not just MTEB scores",
+    "Use dimensionality reduction (e.g., Matryoshka) to store compact vectors and improve retrieval speed",
+    "Cache embeddings for static content to avoid redundant inference calls"
+  ]
+}

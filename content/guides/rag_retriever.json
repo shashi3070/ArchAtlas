@@ -1,0 +1,66 @@
+{
+  "s": "A retrieval-augmented generation component that searches a knowledge base for relevant context and feeds it to an LLM to produce grounded, factual answers.",
+  "w": "RAG retrievers bridge the gap between static LLM knowledge and dynamic, domain-specific information. On ingestion, documents are chunked, embedded into vectors, and stored in a vector database. At query time, the user's query is embedded, top-k similar chunks are retrieved (often with hybrid BM25 + vector search), optionally reranked by a cross-encoder, and the most relevant chunks are injected into the LLM prompt as context. The LLM generates a response grounded in the retrieved documents, reducing hallucination and enabling citation.",
+  "use": [
+    "Knowledge bases that change frequently and cannot be baked into model training",
+    "Domain-specific Q&A requiring accuracy over general knowledge",
+    "Document-heavy applications: legal, medical, financial, technical support",
+    "Any application where LLM must cite sources for trustworthiness"
+  ],
+  "avoid": [
+    "Simple FAQ that can be handled by a lookup table or search engine without generation",
+    "Scenarios where retrieval latency adds unacceptable delay to responses",
+    "Knowledge domains with very short documents where chunking provides no benefit"
+  ],
+  "after": [
+    "embedding_model",
+    "vector_database",
+    "elasticsearch",
+    "object_storage",
+    "worker"
+  ],
+  "to": [
+    "llm",
+    "ai_agent",
+    "ai_tool",
+    "evaluation_service"
+  ],
+  "props": {
+    "top_k": "Number of documents retrieved per query",
+    "chunk_size": "Document splitting strategy: tokens per chunk",
+    "retrieval_mode": "Vector-only, BM25-only, or hybrid (vector + keyword)"
+  },
+  "size": {
+    "default_instances": 2,
+    "retrieval_latency_ms": "<200ms for vector search, <500ms with reranking",
+    "index_size": "~1M-1B documents depending on corpus"
+  },
+  "world": [
+    "Amazon Bedrock Knowledge Bases",
+    "Pinecone + LLM RAG pipelines",
+    "Weaviate generative search",
+    "Elasticsearch OpenAI RAG",
+    "LlamaIndex RAG framework"
+  ],
+  "pat": [
+    {
+      "n": "Hybrid Retrieval with Reranking",
+      "d": "Combine vector similarity and keyword search for recall, then rerank top-50 with a cross-encoder for precision."
+    },
+    {
+      "n": "Contextual Chunking",
+      "d": "Enrich document chunks with metadata (title, section, parent doc) to improve retrieval relevance and citation."
+    }
+  ],
+  "pits": [
+    "Poor chunking losing critical context - chunks too small miss relationships, too large dilute relevance",
+    "Retrieval without reranking returning irrelevant documents that confuse the LLM",
+    "Stale index not reflecting recent document updates - requires incremental re-indexing strategy",
+    "Context window overflow from too many retrieved documents - limit top-k and summarize"
+  ],
+  "tips": [
+    "Retrieval quality is the primary driver of RAG accuracy - invest more in retrieval than in prompt engineering",
+    "Use hybrid search (vector + BM25) for best recall, especially with technical or keyword-heavy content",
+    "Evaluate RAG with faithfulness metrics: does the answer actually come from the retrieved documents?"
+  ]
+}

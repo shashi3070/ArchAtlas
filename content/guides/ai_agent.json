@@ -1,0 +1,68 @@
+{
+  "s": "Autonomous AI components that plan, reason, use tools, and execute multi-step workflows to accomplish complex goals with minimal human intervention.",
+  "w": "Agents combine an LLM for reasoning with a planning loop (ReAct, plan-and-execute, or tree-of-thought) and tool-calling capabilities. The LLM receives a goal, decomposes it into subtasks, selects appropriate tools (APIs, code interpreters, search), executes actions, observes results, and iterates until the goal is met or a stopping condition triggers. Agents maintain internal state including conversation history, tool outputs, and intermediate results. Guardrails constrain agent behavior to prevent unsafe or unwanted actions.",
+  "use": [
+    "Complex multi-step workflows requiring dynamic decision-making",
+    "Tasks that combine reasoning with real-world actions (booking, coding, research)",
+    "Processes where the execution path cannot be predetermined",
+    "Aggregation tasks requiring multiple tool calls and data synthesis"
+  ],
+  "avoid": [
+    "Simple deterministic workflows - use regular pipelines instead",
+    "Tasks where latency and cost predictability are critical (agent loops are variable)",
+    "Scenarios requiring guaranteed correctness without human review",
+    "Cost-sensitive applications where agent loops may consume excessive tokens"
+  ],
+  "after": [
+    "api",
+    "api_gateway",
+    "ai_gateway",
+    "message_queue"
+  ],
+  "to": [
+    "ai_tool",
+    "llm",
+    "agent_memory",
+    "rag_retriever",
+    "guardrail",
+    "evaluation_service"
+  ],
+  "props": {
+    "max_iterations": "Safety limit on reasoning loops before forced termination",
+    "tool_timeout_ms": "Per-tool execution deadline",
+    "temperature": "Creativity vs determinism tradeoff for planning"
+  },
+  "size": {
+    "default_instances": 2,
+    "tokens_per_task": "~5k-50k depending on complexity",
+    "concurrent_agents": "~10-100 per gateway depending on model rate limits"
+  },
+  "world": [
+    "OpenAI Assistants API",
+    "Anthropic Claude computer use",
+    "Devin AI software engineer",
+    "AutoGPT / BabyAGI",
+    "Microsoft Copilot Studio"
+  ],
+  "pat": [
+    {
+      "n": "ReAct Loop",
+      "d": "Interleave reasoning traces with tool actions: think → act → observe → think until complete."
+    },
+    {
+      "n": "Plan-and-Execute",
+      "d": "Generate a full plan upfront, then execute steps sequentially, replanning when steps fail."
+    }
+  ],
+  "pits": [
+    "Infinite loops without iteration caps or budget limits - always set max iterations and token budgets",
+    "Cascading tool failures when agent retries without understanding root cause",
+    "Excessive token consumption from verbose reasoning traces in the loop",
+    "Unsafe actions without guardrails - agents can call destructive APIs or leak data"
+  ],
+  "tips": [
+    "Start with plan-and-execute for predictability, move to ReAct only when dynamic replanning is needed",
+    "Implement circuit breakers: if a tool fails 3 times, stop and escalate to human",
+    "Log full agent traces for debugging - the reasoning chain is as important as the final output"
+  ]
+}

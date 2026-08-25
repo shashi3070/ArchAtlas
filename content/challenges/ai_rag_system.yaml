@@ -1,0 +1,58 @@
+id: ai-rag-system
+title: "Design a RAG System"
+difficulty: intermediate
+mode: challenge
+narrative: "Design a retrieval-augmented generation system that can answer questions from 10M documents. The system must retrieve relevant chunks, rerank them, and generate accurate answers with citations. Budget: $3000/mo. Latency target: P95 < 2s."
+requirements:
+- id: retrieval-recall
+  category: performance
+  description: Retrieve relevant chunks for 90% of queries
+  priority: must
+  metric: recall
+  value: 90
+  unit: '%'
+- id: response-latency
+  category: performance
+  description: End-to-end latency P95 under 2 seconds
+  priority: must
+  metric: p95_latency_ms
+  value: 2000
+  unit: ms
+- id: citation-accuracy
+  category: functional
+  description: Every generated answer cites source documents
+  priority: must
+  metric: citation_coverage
+  value: 100
+  unit: '%'
+- id: monthly-budget
+  category: cost
+  description: Total infrastructure and API cost under $3000/month
+  priority: must
+  metric: monthly_cost_usd
+  value: 3000
+  unit: usd
+learning_objectives:
+- Document chunking and embedding strategies
+- Vector similarity search at scale
+- Cross-encoder reranking for precision
+- Prompt construction with grounded citations
+allowed_components:
+- api
+- redis
+- postgresql
+- worker
+- elasticsearch
+- object_storage
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'Chunk documents into 512-token segments with 50-token overlap for optimal retrieval.'
+  - 'Use text-embedding-3-small for embeddings; store in pgvector or Qdrant for fast ANN search.'
+  - 'Retrieve top-50 candidates via vector search, then rerank with a cross-encoder to get top-5 for the prompt.'
+related_topics:
+- rag-systems
+- vector-databases
+- embedding-models
+version: 1.0.0

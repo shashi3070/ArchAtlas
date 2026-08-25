@@ -1,45 +1,53 @@
 {
   "type": "reranker",
-  "kind": "implementation",
   "category": "ai_genai",
   "name": "Reranker",
-  "description": "Second-stage relevance model reordering candidate results using cross-encoder scoring.",
+  "description": "Model service that re-scores and re-orders retrieved documents or candidates to improve relevance ranking after initial retrieval stages.",
   "version": "0.1.0",
   "capabilities": [
     "cross_encoder_scoring",
-    "top_k_reorder",
-    "query_doc_interaction"
+    "relevance_ranking",
+    "candidate_reordering"
   ],
   "helps_with": [
-    "precision_boost_for_retrieval",
-    "answer_grounding_quality"
+    "search_result_quality",
+    "retrieval_precision",
+    "final_answer_relevance"
   ],
   "does_not_solve": [
-    "first_stage_recall_from_corpus",
-    "non_search_rankings"
+    "initial_candidate_generation",
+    "large_scale_indexing"
   ],
   "risks": [
-    "latency_per_candidate",
-    "cost_scaling_with_k"
+    "added_latency_in_pipeline",
+    "model_overfitting_to_specific_domains"
   ],
-  "common_patterns": [],
+  "common_patterns": [
+    "two_stage_retrieval",
+    "score_normalization",
+    "cascade_ranking"
+  ],
   "failure_modes": [
-    "score_drift_after_model_swap",
-    "candidate_overflow"
+    "model_loading_failure",
+    "score_inconsistency",
+    "latency_exceeding_sla"
   ],
   "tradeoffs": [
-    "relevance_gain_vs_added_latency"
+    "ranking_quality_vs_latency",
+    "cross_encoder_vs_bi_encoder_accuracy"
   ],
   "capacity_defaults": {
-    "requests_per_sec_per_instance": 50,
-    "default_instances": 1
+    "rps_per_instance": 3000,
+    "p95_base_ms": 30,
+    "default_instances": 2
   },
   "cost_defaults": {
-    "usd_per_node_month": 120
+    "usd_per_instance_month": 80
   },
   "palette": {
-    "group": "AI",
-    "icon": "box",
-    "color": "#9333ea"
-  }
+    "group": "AI/GenAI",
+    "icon": "ArrowUpDown",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
 }

@@ -1,0 +1,66 @@
+{
+  "s": "Persistent and ephemeral memory systems that allow AI agents to retain context across interactions, learn from past experiences, and maintain coherent long-term state.",
+  "w": "Agents accumulate memories across conversations and tasks. Short-term memory stores current conversation context (working memory buffer). Long-term memory persists facts, preferences, and learned patterns in vector stores or key-value databases. Episodic memory replays past interactions for few-shot retrieval. Semantic memory extracts generalized knowledge. Memory is indexed by recency, relevance, and importance scores to fit within context window limits.",
+  "use": [
+    "Multi-turn conversational agents that need to recall prior interactions",
+    "Personalization systems remembering user preferences across sessions",
+    "Task-oriented agents building up knowledge over repeated workflows",
+    "Research agents accumulating findings across exploration steps"
+  ],
+  "avoid": [
+    "Simple single-turn Q&A where no state is needed",
+    "Scenarios where all context fits in the LLM context window natively",
+    "Privacy-sensitive domains without explicit memory retention controls"
+  ],
+  "after": [
+    "api",
+    "ai_agent",
+    "vector_database",
+    "redis",
+    "postgresql"
+  ],
+  "to": [
+    "ai_agent",
+    "rag_retriever",
+    "llm",
+    "embedding_model"
+  ],
+  "props": {
+    "memory_window_size": "Number of recent interactions retained in working memory",
+    "consolidation_interval": "How often short-term memories are summarized into long-term storage",
+    "retrieval_top_k": "Number of past memories retrieved per query"
+  },
+  "size": {
+    "default_instances": 2,
+    "memory_entries_per_agent": "~1k-100k depending on use case",
+    "retrieval_latency_ms": "<100ms for vector-based recall"
+  },
+  "world": [
+    "ChatGPT memory feature",
+    "Mem0 (formerly MemGPT) memory layer",
+    "LangChain memory modules",
+    "Cohere Command-R memory-augmented generation",
+    "Microsoft Copilot context retention"
+  ],
+  "pat": [
+    {
+      "n": "Memory Consolidation",
+      "d": "Periodically summarize working memory into compressed long-term entries, pruning redundant or low-importance facts."
+    },
+    {
+      "n": "Hierarchical Retrieval",
+      "d": "Retrieve from short-term (recency) and long-term (relevance) stores, merge and rank before injecting into context."
+    }
+  ],
+  "pits": [
+    "Unbounded memory growth without pruning strategies - older entries become stale and consume retrieval bandwidth",
+    "Memory pollution from incorrect LLM-generated facts being persisted as truth",
+    "Retrieval latency adding unacceptable delay to conversational responses",
+    "Privacy leaks when agent memories contain sensitive data from other users"
+  ],
+  "tips": [
+    "Implement explicit user controls: view, edit, and delete memories for transparency",
+    "Use importance scoring (relevance + recency decay) rather than naive chronological retrieval",
+    "Separate working memory (fast, ephemeral) from long-term memory (slow, persistent) for clean architecture"
+  ]
+}

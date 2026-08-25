@@ -1,0 +1,58 @@
+id: ai-multi-agent-workflow
+title: "Multi-Agent Workflow"
+difficulty: advanced
+mode: challenge
+narrative: "Design a multi-agent workflow system where specialized agents (researcher, writer, reviewer, editor) collaborate on complex tasks. Must handle agent failures gracefully with fallback strategies."
+requirements:
+- id: agent-failure-recovery
+  category: availability
+  description: Workflow completes even if one agent fails, using fallback strategies
+  priority: must
+  metric: workflow_success_rate
+  value: 99
+  unit: '%'
+- id: agent-timeout
+  category: performance
+  description: Individual agent tasks complete within 60 seconds or timeout
+  priority: must
+  metric: agent_timeout_ms
+  value: 60000
+  unit: ms
+- id: pipeline-throughput
+  category: scale
+  description: Process 50 concurrent multi-agent workflows
+  priority: must
+  metric: concurrent_workflows
+  value: 50
+  unit: workflows
+- id: handoff-latency
+  category: performance
+  description: Agent-to-agent handoff completes within 2 seconds
+  priority: should
+  metric: handoff_latency_ms
+  value: 2000
+  unit: ms
+learning_objectives:
+- Multi-agent orchestration patterns
+- Agent failure handling and fallback strategies
+- Workflow state machines for agent pipelines
+- Inter-agent communication and handoff
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 15
+hints:
+  - 'Define the workflow as a DAG: researcher -> writer -> reviewer -> editor, with parallel branches where possible.'
+  - 'Assign each agent a fallback: if the reviewer fails, route to a simpler rule-based validator.'
+  - 'Store workflow state as a state machine in PostgreSQL; use Kafka for task dispatch between agents.'
+related_topics:
+- multi-agent-systems
+- workflow-engines
+- fault-tolerance
+version: 1.0.0

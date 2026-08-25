@@ -1,0 +1,58 @@
+id: ai-agent-platform
+title: "Agent Platform"
+difficulty: advanced
+mode: challenge
+narrative: "Build an autonomous agent platform that can use tools, maintain conversation memory, and execute multi-step workflows. Must handle 500 concurrent agent sessions with tool-call timeouts and retry logic."
+requirements:
+- id: concurrent-sessions
+  category: scale
+  description: Support 500 concurrent agent sessions
+  priority: must
+  metric: concurrent_sessions
+  value: 500
+  unit: sessions
+- id: tool-call-timeout
+  category: performance
+  description: Tool calls time out after 30s with retry up to 3 attempts
+  priority: must
+  metric: tool_timeout_ms
+  value: 30000
+  unit: ms
+- id: memory-persistence
+  category: durability
+  description: Agent conversation memory persists across restarts
+  priority: must
+  metric: memory_persistence
+  value: 100
+  unit: '%'
+- id: workflow-completion
+  category: functional
+  description: Multi-step workflows complete with idempotent tool execution
+  priority: must
+  metric: workflow_completion_rate
+  value: 99
+  unit: '%'
+learning_objectives:
+- Agent loop architecture (think-act-observe)
+- Tool orchestration with timeout and retry
+- Conversation memory and state management
+- Multi-step workflow coordination
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 15
+hints:
+  - 'Implement the agent loop as a state machine: THINK -> TOOL_CALL -> OBSERVE -> repeat or ANSWER.'
+  - 'Use idempotency keys on tool calls to safely retry without duplicate side effects.'
+  - 'Partition active sessions across workers; store checkpoint state in PostgreSQL for crash recovery.'
+related_topics:
+- ai-agents
+- tool-use
+- workflow-engines
+version: 1.0.0

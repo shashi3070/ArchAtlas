@@ -1,0 +1,56 @@
+{
+  "type": "agent_memory",
+  "category": "ai_genai",
+  "name": "Agent Memory",
+  "description": "Persistent and ephemeral memory service for AI agents that stores conversation history, learned facts, and working state across sessions and interactions.",
+  "version": "0.1.0",
+  "capabilities": [
+    "conversation_history",
+    "fact_storage",
+    "working_memory",
+    "memory_retrieval"
+  ],
+  "helps_with": [
+    "context_persistence",
+    "personalization",
+    "cross_session_continuity"
+  ],
+  "does_not_solve": [
+    "long_term_knowledge_management",
+    "structured_data_analytics"
+  ],
+  "risks": [
+    "stale_context",
+    "privacy_leakage",
+    "memory_corruption"
+  ],
+  "common_patterns": [
+    "short_long_term_memory",
+    "memory_summarization",
+    "recency_weighted_retrieval"
+  ],
+  "failure_modes": [
+    "write_failure",
+    "read_timeout",
+    "memory_exhaustion"
+  ],
+  "tradeoffs": [
+    "memory_size_vs_retrieval_latency",
+    "retention_vs_privacy"
+  ],
+  "capacity_defaults": {
+    "reads_per_sec": 5000,
+    "writes_per_sec": 2000,
+    "p95_base_ms": 10,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 200
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "HardDrive",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

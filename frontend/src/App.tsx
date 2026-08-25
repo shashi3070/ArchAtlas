@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ChallengesPage } from './pages/ChallengesPage'
 import { ChallengeRunPage } from './pages/ChallengeRunPage'
+import { ChaosPage } from './pages/ChaosPage'
 import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
 import { InterviewPage } from './pages/InterviewPage'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/challenges/:cid" element={<ChallengeRunPage />} />
           <Route path="/interview" element={<InterviewPage />} />
           <Route path="/simulate" element={<SimulatePage />} />
+          <Route path="/chaos" element={<ChaosPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
         </Routes>
       </Layout>

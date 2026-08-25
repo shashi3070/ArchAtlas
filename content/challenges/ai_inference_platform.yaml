@@ -1,0 +1,65 @@
+id: ai-inference-platform
+title: "Inference Platform"
+difficulty: advanced
+mode: challenge
+narrative: "Build a self-hosted LLM inference platform serving 10K requests/day. Must support model versioning, A/B testing, GPU utilization tracking, and auto-scaling based on queue depth."
+requirements:
+- id: daily-throughput
+  category: scale
+  description: Serve 10K inference requests per day
+  priority: must
+  metric: daily_requests
+  value: 10000
+  unit: requests
+- id: model-versioning
+  category: functional
+  description: Support multiple model versions with traffic splitting
+  priority: must
+  metric: model_versions
+  value: 5
+  unit: versions
+- id: gpu-utilization
+  category: performance
+  description: Track GPU utilization per model instance
+  priority: must
+  metric: gpu_tracking_coverage
+  value: 100
+  unit: '%'
+- id: auto-scaling
+  category: scale
+  description: Auto-scale inference workers based on queue depth
+  priority: must
+  metric: scale_response_time_s
+  value: 30
+  unit: seconds
+- id: ab-testing
+  category: functional
+  description: A/B test model versions with traffic splitting
+  priority: should
+  metric: traffic_split_accuracy
+  value: 99
+  unit: '%'
+learning_objectives:
+- Self-hosted LLM inference architecture
+- Model versioning and traffic splitting
+- GPU utilization monitoring and optimization
+- Queue-based auto-scaling strategies
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 20
+hints:
+  - 'Store model versions and traffic weights in a registry table; the load balancer queries this on each request.'
+  - 'Use Prometheus + GPU exporter to track VRAM usage, utilization, and temperature per inference node.'
+  - 'Scale workers based on Kafka consumer lag or a custom queue depth metric with a 30s cooldown.'
+related_topics:
+- llm-inference
+- model-versioning
+- gpu-optimization
+version: 1.0.0

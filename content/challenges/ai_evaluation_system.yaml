@@ -1,0 +1,58 @@
+id: ai-evaluation-system
+title: "AI Evaluation System"
+difficulty: intermediate
+mode: challenge
+narrative: "Build an automated evaluation system for LLM outputs. Must run 50 evaluation metrics per response, track quality over time, detect regressions, and generate dashboards. Throughput: 100 evals/minute."
+requirements:
+- id: throughput
+  category: performance
+  description: Process 100 evaluations per minute
+  priority: must
+  metric: evals_per_minute
+  value: 100
+  unit: evals/min
+- id: metric-coverage
+  category: functional
+  description: Run 50 evaluation metrics per LLM response
+  priority: must
+  metric: metric_count
+  value: 50
+  unit: metrics
+- id: regression-detection
+  category: performance
+  description: Detect quality regressions within 1 hour of deployment
+  priority: must
+  metric: regression_detection_time_min
+  value: 60
+  unit: minutes
+- id: dashboard-latency
+  category: performance
+  description: Dashboard queries return within 2 seconds
+  priority: should
+  metric: dashboard_latency_ms
+  value: 2000
+  unit: ms
+learning_objectives:
+- LLM evaluation metric design
+- Regression detection for model quality
+- Time-series quality tracking
+- Evaluation pipeline parallelization
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- elasticsearch
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'Fan out evaluation across worker pools using Kafka topics partitioned by metric category.'
+  - 'Store metric results as time-series data; use rolling windows for trend analysis.'
+  - 'Flag regressions when a metric drops below mean - 2*stddev over a 24-hour rolling window.'
+related_topics:
+- llm-evaluation
+- regression-detection
+- quality-dashboard
+version: 1.0.0

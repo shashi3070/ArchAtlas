@@ -1,0 +1,54 @@
+{
+  "type": "model_router",
+  "category": "ai_genai",
+  "name": "Model Router",
+  "description": "Intelligent routing layer that selects the optimal LLM or AI model for each request based on cost, latency, capability, and load balancing policies.",
+  "version": "0.1.0",
+  "capabilities": [
+    "model_selection",
+    "load_balancing",
+    "cost_optimization",
+    "fallback_routing"
+  ],
+  "helps_with": [
+    "cost_efficiency",
+    "latency_optimization",
+    "model_availability"
+  ],
+  "does_not_solve": [
+    "model_training_or_fine_tuning",
+    "prompt_engineering"
+  ],
+  "risks": [
+    "routing_logic_complexity",
+    "incorrect_model_selection"
+  ],
+  "common_patterns": [
+    "weighted_round_robin",
+    "latency_based_routing",
+    "cost_aware_routing"
+  ],
+  "failure_modes": [
+    "all_models_unavailable",
+    "routing_rule_misconfiguration",
+    "health_check_false_positives"
+  ],
+  "tradeoffs": [
+    "routing_overhead_vs_optimal_selection",
+    "simplicity_vs_flexibility"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 10000,
+    "p95_base_ms": 5,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 100
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Route",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

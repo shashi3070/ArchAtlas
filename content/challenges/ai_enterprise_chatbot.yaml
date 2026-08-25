@@ -1,0 +1,58 @@
+id: ai-enterprise-chatbot
+title: "Enterprise Chatbot"
+difficulty: advanced
+mode: challenge
+narrative: "Build an enterprise chatbot supporting 10K concurrent users with conversation memory, guardrails, and multi-model routing. Must handle sensitive data with PII redaction and audit logging."
+requirements:
+- id: concurrent-users
+  category: scale
+  description: Support 10K concurrent users with <3s response time
+  priority: must
+  metric: concurrent_users
+  value: 10000
+  unit: users
+- id: conversation-memory
+  category: functional
+  description: Maintain conversation context for last 20 messages
+  priority: must
+  metric: memory_turns
+  value: 20
+  unit: turns
+- id: pii-redaction
+  category: security
+  description: Detect and redact PII before sending to LLM
+  priority: must
+  metric: pii_detection_rate
+  value: 99
+  unit: '%'
+- id: audit-logging
+  category: security
+  description: Log all interactions for compliance audit
+  priority: must
+  metric: audit_coverage
+  value: 100
+  unit: '%'
+learning_objectives:
+- Conversation state management at scale
+- PII detection and redaction pipelines
+- Multi-model routing and fallback strategies
+- Audit logging for compliance
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- elasticsearch
+constraints:
+- key: max_nodes
+  value: 15
+hints:
+  - 'Store conversation history in Redis with a per-session key and 24h TTL for automatic expiry.'
+  - 'Use a dedicated PII detection service (e.g., regex + NER model) as a pre-processing step before LLM calls.'
+  - 'Route model requests through a gateway that tracks token usage and selects models based on query complexity.'
+related_topics:
+- chat-systems
+- pII-compliance
+- multi-model-ai
+version: 1.0.0

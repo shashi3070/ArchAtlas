@@ -1,0 +1,55 @@
+{
+  "type": "evaluation_service",
+  "category": "ai_genai",
+  "name": "AI Evaluation Service",
+  "description": "Automated testing and evaluation platform for AI models and pipelines that measures quality, performance, safety, and accuracy across defined metrics and benchmarks.",
+  "version": "0.1.0",
+  "capabilities": [
+    "model_evaluation",
+    "benchmark_runner",
+    "quality_scoring",
+    "regression_detection"
+  ],
+  "helps_with": [
+    "model_quality_assurance",
+    "performance_monitoring",
+    "safety_validation"
+  ],
+  "does_not_solve": [
+    "model_training",
+    "production_traffic_handling"
+  ],
+  "risks": [
+    "evaluation_staleness",
+    "misleading_metrics",
+    "high_compute_cost_for_evals"
+  ],
+  "common_patterns": [
+    "golden_dataset_comparison",
+    "llm_as_judge",
+    "automated_regression_suite"
+  ],
+  "failure_modes": [
+    "dataset_corruption",
+    "eval_timeout",
+    "metric_inconsistency_across_runs"
+  ],
+  "tradeoffs": [
+    "eval_completeness_vs_cost",
+    "speed_vs_thoroughness"
+  ],
+  "capacity_defaults": {
+    "evals_per_sec": 50,
+    "p95_base_ms": 2000,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 300
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "ClipboardCheck",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

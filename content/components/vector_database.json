@@ -1,49 +1,56 @@
 {
   "type": "vector_database",
-  "kind": "implementation",
-  "category": "database",
+  "category": "ai_genai",
   "name": "Vector Database",
-  "description": "Embedding store with approximate nearest-neighbor indexes powering semantic search and RAG.",
+  "description": "Specialized database optimized for storing, indexing, and querying high-dimensional vectors with support for approximate nearest neighbor search.",
   "version": "0.1.0",
   "capabilities": [
-    "ann_search",
-    "metadata_filters",
-    "hybrid_keyword_vector"
+    "vector_storage",
+    "approximate_nearest_neighbor",
+    "hybrid_search",
+    "metadata_filtering"
   ],
   "helps_with": [
-    "semantic_retrieval",
-    "dedupe_by_similarity",
-    "rag_context_store"
+    "semantic_search",
+    "recommendation_systems",
+    "similarity_retrieval"
   ],
   "does_not_solve": [
-    "transactional_source_of_truth",
-    "exact_analytics_aggregations"
+    "transactional_workloads",
+    "graph_relationship_queries"
   ],
   "risks": [
-    "recall_vs_latency_tuning",
-    "index_rebuild_costs"
+    "index_corruption",
+    "memory_pressure_from_large_indexes",
+    "consistency_lag_in_replicated_clusters"
   ],
   "common_patterns": [
-    "cache_aside"
+    "hnsw_indexing",
+    "ivf_pq_compression",
+    "hybrid_vector_keyword_search"
   ],
   "failure_modes": [
-    "recall_degradation",
-    "index_memory_exhaustion"
+    "index_build_failure",
+    "memory_exhaustion",
+    "query_timeout_under_load"
   ],
   "tradeoffs": [
-    "approximation_quality_vs_speed"
+    "recall_accuracy_vs_query_latency",
+    "index_size_vs_memory_cost"
   ],
   "capacity_defaults": {
-    "safe_reads_per_sec": 20000,
-    "safe_writes_per_sec": 5000,
-    "default_instances": 1
+    "queries_per_sec": 5000,
+    "writes_per_sec": 2000,
+    "p95_base_ms": 20,
+    "default_instances": 3
   },
   "cost_defaults": {
-    "usd_per_node_month": 250
+    "usd_per_instance_month": 300
   },
   "palette": {
-    "group": "Data",
-    "icon": "box",
-    "color": "#059669"
-  }
+    "group": "AI/GenAI",
+    "icon": "Database",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
 }

@@ -1,0 +1,56 @@
+{
+  "type": "ai_agent",
+  "category": "ai_genai",
+  "name": "AI Agent",
+  "description": "Autonomous orchestrator service that plans, reasons, and coordinates multi-step tasks using LLMs, tools, and external systems to accomplish complex objectives.",
+  "version": "0.1.0",
+  "capabilities": [
+    "task_planning",
+    "tool_orchestration",
+    "multi_step_reasoning",
+    "state_management"
+  ],
+  "helps_with": [
+    "complex_task_automation",
+    "dynamic_workflow_execution",
+    "adaptive_problem_solving"
+  ],
+  "does_not_solve": [
+    "deterministic_task_execution",
+    "guaranteed_accuracy_of_reasoning"
+  ],
+  "risks": [
+    "unpredictable_behavior",
+    "cascading_tool_errors",
+    "high_token_cost_per_session"
+  ],
+  "common_patterns": [
+    "react_loop",
+    "plan_and_execute",
+    "tool_use_api"
+  ],
+  "failure_modes": [
+    "infinite_loop",
+    "tool_failure_cascade",
+    "context_window_overflow"
+  ],
+  "tradeoffs": [
+    "autonomy_vs_control",
+    "flexibility_vs_predictability",
+    "capability_vs_cost"
+  ],
+  "capacity_defaults": {
+    "concurrent_sessions": 100,
+    "p95_base_ms": 2000,
+    "default_instances": 3
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 400
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Bot",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

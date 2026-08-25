@@ -1,0 +1,55 @@
+{
+  "type": "ai_gateway_llm",
+  "category": "ai_genai",
+  "name": "LLM AI Gateway",
+  "description": "Composite pattern combining an AI gateway with LLM-specific features including token-based billing, prompt caching, streaming proxy, and model-level access control.",
+  "version": "0.1.0",
+  "capabilities": [
+    "llm_request_proxying",
+    "token_usage_tracking",
+    "prompt_caching",
+    "streaming_support"
+  ],
+  "helps_with": [
+    "llm_cost_management",
+    "multi_model_access_control",
+    "streaming_reliability"
+  ],
+  "does_not_solve": [
+    "model_training",
+    "domain_specific_accuracy"
+  ],
+  "risks": [
+    "gateway_becomes_bottleneck",
+    "streaming_state_memory_growth",
+    "cache_invalidation_challenges"
+  ],
+  "common_patterns": [
+    "llm_proxy",
+    "token_budget_enforcement",
+    "prompt_cache_hit_optimization"
+  ],
+  "failure_modes": [
+    "upstream_model_timeout",
+    "streaming_connection_drop",
+    "token_counter_miscount"
+  ],
+  "tradeoffs": [
+    "caching_benefit_vs_staleness_risk",
+    "centralized_control_vs_added_latency"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 5000,
+    "p95_base_ms": 20,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 250
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Network",
+    "color": "#8b5cf6"
+  },
+  "kind": "pattern"
+}

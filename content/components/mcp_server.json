@@ -1,47 +1,54 @@
 {
   "type": "mcp_server",
-  "kind": "implementation",
   "category": "ai_genai",
   "name": "MCP Server",
-  "description": "Model Context Protocol endpoint exposing standardized tools/resources to AI clients.",
+  "description": "Model Context Protocol server that standardizes how AI models and tools discover, connect to, and exchange data with external systems and services.",
   "version": "0.1.0",
   "capabilities": [
-    "standardized_tool_schema",
-    "resource_endpoints",
-    "session_mgmt"
+    "protocol_standardization",
+    "tool_discovery",
+    "context_sharing",
+    "resource_access"
   ],
   "helps_with": [
-    "tool_interop_across_ai_clients",
-    "capability_marketplaces"
+    "interoperability",
+    "tool_standardization",
+    "secure_resource_sharing"
   ],
   "does_not_solve": [
-    "general_api_gateway_duties",
-    "high_qps_public_traffic"
+    "model_inference",
+    "data_transformation"
   ],
   "risks": [
-    "tool_version_churn",
-    "permission_scope_errors"
+    "protocol_version_mismatches",
+    "security_exposure_via_resources"
   ],
   "common_patterns": [
-    "tool_orchestrator"
+    "json_rpc_transport",
+    "capability_negotiation",
+    "resource_uri_scheme"
   ],
   "failure_modes": [
-    "schema_drift_breaking_clients",
-    "overprivileged_tools"
+    "connection_timeout",
+    "authentication_failure",
+    "schema_incompatibility"
   ],
   "tradeoffs": [
-    "standardization_vs_bespoke_integration_depth"
+    "standardization_vs_flexibility",
+    "security_vs_ease_of_use"
   ],
   "capacity_defaults": {
-    "calls_per_sec": 200,
-    "default_instances": 1
+    "rps_per_instance": 3000,
+    "p95_base_ms": 30,
+    "default_instances": 2
   },
   "cost_defaults": {
-    "usd_per_node_month": 60
+    "usd_per_instance_month": 120
   },
   "palette": {
-    "group": "AI",
-    "icon": "box",
-    "color": "#9333ea"
-  }
+    "group": "AI/GenAI",
+    "icon": "Plug",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
 }

@@ -2847,3 +2847,250 @@ button:disabled {
   font-variant-numeric: tabular-nums;
   color: #334155;
 }
+
+/* ── Chaos page ──────────────────────────────────────── */
+
+.chaos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+
+.chaos-toolbar {
+  margin-bottom: 24px;
+}
+
+.chaos-event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.chaos-event-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.chaos-event-card:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.chaos-event-selected {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.chaos-event-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.chaos-event-desc {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.chaos-event-detail {
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.chaos-event-detail h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.chaos-result {
+  margin-top: 20px;
+}
+
+.chaos-severity-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.chaos-severity {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chaos-severity-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.chaos-severity-medium {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.chaos-severity-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.chaos-severity-critical {
+  background: #991b1b;
+  color: #ffffff;
+}
+
+/* ── Delta report table ──────────────────────────────── */
+
+.chaos-delta {
+  margin-bottom: 20px;
+}
+
+.chaos-delta-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.chaos-delta-table th {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.chaos-delta-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.chaos-delta-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.chaos-metric-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.chaos-degraded {
+  background: #fef2f2;
+}
+
+.chaos-improved {
+  background: #f0fdf4;
+}
+
+.chaos-arrow-bad {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.chaos-arrow-good {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+.chaos-diff-bad {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.chaos-diff-good {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.chaos-overloaded,
+.chaos-bottleneck-shift {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.chaos-overloaded {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.chaos-bottleneck-shift {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.chaos-root-cause,
+.chaos-mitigation {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.chaos-root-cause {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.chaos-mitigation {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.chaos-root-cause h4,
+.chaos-mitigation h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.chaos-root-cause p,
+.chaos-mitigation p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.chaos-affected {
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.chaos-affected h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.chaos-affected ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+}

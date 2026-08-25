@@ -1,0 +1,57 @@
+id: ai-gateway
+title: "AI Gateway Design"
+difficulty: intermediate
+mode: challenge
+narrative: "Design an AI gateway that routes requests across OpenAI, Anthropic, and Gemini with automatic failover, rate limiting, token counting, and cost tracking. Must handle 50K requests/day."
+requirements:
+- id: throughput
+  category: performance
+  description: Handle 50K requests per day with P99 < 5s
+  priority: must
+  metric: daily_requests
+  value: 50000
+  unit: requests
+- id: failover
+  category: availability
+  description: Automatic failover to alternative provider within 5s on error
+  priority: must
+  metric: failover_time_ms
+  value: 5000
+  unit: ms
+- id: rate-limiting
+  category: performance
+  description: Enforce per-key rate limits without exceeding provider quotas
+  priority: must
+  metric: rate_limit_accuracy
+  value: 100
+  unit: '%'
+- id: cost-tracking
+  category: cost
+  description: Track token usage and cost per API key per provider
+  priority: must
+  metric: cost_tracking_coverage
+  value: 100
+  unit: '%'
+learning_objectives:
+- Multi-provider API gateway patterns
+- Automatic failover and circuit breaker design
+- Token counting and cost attribution
+- Rate limiting strategies for upstream APIs
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Use sliding window counters in Redis for per-key rate limiting across distributed gateway nodes.'
+  - 'Maintain a health registry that tracks provider latency and error rates; use circuit breaker pattern for failover.'
+  - 'Log every request with token counts and cost to PostgreSQL for real-time dashboarding.'
+related_topics:
+- api-gateway
+- circuit-breaker
+- rate-limiting
+version: 1.0.0

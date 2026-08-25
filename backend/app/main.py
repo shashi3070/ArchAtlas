@@ -16,6 +16,7 @@ from app.api.routes import (
     architectures,
     auth,
     challenges,
+    chaos,
     components,
     evaluate,
     health,
@@ -67,6 +68,7 @@ def create_app() -> FastAPI:
     app.include_router(auth.router)
     app.include_router(models.router)
     app.include_router(simulation.router)
+    app.include_router(chaos.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:

@@ -1,0 +1,53 @@
+{
+  "type": "embedding_model",
+  "category": "ai_genai",
+  "name": "Embedding Model",
+  "description": "Specialized model service that converts text, images, or other data into high-dimensional vector representations for semantic search and similarity matching.",
+  "version": "0.1.0",
+  "capabilities": [
+    "text_embedding",
+    "batch_embedding",
+    "semantic_vectorization"
+  ],
+  "helps_with": [
+    "semantic_search",
+    "similarity_matching",
+    "retrieval_augmented_generation"
+  ],
+  "does_not_solve": [
+    "text_generation",
+    "complex_reasoning_tasks"
+  ],
+  "risks": [
+    "vector_dimension_drift",
+    "model_version_inconsistency"
+  ],
+  "common_patterns": [
+    "batch_processing",
+    "cache_embeddings",
+    "model_versioning"
+  ],
+  "failure_modes": [
+    "model_loading_failure",
+    "gpu_oom",
+    "incompatible_embedding_dimensions"
+  ],
+  "tradeoffs": [
+    "embedding_quality_vs_latency",
+    "model_size_vs_deployment_cost"
+  ],
+  "capacity_defaults": {
+    "tokens_per_sec": 10000,
+    "p95_base_ms": 50,
+    "default_instances": 1
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 150
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Layers",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

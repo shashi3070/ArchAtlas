@@ -1,0 +1,54 @@
+{
+  "type": "guardrail",
+  "category": "ai_genai",
+  "name": "Guardrail",
+  "description": "Content safety and policy enforcement layer that validates, filters, or modifies AI inputs and outputs to ensure compliance with safety, legal, and brand guidelines.",
+  "version": "0.1.0",
+  "capabilities": [
+    "input_validation",
+    "output_filtering",
+    "content_classification",
+    "policy_enforcement"
+  ],
+  "helps_with": [
+    "safety_compliance",
+    "brand_protection",
+    "toxicity_prevention"
+  ],
+  "does_not_solve": [
+    "model_training_safety",
+    "complete_hallucination_elimination"
+  ],
+  "risks": [
+    "over_filtering_legitimate_content",
+    "latency_increase_on_path"
+  ],
+  "common_patterns": [
+    "pre_post_validation",
+    "content_classification_pipeline",
+    "regex_and_model_hybrid"
+  ],
+  "failure_modes": [
+    "classifier_model_failure",
+    "false_positive_overblock",
+    "bypass_via_prompt_injection"
+  ],
+  "tradeoffs": [
+    "safety_vs_usability",
+    "false_positives_vs_false_negatives"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 8000,
+    "p95_base_ms": 10,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 60
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "ShieldCheck",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

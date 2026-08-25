@@ -1,0 +1,55 @@
+{
+  "type": "ai_tool",
+  "category": "ai_genai",
+  "name": "AI Tool",
+  "description": "Modular, callable service that provides specific capabilities such as code execution, web search, or API calls that can be invoked by AI agents and LLMs.",
+  "version": "0.1.0",
+  "capabilities": [
+    "tool_execution",
+    "parameter_validation",
+    "result_formatting",
+    "authentication_handling"
+  ],
+  "helps_with": [
+    "extending_llm_capabilities",
+    "external_system_integration",
+    "structured_action_execution"
+  ],
+  "does_not_solve": [
+    "complex_reasoning",
+    "multi_step_task_planning"
+  ],
+  "risks": [
+    "tool_misuse_by_agents",
+    "execution_side_effects",
+    "external_service_dependency"
+  ],
+  "common_patterns": [
+    "function_calling_schema",
+    "tool_description_discovery",
+    "sandboxed_execution"
+  ],
+  "failure_modes": [
+    "tool_timeout",
+    "permission_denied",
+    "malformed_response"
+  ],
+  "tradeoffs": [
+    "capability_vs_security",
+    "flexibility_vs_reliability"
+  ],
+  "capacity_defaults": {
+    "rps_per_instance": 5000,
+    "p95_base_ms": 50,
+    "default_instances": 2
+  },
+  "cost_defaults": {
+    "usd_per_instance_month": 50
+  },
+  "palette": {
+    "group": "AI/GenAI",
+    "icon": "Wrench",
+    "color": "#8b5cf6"
+  },
+  "kind": "implementation"
+}

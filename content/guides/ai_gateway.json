@@ -1,0 +1,65 @@
+{
+  "s": "A dedicated entry point for AI/ML workloads that provides unified routing, authentication, rate limiting, cost tracking, and policy enforcement for all LLM and model API calls.",
+  "w": "Sits between application services and model providers (OpenAI, Anthropic, Azure, self-hosted). The gateway normalizes heterogeneous provider APIs into a single interface, enforces authentication and authorization, applies per-user or per-team rate limits and token budgets, logs all requests for audit and cost analysis, routes to different providers based on model, region, or fallback rules, and optionally transforms requests/responses for provider-specific quirks. Unlike a general API gateway, it is purpose-built for streaming, token-based metering, and model-specific concerns.",
+  "use": [
+    "Centralizing LLM access control, key management, and audit logging",
+    "Cost governance with per-team token budgets and usage dashboards",
+    "Provider failover and load balancing across multiple LLM backends",
+    "Abstraction layer so application code is provider-agnostic"
+  ],
+  "avoid": [
+    "Simple single-provider setups where direct API calls are simpler",
+    "Scenarios where the gateway itself becomes a single point of failure without HA",
+    "Ultra-low-latency requirements where an extra network hop is unacceptable"
+  ],
+  "after": [
+    "api",
+    "ai_agent",
+    "client",
+    "load_balancer"
+  ],
+  "to": [
+    "llm",
+    "ai_gateway_llm",
+    "model_router",
+    "guardrail",
+    "evaluation_service"
+  ],
+  "props": {
+    "rate_limit_rpm": "Requests per minute cap per key or user",
+    "token_budget": "Maximum tokens consumable per time window",
+    "fallback_chain": "Ordered list of providers for automatic failover"
+  },
+  "size": {
+    "default_instances": 2,
+    "requests_per_sec": "~1k-10k depending on streaming overhead",
+    "streaming_connections": "~10k concurrent"
+  },
+  "world": [
+    "OpenAI Gateway",
+    "Portkey AI Gateway",
+    "LiteLLM proxy",
+    "Azure AI Gateway",
+    "Cloudflare AI Gateway"
+  ],
+  "pat": [
+    {
+      "n": "Provider Fan-Out",
+      "d": "Route same prompt to multiple providers in parallel, return first response (speculative execution)."
+    },
+    {
+      "n": "Semantic Caching",
+      "d": "Cache LLM responses keyed by normalized prompt + model to avoid redundant inference calls."
+    }
+  ],
+  "pits": [
+    "Gateway as single point of failure - deploy with redundancy and circuit breakers to providers",
+    "Streaming response buffering defeats the purpose - gateway must pass SSE/chunks through without buffering",
+    "Stale provider key rotation causing 401s - implement proactive key refresh"
+  ],
+  "tips": [
+    "Track cost per request and per user at the gateway - this is the primary governance value",
+    "Use the gateway for semantic caching which can reduce LLM spend by 30-60% on repeated queries",
+    "Gateway enables A/B testing of models by routing percentage of traffic to different providers"
+  ]
+}

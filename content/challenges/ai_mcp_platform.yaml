@@ -1,0 +1,57 @@
+id: ai-mcp-platform
+title: "MCP Platform"
+difficulty: intermediate
+mode: challenge
+narrative: "Design a Model Context Protocol platform that connects AI agents to external tools and data sources. Must support 100+ MCP servers with authentication, rate limiting, and request routing."
+requirements:
+- id: server-count
+  category: scale
+  description: Support 100+ concurrent MCP server connections
+  priority: must
+  metric: mcp_servers
+  value: 100
+  unit: servers
+- id: authentication
+  category: security
+  description: All MCP server connections use OAuth2 or API key auth
+  priority: must
+  metric: auth_coverage
+  value: 100
+  unit: '%'
+- id: rate-limiting
+  category: performance
+  description: Per-server rate limiting to prevent provider abuse
+  priority: must
+  metric: rate_limit_enforcement
+  value: 100
+  unit: '%'
+- id: request-routing
+  category: functional
+  description: Route tool requests to the correct MCP server based on tool registry
+  priority: must
+  metric: routing_accuracy
+  value: 100
+  unit: '%'
+learning_objectives:
+- Model Context Protocol architecture
+- Multi-server authentication and credential management
+- Tool registry and request routing
+- Rate limiting for external service protection
+allowed_components:
+- api
+- redis
+- postgresql
+- worker
+- elasticsearch
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'Maintain a tool registry table mapping tool_name -> mcp_server_id -> endpoint_url with schema cache.'
+  - 'Use a connection pool per MCP server; inject OAuth2 tokens or API keys at the gateway layer.'
+  - 'Implement per-server rate limiting with Redis sliding window counters to prevent abuse.'
+related_topics:
+- mcp-protocol
+- tool-registries
+- api-gateway
+version: 1.0.0

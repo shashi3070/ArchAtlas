@@ -1,0 +1,63 @@
+{
+  "s": "A system for systematically measuring, testing, and monitoring the quality, accuracy, safety, and performance of AI models and LLM-powered applications in production.",
+  "w": "Evaluation services run test suites against LLM outputs to measure quality dimensions: correctness (factual accuracy against ground truth), relevance (how well output addresses the prompt), safety (toxicity, bias, policy compliance), faithfulness (RAG responses grounded in source documents), and latency/cost metrics. Evaluations can be automated (LLM-as-judge, rubric scoring) or human-in-the-loop. The service maintains evaluation datasets, runs regression tests on model changes, and produces dashboards tracking quality over time with alerts on degradation.",
+  "use": [
+    "Pre-deployment validation of model changes or prompt updates",
+    "Continuous monitoring of production LLM output quality",
+    "A/B testing comparing two model versions or prompt strategies",
+    "Compliance auditing for regulated industries"
+  ],
+  "avoid": [
+    "One-off evaluations without ongoing monitoring (quality drifts silently)",
+    "Using only automated metrics without human evaluation for subjective quality",
+    "Evaluating every production request (cost prohibitive - sample instead)"
+  ],
+  "after": [
+    "ai_gateway",
+    "ai_agent",
+    "llm",
+    "guardrail"
+  ],
+  "to": [
+    "api",
+    "worker",
+    "notification_service"
+  ],
+  "props": {
+    "sample_rate": "Fraction of production requests evaluated",
+    "eval_dimensions": "Which quality dimensions to measure: correctness, safety, relevance",
+    "judge_model": "Model used for automated LLM-as-judge evaluation"
+  },
+  "size": {
+    "default_instances": 2,
+    "evals_per_day": "~1k-100k depending on sample rate",
+    "evaluation_latency_sec": "~5-30 per evaluation run"
+  },
+  "world": [
+    "Ragas evaluation framework",
+    "DeepEval LLM evaluation",
+    "LangSmith evaluation and tracing",
+    "Braintrust AI evaluation",
+    "Weights & Biases model monitoring"
+  ],
+  "pat": [
+    {
+      "n": "LLM-as-Judge",
+      "d": "Use a strong LLM to evaluate outputs of the target model against rubrics, providing scalable automated quality scoring."
+    },
+    {
+      "n": "Shadow Evaluation",
+      "d": "Run new model version in parallel with production, evaluate outputs without serving them, compare before promotion."
+    }
+  ],
+  "pits": [
+    "LLM-as-judge bias - judge models have their own blind spots, calibrate with human evaluations",
+    "Overfitting to evaluation benchmarks while production quality degrades",
+    "Evaluation staleness - test sets need regular refresh as data distribution shifts"
+  ],
+  "tips": [
+    "Start with 3 key metrics: faithfulness, relevance, and refusal accuracy - add others incrementally",
+    "Maintain a golden test set that never changes for regression detection",
+    "Use sampling, not full evaluation, to keep costs manageable in production"
+  ]
+}
