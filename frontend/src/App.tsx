@@ -11,13 +11,16 @@ import { LabPage } from './pages/LabPage'
 import { LoginPage } from './pages/LoginPage'
 import { TopicPage } from './pages/TopicPage'
 import { TopicsPage } from './pages/TopicsPage'
+import { useAuth } from './state/auth'
 import { useProgress } from './state/progress'
 
 export default function App() {
   const refresh = useProgress((s) => s.refresh)
+  const fetchMe = useAuth((s) => s.fetchMe)
   useEffect(() => {
     void refresh()
-  }, [refresh])
+    void fetchMe()
+  }, [refresh, fetchMe])
 
   return (
     <BrowserRouter>

@@ -352,7 +352,6 @@ function Lab() {
         <button
           type="button"
           className={`btn ${showAsk ? 'primary' : 'ghost'}`}
-          disabled={nodes.length === 0}
           onClick={() => {
             setShowAsk(!showAsk)
             if (!showAsk) setShowEval(false)

@@ -1997,6 +1997,32 @@ button:disabled {
   padding: 8px 0;
 }
 
+.google-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  padding: 12px 24px;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  background: #fff;
+  color: #3c4043;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.google-signin-btn:hover {
+  background: #f7f8f8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.google-signin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .login-hint {
   font-size: 12px;
   color: #94a3b8;
