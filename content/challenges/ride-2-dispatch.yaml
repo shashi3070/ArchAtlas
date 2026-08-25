@@ -1,0 +1,51 @@
+id: ride-2-dispatch
+title: "Ride Service II: Dispatch & ETA"
+difficulty: intermediate
+mode: challenge
+narrative: "QuickRide needs to match riders to drivers and compute accurate ETAs. Design the dispatch system with ETA computation and surge pricing."
+requirements:
+- id: eta-accuracy
+  category: performance
+  description: ETA within 2 minutes of actual arrival
+  priority: must
+  metric: eta_accuracy
+  value: 90
+  unit: '%'
+- id: dispatch-speed
+  category: performance
+  description: Driver matched within 5 seconds of request
+  priority: must
+  metric: dispatch_time
+  value: 5
+  unit: seconds
+- id: surge-pricing
+  category: functional
+  description: Dynamic pricing based on demand/supply
+  priority: should
+  metric: surge
+  value: 100
+  unit: '%'
+learning_objectives:
+- ETA computation with road graph
+- Dispatch matching algorithm
+- Surge pricing logic
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Pre-compute travel times between road segments; use graph algorithms for ETA.'
+  - 'Dispatch is a matching problem: assign rider to optimal driver (lowest ETA).'
+  - 'Surge pricing = demand/supply ratio in a geographic area.'
+related_topics:
+- ride-sharing
+- consistency-and-cap
+chain:
+  family_id: ride-sharing
+  level: 2
+version: 1.0.0

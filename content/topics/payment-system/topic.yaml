@@ -1,0 +1,36 @@
+id: payment-system
+title: "Payment System"
+category: case-study
+order: 35
+summary: "Designing a payment backend with Stripe integration, idempotency, and double-entry accounting."
+prerequisites: ['saga-pattern', 'idempotency', 'databases']
+related_challenges: []
+objectives:
+  - "Design a payment processing pipeline with idempotency"
+  - "Implement double-entry ledger for financial accuracy"
+  - "Handle payment failures and retries safely"
+quiz:
+  - q: "Why is idempotency critical in payment systems?"
+    options:
+      - "Payments are slow"
+      - "Network retries can cause duplicate charges without idempotency keys"
+      - "Payments require encryption"
+      - "Idempotency speeds up processing"
+    answer: 1
+    explain: "Without idempotency, a retry after a timeout can create a duplicate charge; idempotency keys ensure each logical payment is processed exactly once."
+  - q: "What is double-entry bookkeeping?"
+    options:
+      - "Using two databases"
+      - "Every transaction has equal debits and credits across accounts"
+      - "Processing payments twice for safety"
+      - "Two payment gateways"
+    answer: 1
+    explain: "Double-entry means every financial transaction affects at least two accounts (debit and credit), ensuring the books always balance."
+  - q: "How should payment status updates from a gateway be handled?"
+    options:
+      - "Trust the latest status"
+      - "Use idempotent webhooks and verify the status against the gateway API"
+      - "Ignore webhooks"
+      - "Only use polling"
+    answer: 1
+    explain: "Webhooks may be delivered out of order or duplicated; always verify status against the gateway and process idempotently."

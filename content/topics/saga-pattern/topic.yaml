@@ -1,0 +1,36 @@
+id: saga-pattern
+title: "Saga Pattern"
+category: core
+order: 21
+summary: "Managing distributed transactions as a sequence of local transactions with compensating actions for rollback."
+prerequisites: ['microservices', 'messaging-queues']
+related_challenges: []
+objectives:
+  - "Compare choreography-based and orchestration-based sagas"
+  - "Design compensation logic for each step"
+  - "Identify when sagas are necessary vs. over-engineering"
+quiz:
+  - q: "What is the key difference between choreography and orchestration sagas?"
+    options:
+      - "Choreography uses a central coordinator; orchestration does not"
+      - "Choreography uses events and no central coordinator; orchestration uses a central orchestrator"
+      - "Orchestration is simpler to implement"
+      - "Choreography guarantees stronger consistency"
+    answer: 1
+    explain: "Choreography: each service listens for events and decides what to do next. Orchestration: a central saga executor tells each service what to do."
+  - q: "What is a compensating transaction?"
+    options:
+      - "A transaction that retries the failed step"
+      - "A transaction that undoes the effects of a previously completed step"
+      - "A transaction that runs in parallel"
+      - "A transaction that locks the resource"
+    answer: 1
+    explain: "Compensation reverses the side effects of a completed step (e.g., refund a payment, restock an item) when a later step fails."
+  - q: "Why can't sagas use traditional ACID transactions?"
+    options:
+      - "Sagas are too slow"
+      - "Each step spans a different service with its own database"
+      - "Sagas don't support Rollback"
+      - "ACID is outdated"
+    answer: 1
+    explain: "Sagas coordinate across multiple services, each with its own database. There's no global transaction coordinator, so traditional 2PC with ACID is not feasible."

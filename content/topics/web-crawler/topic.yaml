@@ -1,0 +1,36 @@
+id: web-crawler
+title: "Web Crawler"
+category: case-study
+order: 36
+summary: "Designing a distributed web crawler that discovers, fetches, and indexes billions of pages."
+prerequisites: ['messaging-queues', 'databases', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Design the URL frontier and politeness constraints"
+  - "Implement distributed crawling with deduplication"
+  - "Handle dynamic content and crawl traps"
+quiz:
+  - q: "What is the URL frontier?"
+    options:
+      - "The list of all URLs on the internet"
+      - "A priority queue of URLs to be crawled"
+      - "The database of crawled pages"
+      - "The web server's document root"
+    answer: 1
+    explain: "The URL frontier is a prioritized queue of URLs waiting to be crawled, with politeness and priority ordering."
+  - q: "Why must crawlers respect robots.txt?"
+    options:
+      - "It's legally required"
+      - "It defines which pages the site owner allows crawling"
+      - "It speeds up crawling"
+      - "It provides authentication tokens"
+    answer: 1
+    explain: "robots.txt is a standard that tells crawlers which URLs to avoid; respecting it is ethical and often legally required."
+  - q: "How does a crawler detect duplicate content?"
+    options:
+      - "Compare page titles"
+      - "Compute content fingerprints (simhash or minhash)"
+      - "Check URL similarity"
+      - "Ask the server"
+    answer: 1
+    explain: "Simhash or minhash fingerprints detect near-duplicate content efficiently, even across different URLs."

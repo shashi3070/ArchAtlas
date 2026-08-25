@@ -1,0 +1,36 @@
+id: design-youtube
+title: "Design YouTube"
+category: interview
+order: 62
+summary: "Interview-style deep-dive into designing a video streaming platform at scale."
+prerequisites: ['video-streaming', 'cdn-and-edge']
+related_challenges: []
+objectives:
+  - "Design the video upload and transcoding pipeline"
+  - "Implement adaptive streaming and CDN delivery"
+  - "Discuss video storage and cost optimization"
+quiz:
+  - q: "What is adaptive bitrate streaming?"
+    options:
+      - "Fixed quality for all viewers"
+      - "Dynamically switching video quality based on viewer bandwidth"
+      - "Compressing video for storage"
+      - "Converting video formats"
+    answer: 1
+    explain: "Adaptive bitrate streaming (HLS/DASH) provides multiple quality variants; the player switches based on network conditions."
+  - q: "Why is video transcoding parallelized?"
+    options:
+      - "To reduce file size"
+      - "To encode different resolutions simultaneously"
+      - "To improve video quality"
+      - "To reduce upload time"
+    answer: 1
+    explain: "Parallel transcoding encodes multiple resolutions (360p, 720p, 1080p, 4K) simultaneously, reducing total processing time."
+  - q: "Where are the most popular videos cached?"
+    options:
+      - "Origin server"
+      - "CDN edge nodes globally"
+      - "User's device"
+      - "Database"
+    answer: 1
+    explain: "Popular videos are replicated to CDN edge nodes worldwide, serving viewers from the nearest location."

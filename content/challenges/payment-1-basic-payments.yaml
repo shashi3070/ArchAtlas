@@ -1,0 +1,53 @@
+id: payment-1-basic-payments
+title: "Payment System I: Basic Payments"
+difficulty: beginner
+mode: challenge
+narrative: "PaySimple wants to process payments for an e-commerce platform handling 500 transactions/day. Design a payment system with Stripe integration and idempotency."
+requirements:
+- id: idempotency
+  category: availability
+  description: Duplicate requests never create duplicate charges
+  priority: must
+  metric: idempotency
+  value: 100
+  unit: '%'
+- id: audit-trail
+  category: security
+  description: Every transaction has a complete audit trail
+  priority: must
+  metric: audit
+  value: 100
+  unit: '%'
+- id: stay-up
+  category: availability
+  description: Payment processing survives single-instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- Idempotency key scheme
+- Double-entry ledger basics
+- Stripe webhook handling
+allowed_components:
+- client
+- load_balancer
+- api
+- postgresql
+- redis
+- worker
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Client generates a unique idempotency key per payment; server stores the result.'
+  - 'Double-entry ledger: every transaction has a debit and credit entry.'
+  - 'Stripe webhooks may be duplicated or out of order; verify and process idempotently.'
+related_topics:
+- payment-system
+- idempotency
+chain:
+  family_id: payment-system
+  level: 1
+  next_challenge_id: payment-2-reconciliation
+version: 1.0.0

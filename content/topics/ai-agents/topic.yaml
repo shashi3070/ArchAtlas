@@ -1,0 +1,36 @@
+id: ai-agents
+title: "AI Agents"
+category: ai-engineering
+order: 53
+summary: "Building autonomous AI agents that plan, use tools, and take actions to accomplish goals."
+prerequisites: ['llm-inference']
+related_challenges: []
+objectives:
+  - "Explain the ReAct (Reason + Act) loop"
+  - "Design tool-use and function-calling architectures"
+  - "Handle agent state, memory, and error recovery"
+quiz:
+  - q: "What is the ReAct loop?"
+    options:
+      - "React framework for UI"
+      - "Reasoning about the task, then taking an action, then observing the result"
+      - "React component lifecycle"
+      - "Real-time event processing"
+    answer: 1
+    explain: "ReAct = Reason (think about what to do) → Act (execute a tool/function) → Observe (get the result) → repeat until done."
+  - q: "What is the main challenge with AI agents?"
+    options:
+      - "They are too slow"
+      - "They can take incorrect actions with real-world consequences"
+      - "They cannot generate text"
+      - "They are too expensive"
+    answer: 1
+    explain: "Agents take actions (API calls, code execution, file modifications) that can have irreversible consequences; safety and validation are critical."
+  - q: "How should agent tool calls be validated?"
+    options:
+      - "Trust the LLM's judgment"
+      - "Validate parameters, check permissions, and sandbox execution"
+      - "Skip validation for speed"
+      - "Only validate user input"
+    answer: 1
+    explain: "Tool calls should be validated for parameter correctness, permission scope, and executed in a sandboxed environment."

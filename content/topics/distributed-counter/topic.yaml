@@ -1,0 +1,36 @@
+id: distributed-counter
+title: "Distributed Counter"
+category: case-study
+order: 42
+summary: "Building a globally distributed counter system like Twitter likes or YouTube views at massive scale."
+prerequisites: ['caching', 'databases', 'messaging-queues']
+related_challenges: []
+objectives:
+  - "Design a distributed counter with high write throughput"
+  - "Implement approximate counting for massive scale"
+  - "Handle counter consistency across regions"
+quiz:
+  - q: "Why use approximate counting instead of exact counting?"
+    options:
+      - "Approximate is cheaper"
+      - "Exact counting requires coordination; approximate allows local increments"
+      - "Approximate is more accurate"
+      - "Exact counting is impossible"
+    answer: 1
+    explain: "Exact counting requires distributed locks or consensus; approximate counting (e.g., HyperLogLog, counters with merge) avoids coordination."
+  - q: "How do you merge counters from multiple regions?"
+    options:
+      - "Use a global lock"
+      - "Periodically sum regional counters"
+      - "Ignore regional counters"
+      - "Use two-phase commit"
+    answer: 1
+    explain: "Regional counters are periodically merged (summed) to produce a global count; this is eventually consistent."
+  - q: "What is the counter overflow problem?"
+    options:
+      - "Counter value exceeds integer limit"
+      - "Too many concurrent increments overwhelm the counter"
+      - "Counter underflows to negative"
+      - "Counter resets to zero"
+    answer: 1
+    explain: "At massive scale, concurrent increments to a single counter cause contention; sharding the counter across multiple keys reduces this."

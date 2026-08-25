@@ -1,0 +1,36 @@
+id: design-whatsapp
+title: "Design WhatsApp"
+category: interview
+order: 61
+summary: "Interview-style deep-dive into designing a real-time messaging platform supporting billions of users."
+prerequisites: ['chat-system', 'websockets']
+related_challenges: []
+objectives:
+  - "Design the architecture for WhatsApp-scale messaging"
+  - "Handle message delivery, offline storage, and group chats"
+  - "Discuss scaling strategies for WebSocket connections"
+quiz:
+  - q: "What protocol does WhatsApp use for messaging?"
+    options:
+      - "HTTP"
+      - "XMPP over TCP"
+      - "gRPC"
+      - "SMTP"
+    answer: 1
+    explain: "WhatsApp uses a modified XMPP protocol over TCP for efficient real-time messaging."
+  - q: "How does WhatsApp handle message ordering?"
+    options:
+      - "Client timestamps"
+      - "Server-assigned sequence numbers per conversation"
+      - "No ordering guarantee"
+      - "Global ordering"
+    answer: 1
+    explain: "Server-assigned sequence numbers per conversation guarantee ordering regardless of client clock skew."
+  - q: "What is the key scaling challenge for WhatsApp?"
+    options:
+      - "Database storage"
+      - "Managing millions of concurrent WebSocket connections"
+      - "Email delivery"
+      - "File uploads"
+    answer: 1
+    explain: "WhatsApp's primary challenge is managing 100M+ concurrent WebSocket connections efficiently."

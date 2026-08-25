@@ -1,0 +1,36 @@
+id: embedding-systems
+title: "Embedding Systems"
+category: ai-engineering
+order: 54
+summary: "Converting text, images, and data into dense vector representations for semantic search and AI."
+prerequisites: ['databases']
+related_challenges: []
+objectives:
+  - "Explain how text embeddings capture semantic meaning"
+  - "Compare embedding models and choose the right one"
+  - "Design an embedding pipeline with caching and batching"
+quiz:
+  - q: "What does an embedding represent?"
+    options:
+      - "Raw text data"
+      - "A dense vector that captures semantic meaning"
+      - "A sparse binary vector"
+      - "A keyword index"
+    answer: 1
+    explain: "Embeddings map text to dense vectors in a high-dimensional space where similar texts are close together."
+  - q: "What is the dimension of OpenAI's text-embedding-3-small?"
+    options:
+      - "128"
+      - "512"
+      - "1536"
+      - "4096"
+    answer: 2
+    explain: "text-embedding-3-small produces 1536-dimensional vectors; text-embedding-3-large produces 3072-dimensional vectors."
+  - q: "Why batch embedding requests?"
+    options:
+      - "To increase accuracy"
+      - "To reduce API calls and improve throughput"
+      - "To reduce latency per request"
+      - "To simplify implementation"
+    answer: 1
+    explain: "Batching multiple texts in a single API call reduces overhead and improves throughput, especially for ingestion."

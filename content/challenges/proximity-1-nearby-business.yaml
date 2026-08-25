@@ -1,0 +1,46 @@
+id: proximity-1-nearby-business
+title: "Proximity Service I: Nearby Search"
+difficulty: beginner
+mode: challenge
+narrative: "LocalFinder needs to find nearby restaurants within 5km of a user's location. Design the geospatial search system."
+requirements:
+- id: search-speed
+  category: performance
+  description: Return results within 200ms
+  priority: must
+  metric: latency
+  value: 200
+  unit: ms
+- id: radius-search
+  category: functional
+  description: Find all businesses within a 5km radius
+  priority: must
+  metric: radius
+  value: 5
+  unit: km
+- id: ranking
+  category: performance
+  description: Results ranked by distance and rating
+  priority: should
+  metric: ranking
+  value: 100
+  unit: '%'
+learning_objectives:
+- Geohash-based radius search
+- Business data storage
+- Result ranking by distance + rating
+allowed_components:
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Geohash prefix match finds nearby cells; filter by exact distance within cells.'
+  - 'Store business data in PostgreSQL with PostGIS or Redis with geohash keys.'
+  - 'Rank results by distance + rating + relevance score.'
+related_topics:
+- proximity-service
+- databases
+version: 1.0.0

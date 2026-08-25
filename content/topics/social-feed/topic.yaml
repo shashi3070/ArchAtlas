@@ -1,0 +1,36 @@
+id: social-feed
+title: "Social Media Feed"
+category: case-study
+order: 33
+summary: "Building a news feed system like Twitter or Instagram with fan-out, ranking, and real-time updates."
+prerequisites: ['messaging-queues', 'caching', 'databases']
+related_challenges: []
+objectives:
+  - "Compare fan-out-on-write vs fan-out-on-read"
+  - "Design a feed ranking system"
+  - "Handle celebrity accounts with millions of followers"
+quiz:
+  - q: "What is the 'celebrity problem' in feed fan-out?"
+    options:
+      - "Celebrities post too frequently"
+      - "A celebrity's post must be fanned out to millions of followers, causing write amplification"
+      - "Celebrities have too many photos"
+      - "Celebrity accounts are hacked frequently"
+    answer: 1
+    explain: "Fan-out-on-write for a celebrity with 10M followers requires 10M write operations per post, which is prohibitively expensive."
+  - q: "Which approach stores a user's feed as a pre-computed list?"
+    options:
+      - "Fan-out-on-read"
+      - "Fan-out-on-write"
+      - "On-demand computation"
+      - "Real-time streaming"
+    answer: 1
+    explain: "Fan-out-on-write pre-computes each user's feed by writing post references to their feed list at post time."
+  - q: "What is the primary trade-off of fan-out-on-read?"
+    options:
+      - "High write cost"
+      - "Expensive read latency as feeds are computed on-the-fly"
+      - "No support for new posts"
+      - "Requires more cache"
+    answer: 1
+    explain: "Fan-out-on-read computes feeds at read time by merging followed users' posts, which is slow for users following many active accounts."

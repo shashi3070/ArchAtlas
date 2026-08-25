@@ -1,0 +1,36 @@
+id: proximity-service
+title: "Proximity Service"
+category: case-study
+order: 39
+summary: "Building a location-based search system like Google Maps or Yelp to find nearby businesses."
+prerequisites: ['databases', 'caching', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Design a geospatial index for nearby business search"
+  - "Implement business data storage and search ranking"
+  - "Handle high read traffic with caching and replication"
+quiz:
+  - q: "Which geospatial index supports radius queries efficiently?"
+    options:
+      - "B-tree"
+      - "R-tree or geohash"
+      - "Hash index"
+      - "Inverted index"
+    answer: 1
+    explain: "R-trees index spatial objects; geohashes partition space into cells. Both support efficient radius and bounding-box queries."
+  - q: "How should business search results be ranked?"
+    options:
+      - "Alphabetical order"
+      - "Distance + rating + relevance"
+      - "Random order"
+      - "Distance only"
+    answer: 1
+    explain: "Results are ranked by a combination of distance, business rating, and keyword relevance for the best user experience."
+  - q: "What is the read-to-write ratio for a proximity service?"
+    options:
+      - "1:1"
+      - "Reads dominate (100:1 or more)"
+      - "Writes dominate"
+      - "Equal"
+    answer: 1
+    explain: "Users search far more often than businesses update their profiles, so reads dominate heavily."

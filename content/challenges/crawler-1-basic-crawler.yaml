@@ -1,0 +1,53 @@
+id: crawler-1-basic-crawler
+title: "Web Crawler I: Basic Crawler"
+difficulty: beginner
+mode: challenge
+narrative: "CrawlBot wants to index 1M web pages starting from 100 seed URLs. Design a crawler that respects robots.txt and avoids revisiting pages."
+requirements:
+- id: politeness
+  category: security
+  description: Respect robots.txt and rate-limit per domain
+  priority: must
+  metric: politeness
+  value: 100
+  unit: '%'
+- id: deduplication
+  category: performance
+  description: No page is crawled more than once
+  priority: must
+  metric: dedup
+  value: 100
+  unit: '%'
+- id: crawl-speed
+  category: scale
+  description: Crawl 100 pages per minute
+  priority: should
+  metric: pages_per_minute
+  value: 100
+  unit: null
+learning_objectives:
+- URL frontier with priority
+- Bloom filter for deduplication
+- Politeness and rate limiting
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'URL frontier is a priority queue; high-priority pages (homepages) are crawled first.'
+  - 'Bloom filter for URL dedup; content fingerprint for near-duplicate detection.'
+  - 'Per-domain rate limiting: max 1 request/second per domain.'
+related_topics:
+- web-crawler
+- bloom-filter
+chain:
+  family_id: web-crawler
+  level: 1
+  next_challenge_id: crawler-2-distributed
+version: 1.0.0

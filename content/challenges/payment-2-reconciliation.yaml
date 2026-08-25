@@ -1,0 +1,52 @@
+id: payment-2-reconciliation
+title: "Payment System II: Reconciliation"
+difficulty: intermediate
+mode: challenge
+narrative: "PaySimple processes 10K transactions/day and needs automated reconciliation between the internal ledger and Stripe's settlement reports. Design the reconciliation pipeline."
+requirements:
+- id: reconciliation-accuracy
+  category: availability
+  description: Detect discrepancies within 1 hour
+  priority: must
+  metric: detection_time
+  value: 3600
+  unit: seconds
+- id: false-positive-rate
+  category: performance
+  description: False positive discrepancy rate below 1%
+  priority: should
+  metric: false_positive
+  value: 1
+  unit: '%'
+- id: daily-report
+  category: functional
+  description: Generate daily reconciliation report
+  priority: must
+  metric: report_frequency
+  value: 1
+  unit: per_day
+learning_objectives:
+- Batch reconciliation pipeline
+- Discrepancy detection and alerting
+- Ledger partitioning for scale
+allowed_components:
+- api
+- postgresql
+- redis
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Download Stripe settlement files daily; compare against internal ledger.'
+  - 'Partition ledger by date for efficient comparison.'
+  - 'Flag discrepancies above a threshold for manual review.'
+related_topics:
+- payment-system
+- messaging-queues
+chain:
+  family_id: payment-system
+  level: 2
+version: 1.0.0

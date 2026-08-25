@@ -1,0 +1,36 @@
+id: gaming-leaderboard
+title: "Gaming Leaderboard"
+category: case-study
+order: 40
+summary: "Building a real-time leaderboard for millions of players with score updates and rank queries."
+prerequisites: ['caching', 'databases', 'websockets']
+related_challenges: []
+objectives:
+  - "Design a real-time leaderboard using sorted sets"
+  - "Handle millions of score updates per second"
+  - "Implement rank queries and friend leaderboards"
+quiz:
+  - q: "Which data structure is ideal for a leaderboard?"
+    options:
+      - "Array"
+      - "Sorted set (Redis ZSET)"
+      - "Hash table"
+      - "Linked list"
+    answer: 1
+    explain: "Redis sorted sets maintain elements ordered by score with O(log N) insert and rank queries."
+  - q: "How do you get a player's rank in Redis?"
+    options:
+      - "ZCARD"
+      - "ZREVRANK"
+      - "ZSCORE"
+      - "ZCOUNT"
+    answer: 1
+    explain: "ZREVRANK returns the 0-based rank of a member in descending order; ZRANK for ascending."
+  - q: "How should the leaderboard handle ties?"
+    options:
+      - "Ignore ties"
+      - "Use timestamp as tiebreaker"
+      - "Assign random ranks"
+      - "Merge tied players"
+    answer: 1
+    explain: "Ties are broken by timestamp: the player who reached the score first ranks higher."

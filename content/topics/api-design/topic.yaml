@@ -1,0 +1,36 @@
+id: api-design
+title: "API Design Best Practices"
+category: core
+order: 15
+summary: "Designing APIs that are consistent, evolvable, secure, and developer-friendly."
+prerequisites: ['http-fundamentals']
+related_challenges: []
+objectives:
+  - "Apply RESTful naming conventions and HTTP semantics correctly"
+  - "Design API versioning strategies"
+  - "Implement pagination, error handling, and idempotency"
+quiz:
+  - q: "Which HTTP method should be used for an idempotent update?"
+    options:
+      - "POST"
+      - "PUT"
+      - "PATCH (always)"
+      - "CONNECT"
+    answer: 1
+    explain: "PUT is idempotent by specification: sending the same PUT request multiple times produces the same server state. POST is not idempotent."
+  - q: "What is the recommended pagination approach for large collections?"
+    options:
+      - "Offset-based pagination with LIMIT/OFFSET"
+      - "Cursor-based pagination with a opaque token"
+      - "Return all results at once"
+      - "Client-side pagination"
+    answer: 1
+    explain: "Cursor-based pagination is stable under concurrent inserts/deletes; offset-based can miss or duplicate items when the underlying data changes between requests."
+  - q: "API versioning via URL path (e.g., /v1/users) has which trade-off?"
+    options:
+      - "Violates REST principles"
+      - "Multiple versions require maintaining separate codebases"
+      - "Cannot be cached by CDNs"
+      - "Breaks HTTPS"
+    answer: 1
+    explain: "URL-path versioning is explicit and cache-friendly but means each version is a separate resource, increasing maintenance burden for long-lived APIs."

@@ -1,0 +1,52 @@
+id: social-1-feed-basics
+title: "Social Feed I: Post & Timeline"
+difficulty: beginner
+mode: challenge
+narrative: "Feedly wants to launch a social app where users post text updates and see a timeline of posts from people they follow. Start with 10K users and 100 posts/day."
+requirements:
+- id: post-speed
+  category: performance
+  description: Post creation completes within 200ms
+  priority: must
+  metric: latency
+  value: 200
+  unit: ms
+- id: timeline-speed
+  category: performance
+  description: Timeline loads within 500ms
+  priority: must
+  metric: latency
+  value: 500
+  unit: ms
+- id: stay-up
+  category: availability
+  description: Survive single-instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- Fan-out-on-write for small networks
+- Timeline caching with Redis sorted sets
+- Follow graph storage
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - "At 10K users, fan-out-on-write is feasible; write post ID to each follower's timeline."
+  - 'Store the follow graph in the database; cache hot timelines in Redis.'
+  - 'Timeline is a sorted set of post IDs scored by timestamp.'
+related_topics:
+- social-feed
+- news-feed
+chain:
+  family_id: social-feed
+  level: 1
+  next_challenge_id: social-2-celebrity-problem
+version: 1.0.0

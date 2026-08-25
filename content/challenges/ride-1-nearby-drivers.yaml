@@ -1,0 +1,50 @@
+id: ride-1-nearby-drivers
+title: "Ride Service I: Nearby Drivers"
+difficulty: beginner
+mode: challenge
+narrative: "QuickRide needs to find the 5 nearest drivers to a rider's location within 100ms. Design the geospatial indexing system."
+requirements:
+- id: search-speed
+  category: performance
+  description: Find 5 nearest drivers within 100ms
+  priority: must
+  metric: latency
+  value: 100
+  unit: ms
+- id: location-updates
+  category: scale
+  description: Handle 10K location updates per second
+  priority: must
+  metric: updates_per_second
+  value: 10000
+  unit: null
+- id: accuracy
+  category: performance
+  description: Results are within 1km of actual nearest drivers
+  priority: should
+  metric: accuracy
+  value: 95
+  unit: '%'
+learning_objectives:
+- Geohash-based spatial indexing
+- Real-time location updates
+- Nearby search with Redis
+allowed_components:
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Geohash encodes lat/long as a string; nearby search = prefix match + neighbor cells.'
+  - 'Store driver locations in Redis with geohash as key.'
+  - 'Location updates every 4 seconds; overwrite the previous location.'
+related_topics:
+- ride-sharing
+- proximity-service
+chain:
+  family_id: ride-sharing
+  level: 1
+  next_challenge_id: ride-2-dispatch
+version: 1.0.0

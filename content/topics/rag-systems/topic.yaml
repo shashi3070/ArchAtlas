@@ -1,0 +1,36 @@
+id: rag-systems
+title: "RAG Systems"
+category: ai-engineering
+order: 50
+summary: "Retrieval-Augmented Generation: grounding LLM responses in external knowledge for accuracy and freshness."
+prerequisites: ['vector-databases', 'embedding-systems']
+related_challenges: []
+objectives:
+  - "Design an end-to-end RAG pipeline with retrieval, ranking, and generation"
+  - "Evaluate retrieval quality with precision, recall, and MRR"
+  - "Handle chunking, embedding, and index strategies"
+quiz:
+  - q: "What problem does RAG solve that pure LLMs cannot?"
+    options:
+      - "LLMs are too slow"
+      - "LLMs lack access to private or up-to-date information"
+      - "LLMs cannot generate text"
+      - "LLMs are too expensive"
+    answer: 1
+    explain: "RAG retrieves relevant documents at query time, giving the LLM access to information beyond its training data."
+  - q: "What is the typical RAG pipeline?"
+    options:
+      - "Generate first, then retrieve"
+      - "Retrieve relevant documents, then generate a response grounded in them"
+      - "Only retrieve, no generation"
+      - "Only generate, no retrieval"
+    answer: 1
+    explain: "RAG retrieves relevant chunks from a vector store, injects them into the prompt, and the LLM generates a response grounded in the retrieved context."
+  - q: "What is chunk overlap and why is it used?"
+    options:
+      - "Overlapping chunks increase storage"
+      - "Overlap ensures context at chunk boundaries is not lost"
+      - "Overlap reduces embedding cost"
+      - "Overlap improves ranking"
+    answer: 1
+    explain: "Overlapping chunks ensure that sentences split across chunk boundaries are captured in at least one chunk, preserving context."

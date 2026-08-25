@@ -1,0 +1,48 @@
+id: rag-2-hybrid-search
+title: "RAG System II: Hybrid Search"
+difficulty: intermediate
+mode: challenge
+narrative: "DocuBot's pure vector search misses keyword-specific queries. Add hybrid search combining vector similarity with BM25 keyword matching."
+requirements:
+- id: hybrid-recall
+  category: performance
+  description: Hybrid search improves recall by 15% over vector-only
+  priority: must
+  metric: recall_improvement
+  value: 15
+  unit: '%'
+- id: response-time
+  category: performance
+  description: Hybrid search completes within 500ms
+  priority: must
+  metric: latency
+  value: 500
+  unit: ms
+- id: reranking
+  category: performance
+  description: Cross-encoder reranking improves precision by 10%
+  priority: should
+  metric: precision_improvement
+  value: 10
+  unit: '%'
+learning_objectives:
+- Hybrid search (vector + BM25)
+- Cross-encoder reranking
+- Score fusion strategies
+allowed_components:
+- api
+- redis
+- postgresql
+- worker
+- elasticsearch
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Combine vector similarity scores with BM25 scores using weighted sum or RRF.'
+  - 'Cross-encoder reranker takes (query, chunk) pairs and scores relevance.'
+  - 'Elasticsearch supports both BM25 and vector search natively.'
+related_topics:
+- rag-systems
+- vector-databases
+version: 1.0.0

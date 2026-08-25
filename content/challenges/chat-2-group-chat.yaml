@@ -1,0 +1,52 @@
+id: chat-2-group-chat
+title: "Chat System II: Group Messaging"
+difficulty: intermediate
+mode: challenge
+narrative: "NovaChat is adding group chats (up to 256 members). A message sent in a group must reach all online members within 500ms. Design the fan-out strategy."
+requirements:
+- id: fan-out-speed
+  category: performance
+  description: Group message delivered to all online members within 500ms
+  priority: must
+  metric: latency
+  value: 500
+  unit: ms
+- id: group-size
+  category: scale
+  description: Support groups with up to 256 members
+  priority: must
+  metric: members
+  value: 256
+  unit: null
+- id: offline-delivery
+  category: availability
+  description: Offline members receive messages on reconnect
+  priority: must
+  metric: delivery
+  value: 100
+  unit: '%'
+learning_objectives:
+- Fan-out-on-write vs fan-out-on-read
+- Message ordering per conversation
+- Offline message queuing
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+- kafka
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'For 256-member groups, fan-out-on-write is feasible (256 writes per message).'
+  - 'Each message needs a monotonic sequence ID per group for ordering.'
+  - "Offline members' messages should be stored per-member, not per-group."
+related_topics:
+- chat-system
+- messaging-queues
+chain:
+  family_id: chat-system
+  level: 2
+version: 1.0.0

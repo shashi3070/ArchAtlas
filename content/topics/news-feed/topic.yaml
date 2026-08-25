@@ -1,0 +1,36 @@
+id: news-feed
+title: "News Feed System"
+category: case-study
+order: 41
+summary: "Building a feed aggregation system like Facebook or LinkedIn with ranking and real-time updates."
+prerequisites: ['messaging-queues', 'caching', 'databases']
+related_challenges: []
+objectives:
+  - "Design a feed system supporting diverse content types"
+  - "Implement ML-based feed ranking"
+  - "Handle feed pagination and real-time updates"
+quiz:
+  - q: "What content types does a news feed aggregate?"
+    options:
+      - "Text only"
+      - "Text, images, videos, links, and shared posts"
+      - "Images only"
+      - "Links only"
+    answer: 1
+    explain: "Modern feeds aggregate diverse content types: text posts, photos, videos, article links, and reposts from followed accounts."
+  - q: "How does the feed handle content from accounts the user follows?"
+    options:
+      - "Shows all posts chronologically"
+      - "Pre-fetches and ranks posts from followed accounts"
+      - "Ignores followed accounts"
+      - "Only shows sponsored content"
+    answer: 1
+    explain: "The feed pre-fetches posts from followed accounts and applies ML ranking to surface the most relevant content."
+  - q: "What is the purpose of the 'follow' graph?"
+    options:
+      - "Track user friendships"
+      - "Define which accounts' posts appear in a user's feed"
+      - "Store user profiles"
+      - "Manage authentication"
+    answer: 1
+    explain: "The follow graph defines the relationship: user A follows user B → B's posts appear in A's feed."

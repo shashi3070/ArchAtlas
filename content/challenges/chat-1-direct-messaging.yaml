@@ -1,0 +1,53 @@
+id: chat-1-direct-messaging
+title: "Chat System I: Direct Messaging"
+difficulty: beginner
+mode: challenge
+narrative: "NovaChat wants to launch a 1:1 messaging app for 100K concurrent users with delivery guarantees. Design the smallest honest system."
+requirements:
+- id: handle-concurrency
+  category: scale
+  description: Support 100K concurrent WebSocket connections
+  priority: must
+  metric: connections
+  value: 100000
+  unit: null
+- id: delivery-guarantee
+  category: availability
+  description: Messages are delivered at least once
+  priority: must
+  metric: delivery
+  value: 99.9
+  unit: '%'
+- id: stay-up
+  category: availability
+  description: Survive single-instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- WebSocket connection management
+- Message queue for offline delivery
+- Simple presence tracking
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+- kafka
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'WebSocket connections are stateful; each server handles a fraction of connections.'
+  - 'Messages must be persisted before acknowledgment to prevent loss.'
+  - 'Offline users need a message queue; Redis lists or Kafka topics work.'
+related_topics:
+- chat-system
+- websockets
+chain:
+  family_id: chat-system
+  level: 1
+  next_challenge_id: chat-2-group-chat
+version: 1.0.0

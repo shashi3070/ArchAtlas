@@ -1,0 +1,36 @@
+id: circuit-breaker
+title: "Circuit Breaker Pattern"
+category: core
+order: 20
+summary: "Preventing cascade failures by detecting unhealthy dependencies and short-circuiting requests."
+prerequisites: ['reliability-patterns', 'microservices']
+related_challenges: []
+objectives:
+  - "Explain the three states: closed, open, half-open"
+  - "Configure failure thresholds and recovery timeouts"
+  - "Integrate circuit breakers with fallback strategies"
+quiz:
+  - q: "What happens when a circuit breaker is in the 'open' state?"
+    options:
+      - "All requests pass through normally"
+      - "All requests are immediately failed without calling the dependency"
+      - "Requests are queued until the dependency recovers"
+      - "Only health check requests pass through"
+    answer: 1
+    explain: "In the open state, the circuit breaker rejects all requests immediately, protecting the dependency from further load and the caller from latency."
+  - q: "When does a circuit breaker transition from open to half-open?"
+    options:
+      - "Immediately after the failure"
+      - "After a configurable timeout period"
+      - "When the dependency sends a recovery signal"
+      - "When the operator manually resets it"
+    answer: 1
+    explain: "After the timeout, the circuit breaker allows a trial request through (half-open). If it succeeds, the circuit closes; if it fails, the circuit re-opens."
+  - q: "What is a common fallback strategy when the circuit is open?"
+    options:
+      - "Retry the request immediately"
+      - "Return a cached or default response"
+      - "Forward the request to a different service"
+      - "Both B and C"
+    answer: 3
+    explain: "Returning cached/default data or routing to a degraded but available service are both common fallback strategies that maintain partial functionality."

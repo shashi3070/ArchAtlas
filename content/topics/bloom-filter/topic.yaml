@@ -1,0 +1,36 @@
+id: bloom-filter
+title: "Bloom Filter"
+category: core
+order: 25
+summary: "A space-efficient probabilistic data structure for set membership testing with tunable false positive rates."
+prerequisites: ['databases']
+related_challenges: []
+objectives:
+  - "Explain the false-positive/false-negative trade-off"
+  - "Calculate the optimal bit-array size and hash-function count"
+  - "Apply bloom filters to database and cache optimization"
+quiz:
+  - q: "What kind of errors can a bloom filter produce?"
+    options:
+      - "False negatives only"
+      - "False positives only"
+      - "Both false positives and false negatives"
+      - "No errors"
+    answer: 1
+    explain: "A bloom filter can say 'yes' when the element is not in the set (false positive), but never 'no' when it is (no false negatives)."
+  - q: "How does increasing the bit-array size affect accuracy?"
+    options:
+      - "Decreases false positive rate"
+      - "Increases false positive rate"
+      - "Has no effect on accuracy"
+      - "Makes the filter slower"
+    answer: 0
+    explain: "A larger bit array spreads the hash bits over more positions, reducing collisions and lowering the false positive rate."
+  - q: "Which use case is a bloom filter well-suited for?"
+    options:
+      - "Exact counting of unique visitors"
+      - "Checking if a URL has been visited before in a web crawler"
+      - "Storing full user profiles"
+      - "Sorted range queries"
+    answer: 1
+    explain: "Bloom filters efficiently test 'have I seen this before?' with minimal memory, perfect for web crawlers avoiding revisits."

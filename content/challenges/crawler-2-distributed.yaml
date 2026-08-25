@@ -1,0 +1,52 @@
+id: crawler-2-distributed
+title: "Web Crawler II: Distributed Crawler"
+difficulty: intermediate
+mode: challenge
+narrative: "CrawlBot needs to scale to 100M pages. The single-machine crawler is too slow. Distribute the crawling across multiple machines while maintaining politeness."
+requirements:
+- id: scale
+  category: scale
+  description: Crawl 100M pages within 30 days
+  priority: must
+  metric: total_pages
+  value: 100000000
+  unit: null
+- id: politeness
+  category: security
+  description: Per-domain rate limiting across all machines
+  priority: must
+  metric: politeness
+  value: 100
+  unit: '%'
+- id: fault-tolerance
+  category: availability
+  description: Crawler continues if one machine fails
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- Distributed URL frontier
+- Domain-based partitioning
+- Fault tolerance in distributed crawling
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+- object_storage
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Partition URLs by domain hash across machines; each machine handles its own domains.'
+  - 'Use Kafka to distribute URLs; consumers process their assigned partition.'
+  - 'Each machine maintains its own politeness state; no cross-machine coordination needed.'
+related_topics:
+- web-crawler
+- messaging-queues
+chain:
+  family_id: web-crawler
+  level: 2
+version: 1.0.0

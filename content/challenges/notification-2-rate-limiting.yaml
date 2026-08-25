@@ -1,0 +1,51 @@
+id: notification-2-rate-limiting
+title: "Notification System II: Rate Limiting"
+difficulty: intermediate
+mode: challenge
+narrative: "NotifyMe users are complaining about notification spam. Add rate limiting: max 5 push notifications per hour per user, with priority channels bypassing limits."
+requirements:
+- id: rate-limit
+  category: availability
+  description: Max 5 push notifications per hour per user
+  priority: must
+  metric: max_per_hour
+  value: 5
+  unit: null
+- id: priority-bypass
+  category: functional
+  description: Critical notifications bypass rate limits
+  priority: must
+  metric: priority_bypass
+  value: 100
+  unit: '%'
+- id: fallback
+  category: availability
+  description: If push is rate-limited, try email as fallback
+  priority: should
+  metric: fallback
+  value: 100
+  unit: '%'
+learning_objectives:
+- Per-user rate limiting with Redis
+- Priority-based notification routing
+- Channel fallback strategies
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Use Redis INCR with TTL for per-user rate limiting.'
+  - 'Priority notifications (security alerts) bypass the rate limit.'
+  - 'If push is rate-limited, fall back to email; if email fails, try SMS.'
+related_topics:
+- notification-system
+- rate-limiting
+chain:
+  family_id: notification-system
+  level: 2
+version: 1.0.0

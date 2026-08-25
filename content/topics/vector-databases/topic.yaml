@@ -1,0 +1,36 @@
+id: vector-databases
+title: "Vector Databases"
+category: ai-engineering
+order: 51
+summary: "Storing and querying high-dimensional vectors for similarity search in AI applications."
+prerequisites: ['databases']
+related_challenges: []
+objectives:
+  - "Explain approximate nearest neighbor (ANN) algorithms"
+  - "Compare vector database options (Pinecone, Weaviate, pgvector, Qdrant)"
+  - "Design a vector index for RAG or recommendation systems"
+quiz:
+  - q: "What is approximate nearest neighbor (ANN) search?"
+    options:
+      - "Exact distance calculation to all vectors"
+      - "Finding vectors similar to a query with sub-linear time at the cost of slight accuracy loss"
+      - "Finding the exact nearest neighbor"
+      - "Random sampling of vectors"
+    answer: 1
+    explain: "ANN trades exactness for speed; algorithms like HNSW and IVF find near-optimal matches in O(log N) instead of O(N)."
+  - q: "Which index algorithm uses a graph structure for ANN search?"
+    options:
+      - "IVF (Inverted File Index)"
+      - "HNSW (Hierarchical Navigable Small World)"
+      - "LSH (Locality-Sensitive Hashing)"
+      - "PQ (Product Quantization)"
+    answer: 1
+    explain: "HNSW builds a multi-layer graph where each node connects to its approximate nearest neighbors; search traverses the graph greedily."
+  - q: "What metric is used to measure similarity between text embeddings?"
+    options:
+      - "Euclidean distance"
+      - "Cosine similarity"
+      - "Manhattan distance"
+      - "Jaccard index"
+    answer: 1
+    explain: "Cosine similarity measures the angle between vectors, making it invariant to magnitude; it is the standard metric for text embeddings."

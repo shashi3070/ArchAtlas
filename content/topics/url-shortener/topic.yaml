@@ -1,0 +1,36 @@
+id: url-shortener
+title: "URL Shortener"
+category: case-study
+order: 30
+summary: "Building a high-throughput URL shortening service with analytics, caching, and global distribution."
+prerequisites: ['caching', 'databases', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Design a globally distributed URL shortener like Bitly"
+  - "Handle high read traffic with caching and replication"
+  - "Implement collision-resistant short code generation"
+quiz:
+  - q: "What encoding is best for generating short codes from a numeric ID?"
+    options:
+      - "Base64"
+      - "Base62 (a-z, A-Z, 0-9)"
+      - "Hexadecimal"
+      - "UUID"
+    answer: 1
+    explain: "Base62 gives 62^7 = ~3.5 trillion unique 7-character codes, balancing readability and collision space."
+  - q: "Where should URL redirects be served from in a high-traffic system?"
+    options:
+      - "Database on every request"
+      - "CDN edge with cache"
+      - "Origin server only"
+      - "Client-side redirect"
+    answer: 1
+    explain: "CDN edge caching serves most redirects at the edge with sub-10ms latency, shielding the origin."
+  - q: "Why is a counter-based ID generator preferred over random generation?"
+    options:
+      - "Random is faster"
+      - "Counter guarantees uniqueness without collision checks"
+      - "Random uses less memory"
+      - "Counter is more secure"
+    answer: 1
+    explain: "A distributed counter (e.g., Snowflake) generates unique IDs without needing to check for collisions in the DB."

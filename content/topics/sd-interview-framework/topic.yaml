@@ -1,0 +1,36 @@
+id: sd-interview-framework
+title: "System Design Interview Framework"
+category: interview
+order: 60
+summary: "A structured approach to system design interviews: requirements, design, deep-dive, and trade-offs."
+prerequisites: []
+related_challenges: []
+objectives:
+  - "Apply the 4-step framework: clarify, design, deep-dive, evaluate"
+  - "Time-box each phase effectively in a 45-minute interview"
+  - "Communicate trade-offs and justify design decisions"
+quiz:
+  - q: "What should you do first when presented with a system design question?"
+    options:
+      - "Start drawing diagrams immediately"
+      - "Ask clarifying questions about requirements and constraints"
+      - "List all possible technologies"
+      - "Choose a database"
+    answer: 1
+    explain: "Clarifying requirements ensures you solve the right problem and avoids designing the wrong system."
+  - q: "How much time should you spend on the high-level design?"
+    options:
+      - "5 minutes"
+      - "10-15 minutes"
+      - "30 minutes"
+      - "5 minutes"
+    answer: 1
+    explain: "A 45-minute interview typically allocates: 5 min clarify, 10-15 min high-level design, 15-20 min deep-dive, 5-10 min trade-offs."
+  - q: "What is the most important skill in a system design interview?"
+    options:
+      - "Memorizing system architectures"
+      - "Communicating trade-offs and reasoning about design decisions"
+      - "Drawing perfect diagrams"
+      - "Knowing every technology"
+    answer: 1
+    explain: "Interviewers evaluate your thought process and ability to reason about trade-offs, not whether you memorized a specific architecture."

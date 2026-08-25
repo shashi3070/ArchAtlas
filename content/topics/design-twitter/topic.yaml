@@ -1,0 +1,36 @@
+id: design-twitter
+title: "Design Twitter/X"
+category: interview
+order: 63
+summary: "Interview-style deep-dive into designing a social media platform with real-time feed and search."
+prerequisites: ['social-feed', 'news-feed', 'search-autocomplete']
+related_challenges: []
+objectives:
+  - "Design the tweet posting and timeline generation system"
+  - "Implement fan-out strategies for celebrity accounts"
+  - "Build real-time search and trending topics"
+quiz:
+  - q: "What is the 'celebrity problem' on Twitter?"
+    options:
+      - "Celebrities tweet too much"
+      - "A celebrity's tweet must be fanned out to millions of followers"
+      - "Celebrities have too many followers"
+      - "Celebrity accounts are hacked"
+    answer: 1
+    explain: "Fan-out-on-write for a celebrity with 10M followers requires 10M writes per tweet, which is prohibitively expensive."
+  - q: "How does Twitter handle the celebrity problem?"
+    options:
+      - "Ignore celebrity tweets"
+      - "Use fan-out-on-read for celebrities, fan-out-on-write for regular users"
+      - "Block celebrity accounts"
+      - "Use a separate database"
+    answer: 1
+    explain: "Twitter uses a hybrid: fan-out-on-write for regular users (pre-compute feeds) and fan-out-on-read for celebrities (compute at read time)."
+  - q: "What is Twitter's search architecture based on?"
+    options:
+      - "SQL LIKE queries"
+      - "Inverted index (Lucene/Solr/Elasticsearch)"
+      - "Full table scan"
+      - "Hash table"
+    answer: 1
+    explain: "Twitter uses an inverted index (like Lucene) to map tokens to tweet IDs for fast full-text search."

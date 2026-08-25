@@ -1,0 +1,50 @@
+id: leaderboard-2-sharded
+title: "Gaming Leaderboard II: Global Rankings"
+difficulty: intermediate
+mode: challenge
+narrative: "GameZone now has 100M players across multiple game regions. A single Redis instance can't hold the entire leaderboard. Design a sharded leaderboard with global rankings."
+requirements:
+- id: global-rank
+  category: functional
+  description: Any player can query their global rank
+  priority: must
+  metric: global_rank
+  value: 100
+  unit: '%'
+- id: update-speed
+  category: performance
+  description: Score updates complete within 50ms
+  priority: must
+  metric: latency
+  value: 50
+  unit: ms
+- id: regional-leaderboard
+  category: functional
+  description: Regional leaderboards available alongside global
+  priority: should
+  metric: regional
+  value: 100
+  unit: '%'
+learning_objectives:
+- Leaderboard sharding strategies
+- Merging sorted sets for global rankings
+- Regional vs global leaderboards
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Shard by region or game; each shard maintains a local sorted set.'
+  - "Global rank = sum of all shards' counts above you + your rank in your shard."
+  - 'Periodically merge shards for global queries; cache the merged result.'
+related_topics:
+- gaming-leaderboard
+- consistent-hashing
+chain:
+  family_id: gaming-leaderboard
+  level: 2
+version: 1.0.0

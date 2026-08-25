@@ -1,0 +1,36 @@
+id: backpressure
+title: "Backpressure"
+category: core
+order: 24
+summary: "Controlling the flow of data when a fast producer overwhelms a slow consumer."
+prerequisites: ['messaging-queues', 'reliability-patterns']
+related_challenges: []
+objectives:
+  - "Explain push-based vs. pull-based backpressure"
+  - "Design bounded buffers with overflow strategies"
+  - "Apply backpressure in streaming systems"
+quiz:
+  - q: "What is backpressure?"
+    options:
+      - "Increasing the producer's speed"
+      - "A mechanism for the consumer to signal the producer to slow down"
+      - "Adding more consumers"
+      - "Increasing buffer size"
+    answer: 1
+    explain: "Backpressure propagates the consumer's capacity constraints back to the producer, preventing unbounded buffer growth and OOM failures."
+  - q: "Which overflow strategy drops messages when the buffer is full?"
+    options:
+      - "Block the producer"
+      - "Drop oldest"
+      - "Drop newest"
+      - "All of the above are valid strategies"
+    answer: 3
+    explain: "Block, drop-oldest, and drop-newest are all valid strategies depending on the use case (e.g., metrics drop oldest; alerts block)."
+  - q: "In reactive streams, what does 'demand' represent?"
+    options:
+      - "How many messages the consumer has processed"
+      - "How many messages the consumer is requesting from the producer"
+      - "The total message count in the system"
+      - "The producer's sending rate"
+    answer: 1
+    explain: "In reactive streams (e.g., RxJava, Project Reactor), the consumer signals demand; the producer only sends as many messages as requested."

@@ -1,0 +1,36 @@
+id: chat-system
+title: "Chat System"
+category: case-study
+order: 31
+summary: "Designing a real-time messaging system like WhatsApp with millions of concurrent connections."
+prerequisites: ['websockets', 'messaging-queues', 'databases']
+related_challenges: []
+objectives:
+  - "Design a 1:1 and group chat system"
+  - "Handle message ordering, delivery guarantees, and offline storage"
+  - "Scale WebSocket connections across multiple servers"
+quiz:
+  - q: "How are messages ordered in a chat system?"
+    options:
+      - "Client timestamp"
+      - "Server-assigned sequence ID"
+      - "Message content hash"
+      - "Random ID"
+    answer: 1
+    explain: "Server-assigned sequence IDs guarantee monotonic ordering regardless of client clock skew."
+  - q: "What is the purpose of a message queue between chat servers?"
+    options:
+      - "Store messages permanently"
+      - "Route messages between servers holding different user connections"
+      - "Compress messages"
+      - "Encrypt messages"
+    answer: 1
+    explain: "When sender and receiver are on different chat servers, a message bus (Kafka/NATS) routes messages between them."
+  - q: "How does the system handle a user who is offline?"
+    options:
+      - "Messages are lost"
+      - "Messages are stored in an offline queue and delivered on reconnect"
+      - "Messages are sent via email"
+      - "Messages are retried indefinitely"
+    answer: 1
+    explain: "Offline messages are persisted and queued; when the user reconnects, the server delivers all queued messages in order."

@@ -1,0 +1,36 @@
+id: cqrs
+title: "Command Query Responsibility Segregation"
+category: core
+order: 22
+summary: "Separating read and write models to optimize each independently for their access patterns."
+prerequisites: ['microservices', 'databases']
+related_challenges: []
+objectives:
+  - "Explain when CQRS improves performance and scalability"
+  - "Design event-driven CQRS with event sourcing"
+  - "Identify the consistency trade-offs of separated read/write models"
+quiz:
+  - q: "In CQRS, what does the 'command' side handle?"
+    options:
+      - "All database queries"
+      - "Write operations that change system state"
+      - "Read-only reporting queries"
+      - "Load balancing"
+    answer: 1
+    explain: "Commands are operations that change state (create, update, delete). The command side validates and processes these operations."
+  - q: "What consistency model does CQRS typically provide?"
+    options:
+      - "Strong consistency"
+      - "Eventual consistency between read and write models"
+      - "No consistency guarantee"
+      - "Linearizability"
+    answer: 1
+    explain: "The read model is updated asynchronously via events, so there's a window where reads may return stale data (eventual consistency)."
+  - q: "When is CQRS most beneficial?"
+    options:
+      - "Simple CRUD applications with low traffic"
+      - "Systems where read and write workloads have very different scaling needs"
+      - "Applications with a single database table"
+      - "Prototypes and MVPs"
+    answer: 1
+    explain: "CQRS shines when read and write patterns diverge (e.g., millions of reads but few writes), allowing each side to be scaled and optimized independently."

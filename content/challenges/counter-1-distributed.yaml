@@ -1,0 +1,50 @@
+id: counter-1-distributed
+title: "Distributed Counter I: Basic Counter"
+difficulty: beginner
+mode: challenge
+narrative: "LikeButton needs a distributed counter for post likes handling 10K increments/second with approximate accuracy. Design the counter system."
+requirements:
+- id: write-speed
+  category: performance
+  description: Handle 10K increments per second
+  priority: must
+  metric: increments_per_second
+  value: 10000
+  unit: null
+- id: accuracy
+  category: performance
+  description: Counter within 1% of exact value
+  priority: must
+  metric: accuracy
+  value: 99
+  unit: '%'
+- id: read-speed
+  category: performance
+  description: Counter reads complete within 50ms
+  priority: should
+  metric: latency
+  value: 50
+  unit: ms
+learning_objectives:
+- Counter sharding for write throughput
+- Approximate counting with merging
+- In-memory buffering for batch updates
+allowed_components:
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Shard the counter into N physical counters; increment a random shard.'
+  - 'Sum all shards for the approximate total.'
+  - 'Buffer increments in memory; flush to Redis periodically.'
+related_topics:
+- distributed-counter
+- caching
+chain:
+  family_id: distributed-counter
+  level: 1
+  next_challenge_id: counter-2-multi-region
+version: 1.0.0

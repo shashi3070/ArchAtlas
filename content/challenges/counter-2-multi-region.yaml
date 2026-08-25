@@ -1,0 +1,50 @@
+id: counter-2-multi-region
+title: "Distributed Counter II: Multi-Region"
+difficulty: intermediate
+mode: challenge
+narrative: "LikeButton is expanding to multiple regions. Counters must be updated locally in each region and merged globally. Design the multi-region counter with eventual consistency."
+requirements:
+- id: local-speed
+  category: performance
+  description: Local increments complete within 5ms
+  priority: must
+  metric: latency
+  value: 5
+  unit: ms
+- id: global-merge
+  category: functional
+  description: Global count available within 30 seconds
+  priority: must
+  metric: merge_time
+  value: 30
+  unit: seconds
+- id: fault-tolerance
+  category: availability
+  description: Local counters work during cross-region network partition
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- Multi-region counter replication
+- CRDT G-Counters
+- Eventual consistency for counters
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Each region maintains its own counter; local increments are fast.'
+  - 'Periodically merge regional counters via Kafka or dedicated merge service.'
+  - 'G-Counter CRDT: each region has its own count; global = sum of all regional counts.'
+related_topics:
+- distributed-counter
+- consistency-and-cap
+chain:
+  family_id: distributed-counter
+  level: 2
+version: 1.0.0

@@ -1,0 +1,36 @@
+id: service-discovery
+title: "Service Discovery"
+category: core
+order: 13
+summary: "How services find each other in dynamic environments where instances come and go."
+prerequisites: ['microservices', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Compare client-side and server-side discovery"
+  - "Explain health checking and TTL-based registration"
+  - "Design a discovery system with Consul, etcd, or DNS"
+quiz:
+  - q: "In client-side discovery, who is responsible for querying the registry and choosing an instance?"
+    options:
+      - "The load balancer"
+      - "The calling service (client)"
+      - "A central routing server"
+      - "DNS"
+    answer: 1
+    explain: "Client-side discovery means the caller queries the service registry directly and picks an instance (often via a library), giving it full control over load balancing strategy."
+  - q: "What is the purpose of TTL-based health registration?"
+    options:
+      - "To encrypt service communication"
+      - "To automatically deregister instances that stop sending heartbeats"
+      - "To balance load across instances"
+      - "To cache service metadata"
+    answer: 1
+    explain: "TTL registration requires instances to re-register periodically; if they miss the TTL window, the registry removes them, preventing traffic to dead instances."
+  - q: "DNS-based service discovery has which key limitation?"
+    options:
+      - "It cannot handle more than 10 services"
+      - "DNS caching makes it slow to detect changes"
+      - "It requires a dedicated load balancer"
+      - "It only works with HTTP"
+    answer: 1
+    explain: "DNS TTLs and resolver caching delay propagation of membership changes, making pure DNS unsuitable for fast-failover scenarios without additional mechanisms."

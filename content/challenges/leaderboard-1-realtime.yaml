@@ -1,0 +1,50 @@
+id: leaderboard-1-realtime
+title: "Gaming Leaderboard I: Real-Time Rankings"
+difficulty: beginner
+mode: challenge
+narrative: "GameZone needs a real-time leaderboard for 1M players with score updates every second and rank queries in under 10ms. Design the leaderboard system."
+requirements:
+- id: update-speed
+  category: performance
+  description: Score updates complete within 10ms
+  priority: must
+  metric: latency
+  value: 10
+  unit: ms
+- id: rank-speed
+  category: performance
+  description: Rank queries complete within 10ms
+  priority: must
+  metric: latency
+  value: 10
+  unit: ms
+- id: concurrent-updates
+  category: scale
+  description: Handle 10K score updates per second
+  priority: should
+  metric: updates_per_second
+  value: 10000
+  unit: null
+learning_objectives:
+- Redis sorted sets for leaderboards
+- Score tiebreaking with timestamps
+- Real-time rank queries
+allowed_components:
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Redis sorted sets (ZADD) provide O(log N) insert and O(1) rank queries.'
+  - 'Tiebreaking: encode timestamp in fractional score (score + timestamp/1e12).'
+  - 'ZREVRANK returns the 0-based rank of a player in descending order.'
+related_topics:
+- gaming-leaderboard
+- caching
+chain:
+  family_id: gaming-leaderboard
+  level: 1
+  next_challenge_id: leaderboard-2-sharded
+version: 1.0.0

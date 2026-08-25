@@ -1,0 +1,36 @@
+id: idempotency
+title: "Idempotency"
+category: core
+order: 19
+summary: "Ensuring that repeating a request produces the same result, critical for safe retries in distributed systems."
+prerequisites: ['http-fundamentals', 'api-design']
+related_challenges: []
+objectives:
+  - "Explain why idempotency matters in distributed systems"
+  - "Design idempotency key schemes for payment and order APIs"
+  - "Compare idempotent vs. at-least-once vs. exactly-once semantics"
+quiz:
+  - q: "Which HTTP method is naturally idempotent?"
+    options:
+      - "POST"
+      - "PUT"
+      - "PATCH (partial update)"
+      - "None are idempotent"
+    answer: 1
+    explain: "PUT replaces the entire resource; sending the same PUT twice produces the same final state. POST creates a new resource each time."
+  - q: "How do idempotency keys prevent double charges?"
+    options:
+      - "They encrypt the payment request"
+      - "The server remembers the key and returns the cached response for duplicate requests"
+      - "They rate-limit the client"
+      - "They route the request to a different server"
+    answer: 1
+    explain: "The server stores the idempotency key with the result; if a duplicate request arrives with the same key, it returns the stored response without re-executing."
+  - q: "At-least-once delivery combined with idempotent processing achieves:"
+    options:
+      - "Exactly-once semantics"
+      - "At-most-once semantics"
+      - "No delivery guarantee"
+      - "First-in-first-out ordering"
+    answer: 0
+    explain: "At-least-once delivery may retry; if the handler is idempotent, retries produce the same result, giving effective exactly-once semantics."

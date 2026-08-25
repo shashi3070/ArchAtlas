@@ -1,0 +1,46 @@
+id: search-1-autocomplete
+title: "Search Autocomplete I: Trie-Based"
+difficulty: beginner
+mode: challenge
+narrative: "SearchBox needs autocomplete that returns top-5 suggestions within 50ms as the user types. Design the trie-based autocomplete system."
+requirements:
+- id: latency
+  category: performance
+  description: Suggestions returned within 50ms
+  priority: must
+  metric: latency
+  value: 50
+  unit: ms
+- id: freshness
+  category: performance
+  description: Suggestions reflect recent search trends
+  priority: must
+  metric: freshness
+  value: 90
+  unit: '%'
+- id: scale
+  category: scale
+  description: Handle 10K queries per second
+  priority: should
+  metric: qps
+  value: 10000
+  unit: null
+learning_objectives:
+- Trie data structure for prefix search
+- Frequency-weighted ranking
+- Cache hot prefixes
+allowed_components:
+- api
+- redis
+- postgresql
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Trie nodes store top-K children by frequency; lookup is O(prefix_length).'
+  - "Cache热门 prefixes (e.g., 'how to', 'what is') in Redis."
+  - 'Periodically rebuild the trie from query logs; real-time updates adjust frequencies.'
+related_topics:
+- search-autocomplete
+- caching
+version: 1.0.0

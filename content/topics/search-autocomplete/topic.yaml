@@ -1,0 +1,36 @@
+id: search-autocomplete
+title: "Search Autocomplete"
+category: case-study
+order: 38
+summary: "Building a real-time search suggestion system with trie-based ranking and low-latency responses."
+prerequisites: ['caching', 'databases']
+related_challenges: []
+objectives:
+  - "Design a trie-based autocomplete with frequency ranking"
+  - "Handle real-time updates to suggestion popularity"
+  - "Scale to billions of queries with sub-50ms latency"
+quiz:
+  - q: "What data structure is ideal for prefix-based search?"
+    options:
+      - "Hash table"
+      - "Trie (prefix tree)"
+      - "Binary search tree"
+      - "Linked list"
+    answer: 1
+    explain: "A trie allows O(prefix_length) lookup of all strings sharing a prefix, which is exactly what autocomplete needs."
+  - q: "How are suggestions ranked?"
+    options:
+      - "Alphabetical order"
+      - "Frequency of past searches (popularity)"
+      - "Recency only"
+      - "Random selection"
+    answer: 1
+    explain: "Suggestions are ranked by search frequency (weighted by recency), so the most popular queries appear first."
+  - q: "How is the trie kept up to date?"
+    options:
+      - "Rebuilt from scratch daily"
+      - "Incrementally updated as new queries arrive"
+      - "Never updated"
+      - "Client-side only"
+    answer: 1
+    explain: "New queries update frequency counts in the trie in real-time; periodic snapshots rebuild the trie for consistency."

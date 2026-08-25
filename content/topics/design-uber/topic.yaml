@@ -1,0 +1,36 @@
+id: design-uber
+title: "Design Uber"
+category: interview
+order: 64
+summary: "Interview-style deep-dive into designing a ride-sharing platform with real-time location and dispatch."
+prerequisites: ['ride-sharing']
+related_challenges: []
+objectives:
+  - "Design the geospatial indexing and driver matching system"
+  - "Implement real-time location tracking and ETA computation"
+  - "Discuss surge pricing and dispatch optimization"
+quiz:
+  - q: "What data structure finds nearby drivers efficiently?"
+    options:
+      - "Hash table"
+      - "Geohash or quadtree"
+      - "Binary tree"
+      - "Array"
+    answer: 1
+    explain: "Geohashes partition 2D space into grid cells; querying nearby cells finds nearby drivers efficiently."
+  - q: "How does Uber compute ETA at 500K requests/second?"
+    options:
+      - "Asks each driver"
+      - "Pre-computed road segments with time estimates"
+      - "Uses GPS directly"
+      - "Asks Google Maps"
+    answer: 1
+    explain: "Uber pre-computes travel times between road segments and uses graph algorithms for fast ETA estimation."
+  - q: "What triggers surge pricing?"
+    options:
+      - "Random price increases"
+      - "Real-time demand exceeding driver supply in a region"
+      - "Time of day only"
+      - "Driver preference"
+    answer: 1
+    explain: "Surge pricing is triggered when demand in a geographic area exceeds available driver supply, balancing the market via price signals."

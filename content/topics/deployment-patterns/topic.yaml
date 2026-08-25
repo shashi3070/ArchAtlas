@@ -1,0 +1,36 @@
+id: deployment-patterns
+title: "Deployment Patterns"
+category: core
+order: 16
+summary: "Strategies for releasing new code safely: blue-green, canary, rolling, and feature flags."
+prerequisites: ['microservices', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Compare blue-green, canary, and rolling deployments"
+  - "Explain how feature flags enable safe rollouts"
+  - "Design rollback strategies for each pattern"
+quiz:
+  - q: "Which deployment pattern routes a small percentage of traffic to the new version first?"
+    options:
+      - "Blue-green deployment"
+      - "Canary deployment"
+      - "Rolling deployment"
+      - "Big bang deployment"
+    answer: 1
+    explain: "Canary deployment sends a fraction (e.g., 5%) of traffic to the new version while monitoring metrics; if healthy, the percentage increases."
+  - q: "What is the main advantage of blue-green deployment?"
+    options:
+      - "Uses less infrastructure"
+      - "Instant rollback by switching traffic back to blue"
+      - "No downtime during deployment"
+      - "Both B and C"
+    answer: 3
+    explain: "Blue-green maintains two identical environments; traffic switches atomically, enabling instant rollback by switching back. Both B and C are correct."
+  - q: "Feature flags allow you to:"
+    options:
+      - "Deploy code and activate features independently"
+      - "Replace deployment tools"
+      - "Eliminate the need for staging environments"
+      - "Run multiple databases simultaneously"
+    answer: 0
+    explain: "Feature flags decouple deployment from release: code ships to production behind a flag, then is activated for specific users or percentages without a new deploy."

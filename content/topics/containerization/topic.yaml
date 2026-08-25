@@ -1,0 +1,36 @@
+id: containerization
+title: "Containers & Kubernetes"
+category: core
+order: 17
+summary: "Packaging applications as portable containers and orchestrating them at scale with Kubernetes."
+prerequisites: ['microservices', 'deployment-patterns']
+related_challenges: []
+objectives:
+  - "Explain container isolation vs. VM isolation"
+  - "Describe Kubernetes pod, service, and deployment abstractions"
+  - "Design a Kubernetes deployment with health checks and resource limits"
+quiz:
+  - q: "How do containers differ from virtual machines?"
+    options:
+      - "Containers are more isolated than VMs"
+      - "Containers share the host OS kernel; VMs include a full guest OS"
+      - "VMs start faster than containers"
+      - "Containers cannot run on cloud providers"
+    answer: 1
+    explain: "Containers use Linux namespaces and cgroups for process-level isolation on the shared kernel; VMs run a complete OS on a hypervisor, making them heavier but more isolated."
+  - q: "What is a Kubernetes Service?"
+    options:
+      - "A running container instance"
+      - "A stable network endpoint that maps to a set of pods"
+      - "A YAML configuration file"
+      - "A Docker image registry"
+    answer: 1
+    explain: "A Service provides a stable IP and DNS name that load-balances traffic to the matching pods, even as pods are created and destroyed."
+  - q: "Which Kubernetes resource ensures a specified number of pod replicas are running?"
+    options:
+      - "Service"
+      - "ConfigMap"
+      - "Deployment"
+      - "Ingress"
+    answer: 2
+    explain: "A Deployment manages ReplicaSets, which maintain the desired number of pod replicas and handle rolling updates."

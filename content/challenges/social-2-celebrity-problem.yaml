@@ -1,0 +1,52 @@
+id: social-2-celebrity-problem
+title: "Social Feed II: Celebrity Problem"
+difficulty: advanced
+mode: challenge
+narrative: "Feedly now has 10M users, some with 5M followers. A celebrity's post must appear in followers' timelines without causing write amplification. Redesign the fan-out strategy."
+requirements:
+- id: fan-out-cost
+  category: scale
+  description: Celebrity post appears in followers' timelines within 5 seconds
+  priority: must
+  metric: fan_out_time
+  value: 5
+  unit: seconds
+- id: no-write-amplification
+  category: performance
+  description: No single post triggers more than 10K writes
+  priority: must
+  metric: max_writes
+  value: 10000
+  unit: null
+- id: timeline-consistency
+  category: availability
+  description: Followers see the celebrity post within 10 seconds
+  priority: should
+  metric: consistency_time
+  value: 10
+  unit: seconds
+learning_objectives:
+- Hybrid fan-out strategy
+- Fan-out-on-read for celebrities
+- Timeline merging at read time
+allowed_components:
+- client
+- load_balancer
+- api
+- redis
+- postgresql
+- kafka
+constraints:
+- key: max_nodes
+  value: 12
+hints:
+  - 'Use fan-out-on-write for regular users; fan-out-on-read for celebrities.'
+  - 'At read time, merge pre-computed timeline with live celebrity posts.'
+  - 'Cache celebrity posts separately; check on every timeline request.'
+related_topics:
+- social-feed
+- messaging-queues
+chain:
+  family_id: social-feed
+  level: 2
+version: 1.0.0

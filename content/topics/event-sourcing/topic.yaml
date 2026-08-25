@@ -1,0 +1,36 @@
+id: event-sourcing
+title: "Event Sourcing"
+category: core
+order: 23
+summary: "Storing state as an append-only log of events rather than current snapshots."
+prerequisites: ['cqrs', 'messaging-queues']
+related_challenges: []
+objectives:
+  - "Explain event sourcing vs. CRUD state management"
+  - "Design event schemas and handling event schema evolution"
+  - "Build read models from event streams"
+quiz:
+  - q: "In event sourcing, what is the source of truth?"
+    options:
+      - "The current state in the database"
+      - "The append-only log of events"
+      - "The latest snapshot"
+      - "The read model"
+    answer: 1
+    explain: "Events are the source of truth; current state is derived by replaying events. Snapshots are performance optimizations, not the truth."
+  - q: "Why are snapshots used in event sourcing?"
+    options:
+      - "To provide backups"
+      - "To avoid replaying thousands of events to derive current state"
+      - "To replace the event log"
+      - "To compress events"
+    answer: 1
+    explain: "Snapshots capture the derived state at a point in time; rebuilding state starts from the latest snapshot + events since, reducing replay time."
+  - q: "How do you handle breaking changes in event schemas?"
+    options:
+      - "Delete old events and rewrite the log"
+      - "Version events and apply upcasters to transform old events"
+      - "Stop accepting new events until migration is complete"
+      - "Use a different event store"
+    answer: 1
+    explain: "Events are immutable once stored; upcasters transform old event versions to the current version during replay, preserving the log's integrity."

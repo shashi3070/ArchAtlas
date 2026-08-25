@@ -1,0 +1,36 @@
+id: microservices
+title: "Microservices Architecture"
+category: core
+order: 14
+summary: "Decomposing monoliths into independently deployable services with their own data stores."
+prerequisites: ['http-fundamentals', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Identify when microservices are appropriate vs. a monolith"
+  - "Explain service boundaries and data ownership"
+  - "Recognize the complexity trade-offs of distributed systems"
+quiz:
+  - q: "What is the primary advantage of microservices over a monolith?"
+    options:
+      - "Faster execution speed"
+      - "Independent deployment and scaling of individual services"
+      - "Simpler debugging"
+      - "No need for API contracts"
+    answer: 1
+    explain: "Microservices let teams deploy, scale, and fail services independently, enabling faster iteration and targeted scaling at the cost of operational complexity."
+  - q: "Which pattern helps maintain data consistency across microservices?"
+    options:
+      - "Shared database"
+      - "Saga pattern with compensating transactions"
+      - "Global lock"
+      - "Distributed 2PC"
+    answer: 1
+    explain: "Sagas coordinate distributed transactions through a sequence of local transactions with compensating actions for rollback, avoiding the locking overhead of 2PC."
+  - q: "What is the 'database per service' pattern?"
+    options:
+      - "All services share one large database"
+      - "Each service owns its data store and no service directly accesses another's database"
+      - "Each service has a read replica of a central database"
+      - "A single database with schema-per-tenant"
+    answer: 1
+    explain: "Database per service enforces loose coupling: services communicate via APIs, not shared tables, enabling independent schema evolution and deployment."

@@ -1,0 +1,36 @@
+id: ride-sharing
+title: "Ride-Sharing Service"
+category: case-study
+order: 34
+summary: "Designing a real-time ride-matching platform like Uber with location tracking, ETA, and dispatch."
+prerequisites: ['websockets', 'databases', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Design a geospatial indexing system for nearby driver lookup"
+  - "Implement real-time location tracking and ETA computation"
+  - "Build a dispatch system matching riders to drivers"
+quiz:
+  - q: "Which data structure is best for finding nearby drivers in a geographic area?"
+    options:
+      - "B-tree"
+      - "Geohash or quadtree index"
+      - "Hash table"
+      - "Linked list"
+    answer: 1
+    explain: "Geohashes partition the 2D plane into grid cells; querying nearby cells finds nearby drivers efficiently."
+  - q: "How does Uber compute ETA at 500K requests/second?"
+    options:
+      - "Asks each driver individually"
+      - "Pre-computed road segments with time estimates"
+      - "Uses GPS coordinates directly"
+      - "Asks Google Maps API"
+    answer: 1
+    explain: "Uber pre-computes travel times between road segments and uses graph algorithms for fast ETA estimation."
+  - q: "What is the dispatch matching problem?"
+    options:
+      - "Finding the fastest route"
+      - "Optimally matching riders to available drivers to minimize wait time"
+      - "Calculating the fare"
+      - "Tracking driver location"
+    answer: 1
+    explain: "Dispatch is a bipartite matching problem: assign each rider to the optimal driver based on distance, direction, and demand."

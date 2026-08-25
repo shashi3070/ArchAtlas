@@ -1,0 +1,36 @@
+id: video-streaming
+title: "Video Streaming Platform"
+category: case-study
+order: 32
+summary: "Designing a YouTube-like video platform with upload, transcoding, CDN delivery, and recommendations."
+prerequisites: ['cdn-and-edge', 'messaging-queues', 'databases']
+related_challenges: []
+objectives:
+  - "Design the video upload and transcoding pipeline"
+  - "Implement adaptive bitrate streaming via HLS/DASH"
+  - "Scale CDN delivery for global viewers"
+quiz:
+  - q: "Why is video transcoded into multiple resolutions?"
+    options:
+      - "To reduce upload time"
+      - "To support adaptive bitrate streaming based on viewer bandwidth"
+      - "To improve video quality"
+      - "To reduce storage costs"
+    answer: 1
+    explain: "Multiple resolutions let the player switch quality based on network conditions, preventing buffering."
+  - q: "What protocol is used for adaptive streaming over HTTP?"
+    options:
+      - "RTMP"
+      - "HLS or DASH"
+      - "WebSocket"
+      - "gRPC"
+    answer: 1
+    explain: "HLS (Apple) and DASH (MPEG) split video into small HTTP-fetched segments with multiple quality variants."
+  - q: "Where should the most popular videos be cached?"
+    options:
+      - "Origin server only"
+      - "CDN edge nodes worldwide"
+      - "User's browser only"
+      - "Database"
+    answer: 1
+    explain: "Popular videos are replicated to CDN edge nodes globally, serving viewers from the nearest location."

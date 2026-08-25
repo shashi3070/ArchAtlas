@@ -1,0 +1,36 @@
+id: websockets
+title: "WebSockets"
+category: core
+order: 12
+summary: "Full-duplex persistent connections for real-time bidirectional communication between client and server."
+prerequisites: ['http-fundamentals']
+related_challenges: []
+objectives:
+  - "Explain the WebSocket handshake and lifecycle"
+  - "Compare long-polling, SSE, and WebSockets"
+  - "Design a WebSocket gateway with connection affinity and fan-out"
+quiz:
+  - q: "How does a WebSocket connection begin?"
+    options:
+      - "A new TCP connection with a custom protocol header"
+      - "An HTTP Upgrade request on an existing connection"
+      - "A UDP datagram with a handshake payload"
+      - "A gRPC bidirectional stream"
+    answer: 1
+    explain: "WebSocket starts as an HTTP request with `Upgrade: websocket` header; the server responds 101 Switching Protocols, then both sides speak WebSocket frames over the same TCP socket."
+  - q: "What is the primary advantage of WebSockets over Server-Sent Events?"
+    options:
+      - "Lower latency for server-to-client push"
+      - "Bidirectional communication without polling"
+      - "Better browser compatibility"
+      - "Simpler server implementation"
+    answer: 1
+    explain: "SSE is server-to-client only; WebSockets support full-duplex messaging, which is essential for chat, gaming, and collaborative editing."
+  - q: "Which failure mode is unique to WebSocket connections vs HTTP?"
+    options:
+      - "Connection timeout"
+      - "Stale connections that the server thinks are alive"
+      - "404 Not Found"
+      - "Rate limiting"
+    answer: 1
+    explain: "HTTP connections are short-lived; WebSockets persist, so servers must implement heartbeats and idle timeouts to detect dead connections."

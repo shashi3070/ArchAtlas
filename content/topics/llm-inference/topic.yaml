@@ -1,0 +1,36 @@
+id: llm-inference
+title: "LLM Inference"
+category: ai-engineering
+order: 52
+summary: "Serving large language models efficiently with low latency and high throughput."
+prerequisites: ['ai-agents']
+related_challenges: []
+objectives:
+  - "Explain KV caching, batching, and speculative decoding"
+  - "Design an LLM serving infrastructure with autoscaling"
+  - "Optimize inference cost vs latency trade-offs"
+quiz:
+  - q: "What is KV caching in LLM inference?"
+    options:
+      - "Caching the model weights"
+      - "Caching key-value pairs from attention layers to avoid recomputation"
+      - "Caching user queries"
+      - "Caching API responses"
+    answer: 1
+    explain: "KV caching stores the key and value tensors from previous tokens, so each new token only needs to compute attention for the new position, not reprocess the entire sequence."
+  - q: "What is the main benefit of continuous batching?"
+    options:
+      - "Simpler implementation"
+      - "Higher throughput by processing multiple requests in a single batch"
+      - "Lower latency per request"
+      - "Simpler scheduling"
+    answer: 1
+    explain: "Continuous batching groups multiple requests into a single GPU batch, maximizing GPU utilization and throughput."
+  - q: "What is speculative decoding?"
+    options:
+      - "Guessing the model's output"
+      - "Using a smaller model to draft tokens, then verifying with the larger model"
+      - "Decoding multiple tokens in parallel"
+      - "Speculating about future queries"
+    answer: 1
+    explain: "Speculative decoding uses a small, fast model to generate candidate tokens, then the large model verifies them in parallel, achieving 2-3x speedup."

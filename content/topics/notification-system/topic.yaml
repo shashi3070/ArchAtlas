@@ -1,0 +1,36 @@
+id: notification-system
+title: "Notification System"
+category: case-study
+order: 37
+summary: "Building a multi-channel notification platform supporting push, email, SMS, and in-app messages."
+prerequisites: ['messaging-queues', 'api-design', 'idempotency']
+related_challenges: []
+objectives:
+  - "Design a notification system with multiple delivery channels"
+  - "Implement preference management and rate limiting"
+  - "Handle delivery failures and retries gracefully"
+quiz:
+  - q: "Why use a message queue between the notification service and delivery channels?"
+    options:
+      - "To encrypt messages"
+      - "To decouple producers from consumers and handle delivery failures asynchronously"
+      - "To store notifications permanently"
+      - "To compress messages"
+    answer: 1
+    explain: "A queue decouples the notification request from delivery; if a channel is down, messages retry from the queue without blocking the caller."
+  - q: "How should notification deduplication work?"
+    options:
+      - "Store all notifications and compare text"
+      - "Use an idempotency key per notification to prevent duplicate sends"
+      - "Disable retries entirely"
+      - "Use a database unique constraint on message content"
+    answer: 1
+    explain: "An idempotency key per notification prevents the same event from triggering multiple sends via retries."
+  - q: "What is notification throttling?"
+    options:
+      - "Delaying all notifications"
+      - "Limiting the number of notifications a user receives per time window"
+      - "Slowing down the network"
+      - "Reducing message size"
+    answer: 1
+    explain: "Throttling limits how many notifications a user gets (e.g., max 5 push/hour) to prevent notification fatigue."

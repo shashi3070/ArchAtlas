@@ -1,0 +1,52 @@
+id: notification-1-multi-channel
+title: "Notification System I: Multi-Channel"
+difficulty: beginner
+mode: challenge
+narrative: "NotifyMe needs to send notifications via push, email, and SMS for 100K users. Design a notification system with user preferences and delivery tracking."
+requirements:
+- id: multi-channel
+  category: functional
+  description: Support push, email, and SMS channels
+  priority: must
+  metric: channels
+  value: 3
+  unit: null
+- id: preference-management
+  category: functional
+  description: Users can opt out of specific channels
+  priority: must
+  metric: preferences
+  value: 100
+  unit: '%'
+- id: delivery-tracking
+  category: cost
+  description: Track delivery status per notification
+  priority: should
+  metric: tracking
+  value: 100
+  unit: '%'
+learning_objectives:
+- Message queue for async delivery
+- User preference storage
+- Delivery status tracking
+allowed_components:
+- api
+- redis
+- postgresql
+- kafka
+- worker
+constraints:
+- key: max_nodes
+  value: 8
+hints:
+  - 'Use a message queue to decouple notification requests from delivery.'
+  - 'Store user preferences in Redis for fast lookup during notification routing.'
+  - 'Track delivery status (sent, delivered, failed) per notification.'
+related_topics:
+- notification-system
+- messaging-queues
+chain:
+  family_id: notification-system
+  level: 1
+  next_challenge_id: notification-2-rate-limiting
+version: 1.0.0

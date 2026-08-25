@@ -1,0 +1,47 @@
+id: rag-1-basic-rag
+title: "RAG System I: Basic RAG"
+difficulty: beginner
+mode: challenge
+narrative: "DocuBot needs to answer questions from a knowledge base of 10K documents. Design a RAG pipeline that retrieves relevant chunks and generates grounded answers."
+requirements:
+- id: retrieval-quality
+  category: performance
+  description: Retrieve relevant chunks for 90% of queries
+  priority: must
+  metric: recall
+  value: 90
+  unit: '%'
+- id: response-time
+  category: performance
+  description: Answer generated within 3 seconds
+  priority: must
+  metric: latency
+  value: 3
+  unit: seconds
+- id: grounding
+  category: performance
+  description: Answers cite retrieved documents
+  priority: should
+  metric: citations
+  value: 100
+  unit: '%'
+learning_objectives:
+- Document chunking and embedding
+- Vector similarity search
+- Prompt construction with context
+allowed_components:
+- api
+- redis
+- postgresql
+- worker
+constraints:
+- key: max_nodes
+  value: 6
+hints:
+  - 'Chunk documents into 512-token segments with 50-token overlap.'
+  - 'Embed chunks with text-embedding-3-small; store in pgvector or Qdrant.'
+  - 'Retrieve top-5 chunks; inject into prompt template for LLM generation.'
+related_topics:
+- rag-systems
+- vector-databases
+version: 1.0.0

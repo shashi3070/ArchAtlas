@@ -1,0 +1,54 @@
+id: video-1-upload-serve
+title: "Video Platform I: Upload & Serve"
+difficulty: beginner
+mode: challenge
+narrative: "StreamVault wants to launch a video platform for 1K daily uploads and 100K daily views. Design the simplest architecture that handles both upload and playback."
+requirements:
+- id: upload-support
+  category: scale
+  description: Handle 1,000 video uploads per day (avg 500MB each)
+  priority: must
+  metric: uploads_per_day
+  value: 1000
+  unit: null
+- id: view-support
+  category: scale
+  description: Serve 100,000 video views per day
+  priority: must
+  metric: views_per_day
+  value: 100000
+  unit: null
+- id: stay-up
+  category: availability
+  description: Survive single-instance loss
+  priority: should
+  metric: availability
+  value: 99.9
+  unit: '%'
+learning_objectives:
+- Object storage for video files
+- Transcoding pipeline basics
+- CDN for video delivery
+allowed_components:
+- client
+- load_balancer
+- api
+- object_storage
+- kafka
+- worker
+- cdn
+constraints:
+- key: max_nodes
+  value: 10
+hints:
+  - 'Video files are too large for databases; use object storage (S3/GCS).'
+  - "Transcoding should be async via a message queue; don't block the upload response."
+  - 'CDN is essential for video delivery; origin-pull is the simplest setup.'
+related_topics:
+- video-streaming
+- cdn-and-edge
+chain:
+  family_id: video-platform
+  level: 1
+  next_challenge_id: video-2-transcoding
+version: 1.0.0

@@ -1,0 +1,36 @@
+id: consistent-hashing
+title: "Consistent Hashing"
+category: core
+order: 11
+summary: "Distributing data across nodes without wholesale reshuffling when the cluster changes size."
+prerequisites: ['caching', 'load-balancing']
+related_challenges: []
+objectives:
+  - "Explain the ring abstraction and virtual nodes"
+  - "Compute key ownership probability under ring rotation"
+  - "Apply consistent hashing to cache sharding and partitioned queues"
+quiz:
+  - q: "Why use virtual nodes instead of a plain hash ring?"
+    options:
+      - "Reduces memory usage"
+      - "Improves uniformity of key distribution across heterogeneous nodes"
+      - "Eliminates the need for a hash function"
+      - "Guarantees zero key movement on scaling"
+    answer: 1
+    explain: "Virtual nodes let each physical node own multiple ring positions, smoothing skew that a single-position ring produces, especially when nodes have unequal capacity."
+  - q: "When a node is added to a consistent hash ring, approximately what fraction of keys move?"
+    options:
+      - "All keys"
+      - "Half the keys"
+      - "1/N of keys where N is the new node count"
+      - "Only keys that hashed to the new node's exact position"
+    answer: 2
+    explain: "A new node takes ownership of a contiguous arc; only keys in that arc migrate, roughly 1/N of the total."
+  - q: "Which scenario benefits most from consistent hashing?"
+    options:
+      - "Stateless API horizontal scaling"
+      - "Cache cluster where nodes join and leave dynamically"
+      - "Single-node batch processing"
+      - "Static three-tier web application"
+    answer: 1
+    explain: "Consistent hashing minimises reshuffling when cache nodes change, which is critical for maintaining hit rates during scaling events."

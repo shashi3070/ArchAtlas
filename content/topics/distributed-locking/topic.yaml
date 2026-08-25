@@ -1,0 +1,36 @@
+id: distributed-locking
+title: "Distributed Locking"
+category: core
+order: 18
+summary: "Coordinating exclusive access to shared resources across multiple service instances."
+prerequisites: ['caching', 'consistency-and-cap']
+related_challenges: []
+objectives:
+  - "Explain the Redlock algorithm and its controversy"
+  - "Compare Redis-based, ZooKeeper-based, and database-based locks"
+  - "Identify when distributed locks are necessary vs. over-engineering"
+quiz:
+  - q: "Why is a single Redis SETNX not a reliable distributed lock?"
+    options:
+      - "Redis is too slow"
+      - "Redis can lose the key on failover before the lock TTL expires"
+      - "SETNX does not support TTL"
+      - "Redis cannot handle more than 100 locks"
+    answer: 1
+    explain: "If the Redis master fails before replicating the SETNX to a slave, the slave is promoted and the lock is lost, allowing two clients to hold the lock simultaneously."
+  - q: "Which property must a distributed lock provide to prevent duplicate processing?"
+    options:
+      - "Mutual exclusion"
+      - "Deadlock freedom"
+      - "Fault tolerance"
+      - "All of the above"
+    answer: 3
+    explain: "A correct distributed lock must be mutually exclusive, deadlock-free, and fault-tolerant (released when the holder crashes). Martin Kleppmann's analysis shows most implementations fail at least one."
+  - q: "When is a distributed lock usually unnecessary?"
+    options:
+      - "Coordinating a scheduled batch job across multiple instances"
+      - "Preventing double-spending in a payment system"
+      - "Incrementing a counter that can tolerate slight overcounting"
+      - "All of the above"
+    answer: 2
+    explain: "If the operation is idempotent or the cost of a race is low (e.g., an analytics counter), an optimistic approach (CAS or idempotency key) is simpler and more performant than a lock."
