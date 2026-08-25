@@ -1,0 +1,55 @@
+{
+  "s": "Separates the command (write) model from the query (read) model, optimizing each independently for its access pattern.",
+  "w": "Commands mutate state through a write model (normalized DB, event store). Queries read from a denormalized read model (cache, search index, materialized view). A synchronization mechanism (CDC, event bus, polling) keeps read models eventually consistent with writes. This lets you scale reads horizontally via replicas/shards while writes stay strongly consistent, and optimize read shapes per consumer.",
+  "use": [
+    "Read-heavy systems where read and write scaling needs diverge drastically",
+    "Complex query patterns that benefit from purpose-built read models per use case",
+    "Event-sourced systems needing fast queries without replaying full event streams",
+    "Multi-team systems where each team builds their own read projection"
+  ],
+  "avoid": [
+    "Simple CRUD where read/write paths are trivially the same",
+    "Strong read-after-write consistency requirements without acceptable lag",
+    "Small teams who cannot manage the operational complexity of dual models"
+  ],
+  "after": [
+    "api",
+    "event_sourcing",
+    "kafka"
+  ],
+  "to": [
+    "redis",
+    "elasticsearch",
+    "vector_database",
+    "postgresql",
+    "clickhouse"
+  ],
+  "props": {
+    "consistency_model": "eventual | causal | strong (read-your-writes via token)"
+  },
+  "size": {},
+  "world": [
+    "Microsoft reference architecture",
+    "Axon Framework (Java CQRS)",
+    "Marten (.NET)",
+    "Most microservice read-model patterns"
+  ],
+  "pat": [
+    {
+      "n": "CQRS + Event Sourcing",
+      "d": "Events stored as log; projections rebuilt from events to serve reads."
+    },
+    {
+      "n": "CQRS + CDC",
+      "d": "Database CDC feeds read models in near-realtime without event store."
+    }
+  ],
+  "pits": [
+    "Eventual consistency causing user confusion - implement read-your-writes via write confirmation tokens",
+    "Projection lag making reads appear stale - monitor lag and expose freshness indicators"
+  ],
+  "tips": [
+    "CQRS is OPTIONAL complexity - start with single model and introduce when read/write needs genuinely diverge",
+    "Eventual consistency is the main challenge - explain how you communicate lag to users"
+  ]
+}

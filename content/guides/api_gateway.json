@@ -1,0 +1,60 @@
+{
+  "s": "A managed front door that turns raw requests into authenticated, rate-limited, routed calls to your backend services.",
+  "w": "Every client request terminates at the gateway first. It authenticates the caller (API keys, JWT validation), enforces quotas, applies routing rules (path or header based), can transform payloads, and then forwards to internal services. Because it sits on the hot path it is usually deployed redundantly across zones and kept stateless so any instance can serve any request.",
+  "use": [
+    "You expose a public API consumed by third parties or mobile apps and need one stable contract while backends evolve behind it",
+    "Multiple microservices need shared cross-cutting behavior (auth, rate limiting, request logging) without reimplementing it everywhere",
+    "You must version APIs (v1/v2) and migrate clients gradually",
+    "Different consumer tiers (free/pro/enterprise) get different quotas and SLAs",
+    "Internal services should never be internet-exposed; the gateway is the only ingress"
+  ],
+  "avoid": [
+    "Ultra-low-latency internal service-to-service hops where an extra network hop adds measurable p99",
+    "Heavy per-request business logic or data transformation - gateways are policy engines, not application servers",
+    "Tiny single-service deployments where nginx alone would be cheaper and simpler"
+  ],
+  "after": [
+    "client",
+    "cdn"
+  ],
+  "to": [
+    "api",
+    "serverless_function",
+    "kubernetes"
+  ],
+  "props": {
+    "auth_provider": "Which identity source validates tokens before forwarding",
+    "rate_limit_rps": "Per-client request cap enforced here"
+  },
+  "size": {
+    "rps_per_instance": "Requests handled per gateway instance per second (default 50k)",
+    "default_instances": "Gateways are critical-path - default 2 for redundancy"
+  },
+  "world": [
+    "AWS API Gateway",
+    "Kong",
+    "Apigee",
+    "Kubernetes Ingress + Istio ingress-gateway",
+    "Cloudflare API Gateway"
+  ],
+  "pat": [
+    {
+      "n": "Backend for Frontend",
+      "d": "One gateway per client type (mobile, web, partner) each exposing exactly the shape that client needs."
+    },
+    {
+      "n": "Strangler Fig",
+      "d": "Route legacy paths to the old system and new paths to new services from the same gateway while migrating."
+    }
+  ],
+  "pits": [
+    "Gateway as bottleneck - every request funnels through it; scale horizontally and health-check it like a tier-0 service",
+    "Config mistakes take down everything at once - stage route changes, canary them, keep rollback instant",
+    "Latency tax - usually 1-5ms added; measure p99 through the gateway not just backend latency"
+  ],
+  "tips": [
+    "Say explicitly: gateway owns POLICY (auth, limits), services own LOGIC",
+    "Mention it decouples client contract from internal topology - reorganizations stay invisible to clients",
+    "If asked about cost: managed gateways charge per million requests - at very high scale self-hosted nginx/Kong wins"
+  ]
+}

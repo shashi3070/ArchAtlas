@@ -75,3 +75,32 @@ def list_components() -> list[dict[str, Any]]:
 def get_component(ctype: str) -> dict[str, Any] | None:
     """Fetch one catalog entry by type id, or None."""
     return load_catalog().get(ctype)
+
+
+# ── Guide loader ──────────────────────────────────────────────────────
+
+GUIDE_SCHEMA_FILE = "guide.schema.json"
+
+
+def scan_guides(content_dir: Path) -> dict[str, dict[str, Any]]:
+    """Scan content/guides/ and return {type: guide_data} for all valid JSON."""
+    guides_dir = content_dir / "guides"
+    if not guides_dir.is_dir():
+        return {}
+    guides: dict[str, dict[str, Any]] = {}
+    for path in sorted(guides_dir.glob("*.json")):
+        entry = _load_json(path)
+        node_type = path.stem
+        guides[node_type] = entry
+    return guides
+
+
+@lru_cache(maxsize=1)
+def load_guides() -> dict[str, dict[str, Any]]:
+    """Load all node guides from the content directory (cached)."""
+    return scan_guides(default_content_dir())
+
+
+def get_guide(ctype: str) -> dict[str, Any] | None:
+    """Fetch one node guide by type id, or None."""
+    return load_guides().get(ctype)

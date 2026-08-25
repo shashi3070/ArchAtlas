@@ -1,0 +1,54 @@
+{
+  "s": "Purpose-built store for embedding similarity search - retrieval backbone of modern AI apps.",
+  "w": "Documents embed into high-dimensional vectors indexed by ANN structures (HNSW graphs, IVF clusters). Queries embed then traverse indexes returning approximate nearest neighbors in milliseconds with configurable recall/latency knobs. Metadata filters combine with similarity (hybrid filtering). Consistency depends on store - many are eventually consistent replicas.",
+  "use": [
+    "RAG retrieval over corporate knowledge bases",
+    "Semantic dedupe/near-duplicate detection at scale",
+    "Personalization via embedding similarity (similar items/users)",
+    "Image/audio similarity search pipelines"
+  ],
+  "avoid": [
+    "Exact-match transactional records (relational/kv fits)",
+    "Tiny datasets where pgvector on existing postgres suffices - don't add infrastructure",
+    "Ground-truth analytics aggregations"
+  ],
+  "after": [
+    "embeddings_model",
+    "rag_pipeline"
+  ],
+  "to": [
+    "reranker",
+    "llm_api"
+  ],
+  "props": {
+    "ef_search": "Recall vs latency knob at query time"
+  },
+  "size": {
+    "safe_reads_per_sec": "~20k",
+    "safe_writes_per_sec": "~5k"
+  },
+  "world": [
+    "Pinecone",
+    "Weaviate",
+    "Qdrant",
+    "Milvus",
+    "pgvector on Postgres"
+  ],
+  "pat": [
+    {
+      "n": "RAG grounding",
+      "d": "Vector hits become citations/context injected into prompts."
+    },
+    {
+      "n": "Hybrid Search",
+      "d": "BM25 keyword ∪ vector semantic merged by reranker."
+    }
+  ],
+  "pits": [
+    "Embedding model drift invalidates whole index - version vectors with model ids, plan re-embedding pipelines",
+    "Recall silently degrades with wrong ef params - benchmark recall@k regularly"
+  ],
+  "tips": [
+    "Explain recall/latency/cost triangle; mention pgvector as pragmatic default for small/mid scale"
+  ]
+}

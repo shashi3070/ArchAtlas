@@ -1,0 +1,61 @@
+{
+  "s": "Managed or self-hosted large language model interface for text generation, summarization, classification, and tool-calling.",
+  "w": "Accepts a prompt (system + user messages) and returns generated text. Models range from small/fast (classification, extraction) to large/reasoning (complex Q&A, code generation). Streaming responses enable token-by-token delivery. Temperature, top-p, and max-tokens control output characteristics. Rate limits, token quotas, and content filters are managed at the API layer.",
+  "use": [
+    "Natural language understanding: sentiment analysis, entity extraction, intent classification",
+    "Text generation: content creation, code generation, email drafting",
+    "RAG answer generation from retrieved context documents",
+    "Conversational interfaces and chatbots"
+  ],
+  "avoid": [
+    "Deterministic exact-match tasks (use traditional rules or databases)",
+    "Real-time latency-critical paths without caching (LLM inference is 100ms+ per call)",
+    "Tasks requiring guaranteed factual accuracy without hallucination mitigation"
+  ],
+  "after": [
+    "api",
+    "rag_pipeline",
+    "mcp_server",
+    "worker",
+    "tool_orchestrator"
+  ],
+  "to": [
+    "embeddings_model",
+    "reranker",
+    "api"
+  ],
+  "props": {
+    "model": "Which LLM to invoke (GPT-4, Claude, Llama, etc.)",
+    "temperature": "Randomness control (0=deterministic, 1=creative)"
+  },
+  "size": {
+    "requests_per_sec": "Provider-dependent; ~10-100 RPM typical rate limits",
+    "tokens_per_sec": "~50-100 output tokens/sec streaming"
+  },
+  "world": [
+    "OpenAI API",
+    "Anthropic Claude API",
+    "Google Vertex AI (Gemini)",
+    "AWS Bedrock",
+    "Self-hosted vLLM/Ollama"
+  ],
+  "pat": [
+    {
+      "n": "RAG",
+      "d": "LLM generates answers grounded in retrieved context to reduce hallucination."
+    },
+    {
+      "n": "Tool Use / Function Calling",
+      "d": "LLM decides which tool to call based on user intent; structured output drives actions."
+    }
+  ],
+  "pits": [
+    "Hallucination in production outputs - implement grounding via RAG and output validation",
+    "Token cost explosion from long prompts - trim context, use caching, and set max_tokens",
+    "Rate limiting during traffic spikes - implement client-side backoff and request queuing"
+  ],
+  "tips": [
+    "Temperature and system prompt design are the primary levers for output quality control",
+    "Streaming responses improve perceived latency by 3-5x even if total generation time is the same"
+  ]
+}

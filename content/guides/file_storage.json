@@ -1,0 +1,39 @@
+{
+  "s": "POSIX-shared network filesystem many instances mount concurrently - lift-and-shift compatibility layer.",
+  "w": "Exported NFS-style trees scale capacity elastically; throughput modes (bursting/provisioned) shape performance. Locking semantics support concurrent writers imperfectly at scale; metadata operations (many small files) often bottleneck before byte throughput does.",
+  "use": [
+    "Legacy apps expecting mounted directories (config shares, home dirs)",
+    "ML training scratch shared across GPU nodes",
+    "Content processing pipelines passing files between stages",
+    "WordPress/media farms with many web servers reading same tree"
+  ],
+  "avoid": [
+    "Massive unstructured archives with HTTP access (object_storage cheaper)",
+    "Database storage (block_storage semantics)",
+    "Millions-of-files metadata churn (object stores list faster)"
+  ],
+  "after": [
+    "kubernetes",
+    "autoscaling_group",
+    "media_transcoder"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~20k",
+    "safe_writes_per_sec": "~3k"
+  },
+  "world": [
+    "AWS EFS",
+    "Azure Files",
+    "GCP Filestore",
+    "NetApp ONTAP clouds"
+  ],
+  "pat": [],
+  "pits": [
+    "Metadata storms on huge dirs - shard directory trees",
+    "NFS locking quirks break some apps - test concurrency"
+  ],
+  "tips": [
+    "Distinguish cleanly: block=disks, file=shared folders, object=HTTP blobs"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "s": "Background job processor that dequeues tasks and executes long-running or deferred work off the critical request path.",
+  "w": "Consumers poll message queues (SQS, RabbitMQ, Kafka) or claim tasks from a job table. Each worker pulls a message, executes the job (email send, image resize, report build), and acks on success or nacks on failure for retry. Concurrency is controlled by prefetch limits or process pools. Horizontal scaling means adding more consumer instances; the queue absorbs bursts.",
+  "use": [
+    "Asynchronous tasks: email sending, PDF generation, image transcoding",
+    "Retry-heavy integrations with flaky third-party APIs",
+    "Batch data processing: nightly aggregation, CSV export, deduplication",
+    "Rate-limited API calls to external services (spaced request patterns)"
+  ],
+  "avoid": [
+    "Request-path work needing sub-second response (requesters block waiting)",
+    "Tasks requiring user-facing real-time feedback without a polling/webhook mechanism",
+    "Lightweight glue that a serverless function handles cheaper"
+  ],
+  "after": [
+    "kafka",
+    "rabbitmq",
+    "sqs",
+    "pubsub",
+    "cron_scheduler",
+    "event_bus",
+    "websocket_gateway"
+  ],
+  "to": [
+    "postgresql",
+    "redis",
+    "email_service",
+    "sms_service",
+    "object_storage",
+    "elasticsearch",
+    "kafka",
+    "llm_api",
+    "payment_gateway"
+  ],
+  "props": {
+    "concurrency": "Number of parallel jobs per worker instance",
+    "retry_policy": "Max retries, backoff strategy, dead-letter routing"
+  },
+  "size": {
+    "jobs_per_sec_per_instance": "~50-500 depending on job heaviness",
+    "default_instances": 2
+  },
+  "world": [
+    "Sidekiq at GitHub/Shopify",
+    "Celery at Instagram",
+    "Temporal workflow workers at Uber",
+    "Resque at GitHub legacy",
+    "BullMQ at Node.js shops"
+  ],
+  "pat": [
+    {
+      "n": "Dead Letter Queue",
+      "d": "Repeatedly failing jobs park in DLQ for manual inspection and replay."
+    },
+    {
+      "n": "Competing Consumers",
+      "d": "Multiple workers dequeue from same queue distributing load automatically."
+    }
+  ],
+  "pits": [
+    "Poison messages looping forever - implement max retries with DLQ escalation",
+    "Memory leaks from accumulated job objects in long-lived workers - periodic restarts or leak profiling",
+    "Visibility timeout expiring before slow job finishes - extend heartbeat or split large jobs"
+  ],
+  "tips": [
+    "Idempotency is non-negotiable: duplicate deliveries are guaranteed eventually at scale",
+    "Queue depth as a scaling signal: sustained backlog means add consumers, transient spikes are fine"
+  ]
+}

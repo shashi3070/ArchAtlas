@@ -1,0 +1,47 @@
+{
+  "s": "Managed point-to-point queue with at-least-once delivery, visibility timeouts, and dead-letter parking.",
+  "w": "Producers send messages (≤256KB); consumers poll (long-polling reduces cost) and 'hide' messages via visibility timeout while processing - delete to ack, or let timeout redeliver. Redrive policies move repeatedly-failing messages to a DLQ. FIFO variant adds ordering/dedup within groups. Scale is effectively unlimited per API quotas.",
+  "use": [
+    "Decoupling web tier from slow work (emails, images, exports)",
+    "Buffering spiky writes before durable DB updates",
+    "Job processing where order doesn't matter but reliability does",
+    "Retry semantics for flaky downstream APIs via DLQ + replay"
+  ],
+  "avoid": [
+    "Strict global ordering across all messages (FIFO only orders within message groups)",
+    "Sub-millisecond delivery needs (in-process/nats territory)",
+    "Huge payloads - store object in S3, send pointer (extended client pattern)"
+  ],
+  "after": [
+    "api",
+    "serverless_function",
+    "event_bus"
+  ],
+  "to": [
+    "worker"
+  ],
+  "props": {
+    "visibility_timeout": "How long a received message stays hidden before redelivery"
+  },
+  "size": {
+    "messages_per_sec": "~10k sustained per queue before batching strategies matter"
+  },
+  "world": [
+    "Amazon internal pipelines",
+    "NASA image processing",
+    "Autodesk render farms"
+  ],
+  "pat": [
+    {
+      "n": "Dead Letter Queue",
+      "d": "Poison messages park in DLQ with alarms; engineers replay after fixes."
+    }
+  ],
+  "pits": [
+    "Duplicate deliveries are guaranteed eventually - make consumers idempotent with dedupe keys",
+    "Visibility timeout shorter than processing = double-processing storms - size it > p99 handler time"
+  ],
+  "tips": [
+    "At-least-once + idempotency pairing is THE expected answer combo"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "s": "Resource isolation that prevents one failing or saturated component from exhausting shared capacity for others.",
+  "w": "Named after ship bulkheads that compartmentalize flooding, this pattern isolates failure domains: separate thread pools, connection pools, or namespace quotas per dependency or tenant. If the payments DB is slow, the search DB pool is unaffected. Kubernetes ResourceQuotas implement this at the pod level; connection pool isolation does it at the service level.",
+  "use": [
+    "Multi-tenant systems where one tenant's load must not starve others",
+    "Services calling multiple dependencies where one slow downstream must not block others",
+    "Shared database clusters with per-team query budgets",
+    "Kubernetes clusters where noisy neighbors must be contained"
+  ],
+  "avoid": [
+    "Over-isolation creating idle resources - bulkheads should reflect actual failure modes",
+    "Isolating components that share the same failure domain anyway (pointless overhead)"
+  ],
+  "after": [
+    "kubernetes",
+    "autoscaling_group"
+  ],
+  "to": [
+    "postgresql",
+    "redis",
+    "kafka"
+  ],
+  "props": {
+    "pool_size": "Max concurrent operations per isolated compartment",
+    "queue_depth": "Waiting requests when pool is full"
+  },
+  "size": {},
+  "world": [
+    "Hystrix thread pools at Netflix",
+    "Kubernetes ResourceQuotas per namespace",
+    "JDBC connection pools per service",
+    "Envoy circuit breakers per upstream"
+  ],
+  "pat": [
+    {
+      "n": "Circuit Breaker + Bulkhead",
+      "d": "Bulkhead limits concurrency; circuit breaker cuts calls - they reinforce each other."
+    }
+  ],
+  "pits": [
+    "Too-small pool causing self-inflicted queuing - size pools based on measured concurrency needs",
+    "Bulkhead metrics not exposed - you cannot tune what you cannot see"
+  ],
+  "tips": [
+    "The ship analogy is perfect for interviews: one compartment floods, ship survives",
+    "Kubernetes ResourceQuotas are the most tangible cloud-native bulkhead example"
+  ]
+}

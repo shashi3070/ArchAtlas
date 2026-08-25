@@ -1,0 +1,56 @@
+{
+  "s": "Agent framework that selects and sequences tool invocations based on LLM reasoning to accomplish complex multi-step tasks.",
+  "w": "Receives a user intent, prompts the LLM to reason about which tools to call and in what order, executes tool calls (API calls, database queries, code execution), feeds results back to the LLM for next-step reasoning, and iterates until the task is complete. Manages tool definitions, execution sandboxing, error handling, and conversation state. Implements ReAct (Reason+Act) or plan-and-execute patterns.",
+  "use": [
+    "Complex tasks requiring multiple API calls in sequence (book flight, check calendar, send invite)",
+    "Data analysis workflows: query database, compute statistics, generate visualization",
+    "Customer service automation: look up account, check order, process refund",
+    "DevOps automation: diagnose alert, check logs, propose fix, deploy"
+  ],
+  "avoid": [
+    "Simple single-tool tasks where direct LLM function-calling suffices",
+    "High-frequency low-latency paths where LLM reasoning overhead is too slow",
+    "Tasks requiring deterministic execution order (use workflow_engine instead)"
+  ],
+  "after": [
+    "api",
+    "llm_api",
+    "mcp_server"
+  ],
+  "to": [
+    "llm_api",
+    "api",
+    "postgres",
+    "redis",
+    "mcp_server",
+    "embeddings_model"
+  ],
+  "props": {
+    "max_iterations": "Safety limit on tool-call loops to prevent runaway agents",
+    "tool_timeout_ms": "Per-tool execution timeout"
+  },
+  "size": {
+    "tasks_per_sec": "~5-20 per GPU instance (LLM-bound)"
+  },
+  "world": [
+    "LangChain agents",
+    "OpenAI Assistants API",
+    "AutoGPT / CrewAI",
+    "Anthropic Claude tool use",
+    "Vercel AI SDK tool calling"
+  ],
+  "pat": [
+    {
+      "n": "ReAct Pattern",
+      "d": "Interleaved Reasoning (LLM) + Acting (tool call) + Observation (result) loop."
+    }
+  ],
+  "pits": [
+    "Infinite loops without proper termination - implement max iterations and timeout budgets",
+    "LLM selecting wrong tools based on ambiguous descriptions - invest in tool documentation quality"
+  ],
+  "tips": [
+    "ReAct pattern explanation (Reason-Act-Observe) is the standard interview answer",
+    "Tool description quality directly impacts agent accuracy - treat tool docs like API documentation"
+  ]
+}

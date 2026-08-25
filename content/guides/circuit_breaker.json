@@ -1,0 +1,54 @@
+{
+  "s": "Automatic call limiter that detects downstream failures and stops hammering a broken service to allow recovery.",
+  "w": "Tracks failure rate (or latency) of calls to a dependency over a rolling window. When failures exceed a threshold, the breaker trips into OPEN state: calls fail-fast immediately without network cost. After a cooldown, a probe (HALF-OPEN) tests if the dependency recovered; success closes the breaker, failure reopens it. This prevents cascade failure and gives the downstream time to heal.",
+  "use": [
+    "Calls to external/third-party APIs with unpredictable availability",
+    "Inter-service RPC where one failing service should not cascade to the whole mesh",
+    "Database failover scenarios where the new primary needs seconds to stabilize",
+    "Any call path where retry storms will worsen an already degraded dependency"
+  ],
+  "avoid": [
+    "Dependencies that must always be called regardless of state (auth checks with no fallback)",
+    "Replacing retry logic entirely - circuit breaker stops calls, retries handle transient failures"
+  ],
+  "after": [
+    "api",
+    "grpc",
+    "worker",
+    "service_mesh"
+  ],
+  "to": [
+    "postgresql",
+    "redis",
+    "kafka",
+    "payment_gateway",
+    "email_service",
+    "llm_api"
+  ],
+  "props": {
+    "failure_threshold_pct": "Failure rate that trips the breaker (default 50%)",
+    "cooldown_ms": "How long OPEN before probing HALF-OPEN"
+  },
+  "size": {},
+  "world": [
+    "Netflix Hystrix (pioneered the pattern)",
+    "Istio/Envoy outlier detection",
+    "Polly (.NET resilience)",
+    "Resilience4j (Java)"
+  ],
+  "pat": [
+    {
+      "n": "Fallback Response",
+      "d": "When breaker is open, serve cached/default/degraded data instead of error."
+    }
+  ],
+  "pits": [
+    "Too-sensitive thresholds tripping on transient blips - tune failure window and volume minimum",
+    "No monitoring on breaker state changes - log and alert on OPEN transitions",
+    "Forgetting to implement fallback behavior - open breaker with no fallback is just a different error"
+  ],
+  "tips": [
+    "Three-state model (CLOSED/OPEN/HALF-OPEN) is the expected answer - name all three",
+    "Pair with retry: circuit breaker prevents retries against a known-bad dependency"
+  ]
+}

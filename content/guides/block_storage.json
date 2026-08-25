@@ -1,0 +1,36 @@
+{
+  "s": "Network-attached disk volumes giving instances durable raw blocks - the disks behind databases.",
+  "w": "Volumes attach to instances over the hypervisor fabric with provisioned IOPS/throughput. Snapshots capture point-in-time to object storage incrementally. Multi-attach enables clustered filesystems; encryption at rest is standard. Performance is guaranteed per-volume, independent of instance count.",
+  "use": [
+    "Backing disks for self-managed databases (postgres/mysql data dirs)",
+    "Boot volumes for fleets with baked AMIs",
+    "High-IOPS workloads needing guaranteed throughput floors",
+    "Snapshot-based backup/restore pipelines"
+  ],
+  "avoid": [
+    "Shared POSIX filesystem semantics (use file_storage)",
+    "Direct object durability/lifecycle tiers (object_storage does this better)"
+  ],
+  "after": [
+    "kubernetes",
+    "autoscaling_group"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~50k provisioned",
+    "safe_writes_per_sec": "~5k"
+  },
+  "world": [
+    "AWS EBS io2 volumes",
+    "Azure Premium SSD",
+    "GCP PD-SSD"
+  ],
+  "pat": [],
+  "pits": [
+    "IOPS caps surprise during peaks - alarm on burst balance",
+    "Volume detach/attach delays failover - rehearse DB failover playbooks"
+  ],
+  "tips": [
+    "In interviews usually implicit behind 'database'; mention explicitly when discussing disk-bound bottlenecks"
+  ]
+}

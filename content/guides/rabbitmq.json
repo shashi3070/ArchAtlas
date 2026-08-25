@@ -1,0 +1,53 @@
+{
+  "s": "Traditional message broker supporting flexible routing topologies, priority queues, and per-message acknowledgments.",
+  "w": "Producers publish to exchanges (direct, topic, fanout, headers) which route to queues based on binding keys. Consumers pull or get pushed; manual ack ensures at-least-once delivery. TTL, dead-letter exchanges, and priority queues provide built-in job management. Quorum queues (Raft-based) give replication for durability. Lightweight compared to Kafka for traditional messaging.",
+  "use": [
+    "Task distribution with complex routing: per-type queues, priority jobs",
+    "RPC-style request-reply over message brokers",
+    "Legacy enterprise integration replacing or wrapping older MQ systems",
+    "Small-to-medium throughput systems needing flexible routing without Kafka's weight"
+  ],
+  "avoid": [
+    "High-throughput log streaming (Kafka's append-only log is far more efficient)",
+    "Long-term message replay (RabbitMQ deletes on ack; Kafka retains)",
+    "Event sourcing stores (no durable log semantics)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "event_bus"
+  ],
+  "to": [
+    "worker",
+    "email_service",
+    "sms_service"
+  ],
+  "props": {
+    "exchange_type": "direct | topic | fanout | headers",
+    "queue_durable": "Whether queue survives broker restart"
+  },
+  "size": {
+    "messages_per_sec": "~20k-50k per node depending on persistence settings",
+    "default_instances": 3
+  },
+  "world": [
+    "Pivotal/VMware RabbitMQ Cloud",
+    "Bloomberg messaging backbone",
+    "Robinhood order routing",
+    "T-Mobile backend queues"
+  ],
+  "pat": [
+    {
+      "n": "Competing Consumers",
+      "d": "Multiple workers dequeue from one queue distributing load automatically."
+    }
+  ],
+  "pits": [
+    "Unacked messages pile up during consumer crashes - set prefetch and per-consumer limits",
+    "Memory alarms triggering flow control - monitor queue depths and disk alarms proactively"
+  ],
+  "tips": [
+    "vs Kafka: RabbitMQ = smart routing + per-message ack, Kafka = high-throughput ordered log",
+    "Exchange routing topology is RabbitMQ's strength - model it explicitly in design interviews"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "s": "Centralized authentication authority issuing tokens via OIDC/OAuth2/SAML so apps never store passwords.",
+  "w": "Users authenticate once against the IdP (passwords, MFA, social federation); apps receive signed JWTs (or opaque tokens introspected) carrying identity/roles. Token lifetime/refresh flows governed centrally; revocation propagates via short expiries + check endpoints. Federation protocols integrate enterprises (SAML) and consumer pools (OIDC).",
+  "use": [
+    "Multi-app SSO portfolios (one login across products)",
+    "B2B enterprise customers demanding SAML federation",
+    "Centralized MFA/risk policies for compliance",
+    "API access tokens validated by gateways/services uniformly"
+  ],
+  "avoid": [
+    "Fine-grained resource-level authorization decisions (IdP authenticates; apps authorize)",
+    "Ultra-hot-path token minting per-request (cache/refresh patterns)"
+  ],
+  "after": [
+    "client",
+    "api_gateway"
+  ],
+  "to": [
+    "secrets_manager"
+  ],
+  "size": {
+    "rps_per_instance": "~1k auth flows/sec managed"
+  },
+  "world": [
+    "Okta/Auth0",
+    "Keycloak self-hosted",
+    "AWS Cognito",
+    "Azure AD/Entra"
+  ],
+  "pat": [],
+  "pits": [
+    "IdP outage locks EVERY app - status-page honesty + cached-token grace periods",
+    "Clock-skew validation failures around expiry boundaries - leeway configs"
+  ],
+  "tips": [
+    "AuthN vs AuthZ separation sentence mandatory in interviews"
+  ]
+}

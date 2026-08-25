@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { useLab } from '../../state/labStore'
+import { NodeGuideModal } from './NodeGuideModal'
 
 export function NodeInspector() {
   const nodes = useLab((s) => s.nodes)
   const selectedNodeId = useLab((s) => s.selectedNodeId)
   const commit = useLab((s) => s.commit)
+  const [showGuide, setShowGuide] = useState(false)
 
   const node = nodes.find((n) => n.id === selectedNodeId)
   if (!node) return null
@@ -23,6 +26,14 @@ export function NodeInspector() {
   return (
     <aside className="inspector" aria-label="node properties">
       <h3>{String(node.data.componentType)}</h3>
+
+      <button
+        type="button"
+        className="btn ghost small-btn"
+        onClick={() => setShowGuide(true)}
+      >
+        Open full guide
+      </button>
 
       <label className="field">
         Name
@@ -77,6 +88,13 @@ export function NodeInspector() {
       >
         Delete node
       </button>
+
+      {showGuide && (
+        <NodeGuideModal
+          nodeType={String(node.data.componentType)}
+          onClose={() => setShowGuide(false)}
+        />
+      )}
     </aside>
   )
 }

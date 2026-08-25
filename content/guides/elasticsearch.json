@@ -1,0 +1,45 @@
+{
+  "s": "Distributed inverted-index engine delivering full-text relevance, facets, and log exploration at interactive speeds.",
+  "w": "Documents tokenize into inverted indexes; BM25 scores relevance. Indices shard across nodes, replicas serve HA/read scaling. Near-real-time refresh makes writes searchable in ~1s. Aggregations power faceting/analytics. Cluster state in master-elected nodes; shard balancing automatic.",
+  "use": [
+    "Product/content search with relevance tuning (synonyms, boosts, fuzzy)",
+    "Autocomplete/typeahead with edge-ngram analyzers",
+    "Log analytics (ELK stack) with Kibana dashboards",
+    "Faceted navigation (filters by brand/price/category computed instantly)"
+  ],
+  "avoid": [
+    "System-of-record duty (it's a derived index - source elsewhere)",
+    "Heavy update-in-place workloads (reindex churn)",
+    "Strict transactional consistency needs"
+  ],
+  "after": [
+    "cdc_pipeline",
+    "api"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~12k",
+    "safe_writes_per_sec": "~6k"
+  },
+  "world": [
+    "Wikipedia search",
+    "Uber's search platform",
+    "Netflix title search",
+    "GitHub code search evolution"
+  ],
+  "pat": [
+    {
+      "n": "CQRS projection",
+      "d": "DB is truth; CDC feeds ES; queries hit ES only."
+    }
+  ],
+  "pits": [
+    "Shard explosion from over-sharding small indices - right-size (target 10-50GB/shard)",
+    "Deep pagination kills clusters - use search_after/cursors",
+    "Mapping explosions on dynamic fields - lock mappings explicitly"
+  ],
+  "tips": [
+    "Explain inverted index vs B-tree lookup distinction crisply",
+    "Mention OpenSearch fork landscape when relevant commercially"
+  ]
+}

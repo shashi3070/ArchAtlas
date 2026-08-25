@@ -1,0 +1,55 @@
+{
+  "s": "Centralized repository for ML features providing consistent training/serving values with low-latency online access.",
+  "w": "Features (user age, purchase count, item category, session duration) are computed in batch pipelines and stored with point-in-time correctness for training. Online serving stores the latest feature values in a fast KV store (Redis/DynamoDB) for real-time inference. The feature store guarantees training/serving consistency - no training/serving skew. Feature versioning, monitoring, and backfill capabilities are built in.",
+  "use": [
+    "ML model serving requiring pre-computed features at low latency (<10ms)",
+    "Preventing training/serving skew where feature computation differs between training and inference",
+    "Feature sharing across multiple ML models (recommendation + fraud + ranking use same user features)",
+    "Regulatory compliance requiring feature lineage and reproducibility"
+  ],
+  "avoid": [
+    "Simple ML with few hand-crafted features (pandas + Redis is sufficient)",
+    "Deep learning models where features are learned end-to-end from raw data",
+    "Small teams without ML platform engineering capacity"
+  ],
+  "after": [
+    "data_warehouse",
+    "spark",
+    "kafka",
+    "airflow"
+  ],
+  "to": [
+    "redis",
+    "recommendation_engine",
+    "llm_api",
+    "moderation_service"
+  ],
+  "props": {
+    "online_store": "Redis | DynamoDB for low-latency feature serving",
+    "offline_store": "S3 + Parquet for training data"
+  },
+  "size": {
+    "feature_serves_per_sec": "~50k per Redis-backed store"
+  },
+  "world": [
+    "Feast (open-source)",
+    "Tecton (managed)",
+    "Uber Michelangelo",
+    "Airbnb Zipline",
+    "Amazon SageMaker Feature Store"
+  ],
+  "pat": [
+    {
+      "n": "Point-in-Time Correctness",
+      "d": "Training features snapshot at event time to prevent future leakage."
+    }
+  ],
+  "pits": [
+    "Training/serving skew silently degrading model performance - feature store eliminates this but requires adoption discipline",
+    "Feature freshness lag impacting model quality - monitor feature staleness per feature"
+  ],
+  "tips": [
+    "Training/serving skew is THE problem feature stores solve - explain it clearly",
+    "Feature store vs data warehouse: feature store is low-latency serving for ML, warehouse is for analytics"
+  ]
+}

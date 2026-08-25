@@ -1,0 +1,58 @@
+{
+  "s": "Distributes incoming traffic across backend instances using health checks and algorithms to maximize throughput and availability.",
+  "w": "Operates at L4 (TCP) or L7 (HTTP) routing requests to healthy upstream targets. Health checks (TCP connect, HTTP 200, gRPC health protocol) continuously probe backends; unhealthy targets are removed from rotation. Algorithms include round-robin, least-connections, and consistent-hashing. Session affinity is optional but discouraged for stateless designs. Cross-zone balancing prevents hotspotting a single AZ.",
+  "use": [
+    "Horizontal scaling of any stateless service tier",
+    "Health-check-driven automatic failover removing dead instances from rotation",
+    "SSL/TLS termination offloading crypto from application servers",
+    "Path-based or host-based routing to different backend pools"
+  ],
+  "avoid": [
+    "Global anycast steering (that is global_load_balancer's job)",
+    "Application-layer auth/rate-limiting (that is api_gateway's job)",
+    "Packet-level filtering (use firewalls/WAFs instead)"
+  ],
+  "after": [
+    "global_load_balancer",
+    "cdn",
+    "waf",
+    "api_gateway",
+    "dns"
+  ],
+  "to": [
+    "api",
+    "reverse_proxy",
+    "autoscaling_group",
+    "kubernetes",
+    "grpc"
+  ],
+  "props": {
+    "algorithm": "round-robin | least-connections | ip-hash"
+  },
+  "size": {
+    "rps_per_instance": "~100k L4 rps or ~50k L7 rps depending on payload",
+    "default_instances": 2
+  },
+  "world": [
+    "AWS ALB/NLB",
+    "Google Cloud Load Balancer",
+    "HAProxy",
+    "nginx upstream",
+    "Envoy xDS-driven"
+  ],
+  "pat": [
+    {
+      "n": "Sidecar",
+      "d": "Envoy sidecar per pod acts as local load balancer with mesh features."
+    }
+  ],
+  "pits": [
+    "Health-check flapping removing healthy instances during GC pauses - use generous thresholds",
+    "Connection draining too fast during scale-in dropping in-flight requests - tune deregistration delay",
+    "Sticky sessions causing uneven load - prefer stateless design over affinity"
+  ],
+  "tips": [
+    "L4 vs L7 tradeoff: L4 is faster (no payload inspection) but L7 enables path routing and compression",
+    "Pair with autoscaling_group: LB health checks drive scaling signals"
+  ]
+}

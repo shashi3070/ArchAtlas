@@ -1,0 +1,50 @@
+{
+  "s": "Stateful stream processor delivering correct results on unbounded data with exactly-once guarantees.",
+  "w": "Records flow through operator graphs with keyed state stored in RocksDB checkpoints. Event-time watermarks handle out-of-order arrivals; windows aggregate over event timestamps not wall clock. Two-phase-commit sinks give exactly-once end-to-end. Savepoints enable stateful upgrades/migrations. CEP library matches event patterns (fraud sequences).",
+  "use": [
+    "Realtime fraud detection scoring transactions mid-flight",
+    "Live metrics/aggregations (per-minute revenue counters)",
+    "Sessionization of user clickstreams (dynamic session windows)",
+    "Anomaly detection with pattern sequences (CEP)"
+  ],
+  "avoid": [
+    "One-off daily reports (spark/airflow simpler)",
+    "Glue scripts (functions cheaper)",
+    "Stateless pure-routing (message bus alone suffices)"
+  ],
+  "after": [
+    "kinesis",
+    "kafka",
+    "pubsub"
+  ],
+  "to": [
+    "clickhouse",
+    "redis",
+    "data_warehouse"
+  ],
+  "props": {
+    "checkpoint_interval": "Durability vs overhead dial"
+  },
+  "size": {
+    "jobs_per_sec_per_instance": "~50k events/sec/node typical"
+  },
+  "world": [
+    "Alibaba Double-11 dashboards",
+    "Uber's realtime pricing signals",
+    "Netflix Keystone pipeline",
+    "ING fraud systems"
+  ],
+  "pat": [
+    {
+      "n": "Backpressure-aware design",
+      "d": "Flink propagates slowdown upstream naturally - credit-based flow control."
+    }
+  ],
+  "pits": [
+    "Checkpoint blowups from oversized state - TTL state, pre-aggregate, window properly",
+    "Watermark misconfig silently drops late data - set allowed lateness deliberately"
+  ],
+  "tips": [
+    "Event-time vs processing-time distinction separates seniors from juniors instantly"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "s": "Content safety layer that reviews, classifies, and filters user-generated content against policy rules and ML classifiers.",
+  "w": "Receives content (text, images, video) via API or message queue, runs through a pipeline: automated ML classifiers (toxicity detection, hate speech, nudity), regex/blocklist matching for known bad patterns, and human review queues for ambiguous cases. Actions include: approve, reject, quarantine (shadow ban), or escalate to human review. Feedback loops improve classifier accuracy over time.",
+  "use": [
+    "User-generated content platforms: comments, posts, reviews, chat messages",
+    "Marketplace listings: product images and descriptions against policy",
+    "AI-generated content safety: reviewing LLM outputs before user exposure",
+    "Trust & safety compliance for platform regulatory requirements"
+  ],
+  "avoid": [
+    "Internal content without user-generated risk (unnecessary latency overhead)",
+    "Fully automated moderation without human review escalation for edge cases",
+    "Content types the ML classifiers cannot handle (specialized domain content)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "llm_api",
+    "rag_pipeline",
+    "tool_orchestrator"
+  ],
+  "to": [
+    "email_service",
+    "sms_service",
+    "push_service",
+    "api",
+    "kafka"
+  ],
+  "props": {
+    "review_mode": "auto | human-in-loop | human-only",
+    "classifier_threshold": "Confidence threshold for auto-approve/reject"
+  },
+  "size": {
+    "reviews_per_sec": "~100-1k auto-classified per instance"
+  },
+  "world": [
+    "Google Jigsaw Perspective API",
+    "Amazon Rekognition Moderation",
+    "Azure Content Safety",
+    "Hive Moderation",
+    "Two Hat (now Community Sift)"
+  ],
+  "pat": [],
+  "pits": [
+    "False positives silencing legitimate content - tune thresholds and provide appeal mechanisms",
+    "Adversarial evasion: users adapting content to bypass classifiers - continuous retraining needed"
+  ],
+  "tips": [
+    "Human-in-the-loop is essential - fully automated moderation at scale always makes mistakes",
+    "Moderation latency impacts user experience - design for async review with fast pre-screening"
+  ]
+}

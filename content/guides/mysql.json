@@ -1,0 +1,51 @@
+{
+  "s": "The world's most-deployed open-source OLTP relational database - boring, mature, everywhere.",
+  "w": "InnoDB engine provides ACID via redo log + MVCC row versioning. B+tree indexes serve point/range lookups; buffer pool keeps hot pages in RAM. Replication is primary-replica via binlog (async by default, semi-sync optional). Query optimizer chooses plans from statistics; performance schema exposes internals.",
+  "use": [
+    "Standard transactional workloads: users, orders, inventory with joins",
+    "Read-heavy products served by replica pools (feeds, catalogs, CMS)",
+    "Teams wanting ubiquitous tooling/hiring pool and predictable operations",
+    "Moderate write rates (<~2-5k durable writes/sec vertical) before sharding talk"
+  ],
+  "avoid": [
+    "Write-throughput ceilings beyond vertical scale (then cassandra/dynamodb/sharded stacks)",
+    "Schemaless document chaos (mongodb fits flexible docs better)",
+    "Massive analytical scans (columnar warehouses win)"
+  ],
+  "after": [
+    "api",
+    "worker"
+  ],
+  "to": [],
+  "props": {
+    "shard_key": "Partition column when splitting horizontally"
+  },
+  "size": {
+    "safe_reads_per_sec": "~12k/node with indexes hot",
+    "safe_writes_per_sec": "~2.5k durable commits/node"
+  },
+  "world": [
+    "YouTube's Vitess-sharded MySQL",
+    "Shopify's massive MySQL fleet",
+    "Uber's early monolith era"
+  ],
+  "pat": [
+    {
+      "n": "CQRS-lite",
+      "d": "Writes to primary, heavy analytics-ish reads to replicas."
+    },
+    {
+      "n": "Vitess-style Sharding",
+      "d": "Horizontal split by tenant/user-id with a routing layer."
+    }
+  ],
+  "pits": [
+    "Replica lag surprises UX ('my edit vanished') - route read-your-writes to primary or use semi-sync",
+    "Lock contention on hot rows - shorten transactions, add idempotency, consider queues for hot counters",
+    "Connection count ceilings - proxy with PgBouncer-analog (ProxySQL) pooling"
+  ],
+  "tips": [
+    "Capacity framing: reads scale with replicas, writes hit one primary - know YOUR ratio",
+    "Sharding narrative: pick shard key = highest-cardinality access dimension (user_id); rebalancing pain justifies managed solutions"
+  ]
+}

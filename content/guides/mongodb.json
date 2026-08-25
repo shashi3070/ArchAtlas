@@ -1,0 +1,50 @@
+{
+  "s": "Document-oriented NoSQL database storing flexible JSON-like BSON documents with rich query indexing and horizontal sharding.",
+  "w": "Collections hold documents (BSON); schemas are dynamic by default but JSON Schema validation enforces structure. Indexes (B-tree) serve queries; aggregation pipelines compute analytics. Replica sets provide HA (primary + secondaries); sharding distributes collections across nodes by shard key. Change streams enable CDC. WiredTiger engine provides document-level concurrency.",
+  "use": [
+    "Content management and catalogs with evolving schema requirements",
+    "User profiles and session stores where document shape varies by feature",
+    "Event/activity logs with flexible payload structures",
+    "Rapid prototyping where schema iteration speed matters most"
+  ],
+  "avoid": [
+    "Heavily relational data with many joins (PostgreSQL is stronger here)",
+    "Strict ACID multi-document transactions (supported but not optimal)",
+    "Analytical scans over billions of rows (columnar stores win)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "cdc_pipeline"
+  ],
+  "to": [],
+  "props": {
+    "shard_key": "Determines data distribution - choose based on query patterns"
+  },
+  "size": {
+    "safe_reads_per_sec": "~15k per replica node",
+    "safe_writes_per_sec": "~5k per node",
+    "default_instances": 3
+  },
+  "world": [
+    "Forbes, eBay product catalog",
+    "MongoDB Atlas managed",
+    "Bosch IoT platform",
+    "Vox Media CMS"
+  ],
+  "pat": [
+    {
+      "n": "CQRS-lite",
+      "d": "Writes to primary, analytics queries to secondaries or Atlas Data Lake."
+    }
+  ],
+  "pits": [
+    "Unbounded document growth from array pushes - cap arrays, use bucketing pattern",
+    "Shard key miss: poor shard key creates hotspots - design from query patterns first",
+    "Multi-document transactions have performance cost - use sparingly, not by default"
+  ],
+  "tips": [
+    "Flexible schema is the headline advantage; mention tradeoff: flexibility vs. data integrity guarantees",
+    "Aggregation pipeline is MongoDB's answer to SQL - know $match, $group, $lookup"
+  ]
+}

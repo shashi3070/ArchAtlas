@@ -1,0 +1,43 @@
+{
+  "s": "PostgreSQL extended into a time-series powerhouse: hypertables auto-partition time and compress history.",
+  "w": "Tables become hypertables chunked by time (and optionally space). Recent chunks stay hot on disk/RAM; older ones compress 10-20x and can tier to cheap storage. Continuous aggregates maintain rollups incrementally (1-min/1-hour averages) instead of recomputing dashboards. Full Postgres SQL + joins still available.",
+  "use": [
+    "Infrastructure/app metrics with retention policies (raw 7d, rollups 1y)",
+    "IoT sensor ingestion at steady high insert rates",
+    "Event telemetry where SQL analytics matter later",
+    "Fleet tracking (GPS breadcrumbs) with windowed queries"
+  ],
+  "avoid": [
+    "Tag cardinality in the millions (influx-style TSDBs handle differently; watch index bloat)",
+    "Update-heavy rows (append-only suits TSDBs)",
+    "General OLTP mixing (keep separate from transactional DB)"
+  ],
+  "after": [
+    "cdc_pipeline",
+    "api",
+    "metrics_collector"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~10k",
+    "safe_writes_per_sec": "~20k appends"
+  },
+  "world": [
+    "Timescale customers: Siemens energy grids",
+    "Toyota connected vehicles telemetry",
+    "Charity:Water sensors"
+  ],
+  "pat": [
+    {
+      "n": "CQRS rollups",
+      "d": "Raw events -> continuous aggregates -> dashboard reads."
+    }
+  ],
+  "pits": [
+    "High-cardinality tags explode indexes - bucket IDs, normalize dimensions",
+    "Compression jobs lag ingest - size background workers"
+  ],
+  "tips": [
+    "Sell 'just Postgres': existing skills/backups apply; compare with influx (simpler but less SQL) and clickhouse (faster scans, heavier ops)"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "s": "The industry-standard distributed batch engine: terabyte ETL joins, aggregations, and ML prep on clusters.",
+  "w": "Driver builds a lazy DAG of transformations over RDD/DataFrame datasets; scheduler splits stages across executors holding partitions in memory where possible. Shuffle stages (wide deps) exchange data over network - THE performance driver. Catalyst optimizer plans SQL; PySpark/Scala/Java APIs. Runs on YARN/K8s/standalone.",
+  "use": [
+    "Nightly terabyte-scale ETL building warehouse marts",
+    "Feature engineering pipelines training ML models",
+    "Log/data file transformations (parquet rewrites, dedupes)",
+    "Graph/compute-heavy batch jobs (PageRank-ish analyses)"
+  ],
+  "avoid": [
+    "Millisecond streaming (flink/spark-structured-streaming tradeoffs differ)",
+    "Single-node datasets (pandas/polars simpler)",
+    "Latency-sensitive serving paths"
+  ],
+  "after": [
+    "data_warehouse",
+    "kafka",
+    "object_storage"
+  ],
+  "to": [
+    "data_warehouse",
+    "feature_store"
+  ],
+  "props": {
+    "shuffle_partitions": "Parallelism dial for wide stages (default 200)"
+  },
+  "size": {
+    "jobs_per_sec_per_instance": "Batch jobs ~minutes; executor sizing dominates"
+  },
+  "world": [
+    "Netflix data platform",
+    "Uber's billion-trip analyses",
+    "NASA JPL imaging",
+    "Every bank's risk grids"
+  ],
+  "pat": [],
+  "pits": [
+    "Executor OOM from skewed joins - salting/broadcast-join small sides",
+    "Small-files problem after writes - compaction jobs scheduled"
+  ],
+  "tips": [
+    "Explain shuffle as THE cost model; skew handling stories show real experience"
+  ]
+}

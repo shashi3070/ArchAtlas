@@ -1,0 +1,30 @@
+{
+  "s": "Quorum-driven selection of ONE active coordinator among replicas with automatic failover.",
+  "w": "Candidates campaign via heartbeats/leases through consensus store (etcd/zookeeper) or Raft membership; quorum agreement installs leader identity. Watchers notify followers of leadership changes; split-brain prevented because minority can't renew leases. Failure detection timeouts tune failover speed vs false-positive flapping.",
+  "use": [
+    "Active-passive service failover (one writer at a time)",
+    "Background-job coordinators (compaction leaders, rebalancers)",
+    "Kubernetes controller-manager HA internals",
+    "Kafka consumer-group leadership analogies"
+  ],
+  "avoid": [
+    "Multi-active designs where any-replica-can-serve simplifies everything",
+    "Fast-failover guarantees without quorum infrastructure"
+  ],
+  "after": [],
+  "to": [],
+  "size": {},
+  "world": [
+    "Kubernetes leader-election leases",
+    "Kafka controllers",
+    "Elasticsearch master elections",
+    "Postgres Patroni clusters"
+  ],
+  "pat": [],
+  "pits": [
+    "Flapping leaders under network partitions - stabilize with randomized jitter + majority-quorum checks"
+  ],
+  "tips": [
+    "Explain WHY quorum prevents split-brain mathematically (intersecting majorities)"
+  ]
+}

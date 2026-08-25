@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { api } from '../../api/client'
 import { nodeVisual } from '../../graph/nodeVisuals'
 import type { CatalogComponent } from '../../state/labStore'
+import { NodeGuideModal } from './NodeGuideModal'
 
 interface Group {
   label: string
@@ -76,6 +77,7 @@ export function Palette({
 }) {
   const { components, error } = useComponentCatalog()
   const [query, setQuery] = useState('')
+  const [guideType, setGuideType] = useState<string | null>(null)
 
   const groups = useMemo(() => {
     if (!components) return []
@@ -135,6 +137,18 @@ export function Palette({
                   <Icon size={13} strokeWidth={2.2} />
                 </span>
                 {c.name}
+                <button
+                  type="button"
+                  className="palette-info-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setGuideType(c.type)
+                  }}
+                  title="Open guide"
+                  tabIndex={-1}
+                >
+                  ⓘ
+                </button>
               </button>
             )
           })}
@@ -143,6 +157,7 @@ export function Palette({
       {components !== null && groups.length === 0 && (
         <p className="muted small">{query ? 'No matches.' : 'No allowed components.'}</p>
       )}
+      {guideType && <NodeGuideModal nodeType={guideType} onClose={() => setGuideType(null)} />}
     </aside>
   )
 }

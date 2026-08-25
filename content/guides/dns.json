@@ -1,0 +1,45 @@
+{
+  "s": "The naming layer every request starts with - also a crude but powerful traffic-steering and failover tool.",
+  "w": "Resolvers cache answers according to TTL. Authoritative servers return records possibly weighted/geographically/failover-ordered. Low TTLs mean faster changes but more resolver load; high TTLs mean resilience but slow propagation.",
+  "use": [
+    "Basic name-to-IP resolution with sane TTLs",
+    "Weighted rollouts (send 5% to new fleet)",
+    "Cheap regional routing via geo-DNS",
+    "Failover records flipping to standby IP on health failure"
+  ],
+  "avoid": [
+    "Sub-minute emergency failover guarantees (resolver caches ignore you)",
+    "Per-request decisions - DNS answers live minutes in caches worldwide"
+  ],
+  "after": [],
+  "to": [
+    "global_load_balancer",
+    "load_balancer",
+    "cdn"
+  ],
+  "props": {
+    "ttl_seconds": "How long resolvers may cache the answer"
+  },
+  "size": {
+    "queries_per_sec": "Managed DNS absorbs millions q/s; cost trivial"
+  },
+  "world": [
+    "Route 53",
+    "Cloudflare DNS",
+    "Google Cloud DNS",
+    "Akamai Edge DNS"
+  ],
+  "pat": [
+    {
+      "n": "Health-Based Failover",
+      "d": "Primary/secondary records where secondary answers only when primary checks fail."
+    }
+  ],
+  "pits": [
+    "Low TTL everywhere melts resolver bill and adds latency - lower TTL only near migrations",
+    "Registrar lockout = total outage even if your infra is perfect - use two registrars/registrar lock"
+  ],
+  "tips": [
+    "Interview gold: explain why DNS failover is best-effort (caches!) and what compensates (GLB anycast, client retries)"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "s": "OpenTelemetry-native trace backend assembling cross-service waterfalls so latency mysteries get solved.",
+  "w": "Apps emit spans (OTLP) describing operations with parent-child context propagation (trace ids ride headers). Collectors buffer/process/sample then store; query layer reconstructs full request journeys. Tail-based sampling keeps interesting traces (errors/slow) while dropping boring ones. Service maps derive dependency graphs automatically.",
+  "use": [
+    "Finding which of 14 microservices adds 800ms p99",
+    "Understanding fan-out amplification (N+1 gRPC storms)",
+    "Post-incident journey reconstruction for specific failed requests",
+    "Dependency mapping discovery in grown-up microservice estates"
+  ],
+  "avoid": [
+    "Metric math/alerting (collectors complement, not replace)",
+    "Full capture forever (sampling essential - storage economics)"
+  ],
+  "after": [
+    "api",
+    "grpc",
+    "api_gateway"
+  ],
+  "to": [
+    "alert_manager"
+  ],
+  "size": {
+    "spans_per_sec": "~20k spans/sec/node with tail sampling"
+  },
+  "world": [
+    "Jaeger/Tempo OSS",
+    "Honeycomb (high-cardinality pioneer)",
+    "Datadog APM",
+    "Lightstep at GitHub"
+  ],
+  "pat": [],
+  "pits": [
+    "Head sampling misses rare-but-weird traces - tail sampling based on latency/error attributes"
+  ],
+  "tips": [
+    "Context-propagation explanation (traceparent headers) shows real understanding"
+  ]
+}

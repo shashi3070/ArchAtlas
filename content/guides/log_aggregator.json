@@ -1,0 +1,39 @@
+{
+  "s": "Ships every log line to searchable indexed storage with retention tiers - forensics backbone.",
+  "w": "Agents (filebeat/fluentbit) tail files/containers, enrich (pod/service labels), ship to ingest pipelines; parsers structure JSON/plain lines; indexes make them searchable. Hot/warm/cold tiers balance cost; lifecycle policies expire old indices. Query languages (Lucene/Datadog-LQL) support ad-hoc investigation plus saved dashboards.",
+  "use": [
+    "Incident forensics grepping exact error contexts across services",
+    "Audit trail searches (who-did-what compliance queries)",
+    "Security anomaly hunting (failed-login spikes)",
+    "Debugging one-off production issues post-hoc"
+  ],
+  "avoid": [
+    "Precise numeric SLIs (metrics do aggregation math better)",
+    "Request journey visualization (tracing correlates spans better)",
+    "Keeping everything forever at hot tier (cost explodes - tier it)"
+  ],
+  "after": [
+    "kubernetes",
+    "api",
+    "worker"
+  ],
+  "to": [
+    "alert_manager"
+  ],
+  "size": {
+    "lines_per_sec": "~50k lines/sec/node indexed"
+  },
+  "world": [
+    "ELK stacks everywhere",
+    "Datadog logs",
+    "Grafana Loki (label-indexed cheapness)",
+    "Splunk in banks"
+  ],
+  "pat": [],
+  "pits": [
+    "Indexing everything at hot tier melts budgets - sample debug logs, tier aggressively"
+  ],
+  "tips": [
+    "Structured JSON logging advocacy - makes every downstream tool smarter"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "s": "Distributed commit log supporting durable pub/sub, stream processing, and event sourcing with partition-level ordering.",
+  "w": "Producers write to topic partitions distributed across brokers; consumers in groups each own partitions ensuring parallel processing without duplication. Replication factor controls durability (ISR consensus). Consumer offsets track progress; retention is time/size-based. Kafka Connect integrates databases/files; Kafka Streams enables exactly-once processing within the cluster. Log compaction keeps latest value per key for state topics.",
+  "use": [
+    "Event backbone connecting dozens of microservices via pub/sub",
+    "Stream processing input (Flink, Spark Streaming, Kafka Streams)",
+    "Decoupling producers and consumers at massive throughput",
+    "Audit log / event sourcing store with durable ordered history",
+    "CDC destination receiving Debezium database change streams"
+  ],
+  "avoid": [
+    "Simple task queue where SQS/RabbitMQ is simpler and cheaper",
+    "Low-volume systems where operational overhead of Kafka cluster is unjustified",
+    "Request-reply patterns (Kafka is fire-and-forget; use gRPC for sync)"
+  ],
+  "after": [
+    "api",
+    "cdc_pipeline",
+    "pubsub",
+    "event_bus",
+    "worker"
+  ],
+  "to": [
+    "flink",
+    "spark",
+    "worker",
+    "clickhouse",
+    "elasticsearch",
+    "postgresql",
+    "redis",
+    "data_warehouse",
+    "vector_database"
+  ],
+  "props": {
+    "replication_factor": "Copies of each partition across brokers (typically 3)",
+    "retention_ms": "How long messages persist before deletion"
+  },
+  "size": {
+    "messages_per_sec": "~100k+/broker; millions cluster-wide",
+    "default_instances": 3
+  },
+  "world": [
+    "LinkedIn (created Kafka)",
+    "Uber 50M+ msgs/sec",
+    "Netflix event backbone",
+    "Airbnb data pipeline",
+    "Confluent Cloud managed"
+  ],
+  "pat": [
+    {
+      "n": "Event Sourcing",
+      "d": "Kafka IS the event store: append-only log becomes system of record."
+    },
+    {
+      "n": "CQRS projection",
+      "d": "Kafka topics -> consumers build read models in elasticsearch/redis."
+    }
+  ],
+  "pits": [
+    "Consumer lag spiraling silently - monitor lag per group per topic and alert on growth",
+    "Partition hot-spots from poor key design - use high-cardinality keys for even distribution",
+    "Rebalancing storms when consumers join/leave frequently - static membership reduces churn"
+  ],
+  "tips": [
+    "At-least-once is the default; exactly-once requires idempotent producers + transactional consumers",
+    "Consumer group model is the interview essential: one partition consumed by exactly one consumer in a group"
+  ]
+}

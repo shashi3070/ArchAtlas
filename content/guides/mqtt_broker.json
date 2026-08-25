@@ -1,0 +1,47 @@
+{
+  "s": "Lightweight pub/sub broker designed for IoT: tiny packets, unreliable networks, and millions of low-power connections.",
+  "w": "Clients connect over TCP/WebSocket with minimal handshake; topics use hierarchical paths (factory/sensor/temp). QoS levels (0-at most once, 1-at least once, 2-exactly once) trade reliability for overhead. Retained messages store last value per topic for late joiners. Last Will Testament messages notify others when a client disconnects unexpectedly. Session persistence survives reconnects.",
+  "use": [
+    "IoT device telemetry ingestion from sensors and edge devices",
+    "Smart home automation (MQTT is the dominant protocol)",
+    "Vehicle fleet tracking with unreliable cellular connections",
+    "Industrial SCADA and factory-floor monitoring"
+  ],
+  "avoid": [
+    "High-throughput data pipelines (Kafka is more efficient at scale)",
+    "Enterprise application integration (use RabbitMQ/Kafka)",
+    "Scenarios requiring complex message routing and filtering (broker-side rules limited)"
+  ],
+  "after": [
+    "api",
+    "edge_compute"
+  ],
+  "to": [
+    "kafka",
+    "time_series_db",
+    "api",
+    "rule_engine"
+  ],
+  "props": {
+    "qos_level": "0 | 1 | 2 - delivery guarantee tier"
+  },
+  "size": {
+    "connections_per_broker": "~100k-500k lightweight connections",
+    "messages_per_sec": "~50k-100k per broker"
+  },
+  "world": [
+    "Eclipse Mosquitto",
+    "AWS IoT Core (MQTT)",
+    "HiveMQ",
+    "VerneMQ"
+  ],
+  "pat": [],
+  "pits": [
+    "QoS 2 expensive at scale - use QoS 1 for most IoT telemetry; QoS 0 for fire-and-forget",
+    "Topic hierarchy explosion with uncontrolled device naming - enforce naming conventions"
+  ],
+  "tips": [
+    "MQTT is the HTTP of IoT - mention it as the default protocol for constrained devices",
+    "Last Will Testament is a unique and useful feature for detecting device failures"
+  ]
+}

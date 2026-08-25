@@ -1,0 +1,56 @@
+{
+  "s": "Persistent bidirectional connection manager enabling real-time push from server to client over a single upgraded HTTP connection.",
+  "w": "After HTTP upgrade handshake, both client and server send frames on the same TCP connection. The gateway manages millions of long-lived connections, routing messages to the correct backend service via connection registries (userId -> connectionId mappings). Heartbeats detect dead connections; reconnection with session resume handles network drops. Backpressure handles slow clients by buffering or dropping stale messages.",
+  "use": [
+    "Real-time chat and messaging (Slack, Discord)",
+    "Live notifications: order status, collaboration cursors, alerts",
+    "Multiplayer gaming state synchronization",
+    "Financial ticker feeds and live dashboards"
+  ],
+  "avoid": [
+    "Request/response patterns where HTTP/REST is simpler and stateless",
+    "Fan-out to millions of anonymous users without connection affinity (use SSE or polling)",
+    "Stateless serverless backends (persistent connections need persistent servers)"
+  ],
+  "after": [
+    "client",
+    "api"
+  ],
+  "to": [
+    "worker",
+    "redis",
+    "kafka",
+    "api",
+    "pubsub"
+  ],
+  "props": {
+    "heartbeat_interval_ms": "How often to ping idle connections",
+    "max_connections": "Per-instance connection ceiling before load balancing"
+  },
+  "size": {
+    "connections_per_instance": "~10k-100k depending on message frequency",
+    "default_instances": 2
+  },
+  "world": [
+    "Socket.IO / ws (Node.js)",
+    "Ably real-time infrastructure",
+    "Pusher",
+    "Discord gateway",
+    "Figma multiplayer backend"
+  ],
+  "pat": [
+    {
+      "n": "Fan-out via Pub/Sub",
+      "d": "Gateway subscribes to a message bus and pushes to connected clients by subscription."
+    }
+  ],
+  "pits": [
+    "Connection storms on mass reconnect after gateway restart - stagger jitter on reconnect timers",
+    "Memory exhaustion from idle connections without heartbeat eviction",
+    "Load imbalance across gateway instances without connection-aware routing"
+  ],
+  "tips": [
+    "WebSocket is persistent bidirectional; SSE is one-way server-push - know the distinction",
+    "Connection count matters more than RPS for sizing - memory per connection is the constraint"
+  ]
+}

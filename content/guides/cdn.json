@@ -1,0 +1,54 @@
+{
+  "s": "Edge-distributed content cache serving static assets from the nearest PoP to cut latency and absorb origin load.",
+  "w": "Content is cached at hundreds of edge locations worldwide. First request fetches from origin (object_storage, api, or reverse_proxy) and caches; subsequent requests at that PoP are served from cache. Cache-Control headers and origin-push invalidation control freshness. TLS termination, Brotli compression, and image optimization happen at the edge. Surrogate-key purging enables selective invalidation.",
+  "use": [
+    "Static asset delivery: JS bundles, CSS, images, fonts, video segments",
+    "API response caching for cacheable GET endpoints (product catalogs, search results)",
+    "DDoS absorption at the edge before traffic reaches origin",
+    "Edge compute (Workers/Lambda@Edge) for header manipulation and A/B tests"
+  ],
+  "avoid": [
+    "Frequently mutating personalized content (cache hit rate near zero = wasted hops)",
+    "Large binary uploads (CDN is for distribution not ingestion)",
+    "Strong consistency requirements without stale-while-revalidate tolerance"
+  ],
+  "after": [
+    "dns",
+    "client",
+    "global_load_balancer"
+  ],
+  "to": [
+    "object_storage",
+    "api",
+    "reverse_proxy",
+    "api_gateway"
+  ],
+  "props": {
+    "ttl_seconds": "Default cache lifetime unless overridden by origin headers"
+  },
+  "size": {
+    "rps_per_instance": "Edge PoPs absorb millions rps; origin shielding reduces origin load ~90%"
+  },
+  "world": [
+    "Cloudflare CDN",
+    "AWS CloudFront",
+    "Akamai",
+    "Fastly",
+    "KeyCDN"
+  ],
+  "pat": [
+    {
+      "n": "Cache-Aside at Edge",
+      "d": "CDN sits transparently; origin owns cache-control policy."
+    }
+  ],
+  "pits": [
+    "Stale content after deploys - use surrogate-key purge and short TTLs during rollouts",
+    "Cache stampede on popular uncached origins - stale-while-revalidate + request coalescing",
+    "Overly broad cache invalidation purging everything - surgical surrogate-key discipline"
+  ],
+  "tips": [
+    "Cache hit ratio is the headline metric: >90% is healthy; investigate misses",
+    "Origin shield / mid-tier caching reduces cost and origin load dramatically"
+  ]
+}

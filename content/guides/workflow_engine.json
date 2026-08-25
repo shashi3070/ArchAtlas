@@ -1,0 +1,45 @@
+{
+  "s": "Durable execution runtime: business flows survive crashes/redeploys, replaying deterministically with retries and timers.",
+  "w": "Workflow code records every decision to event history; workers replay history deterministically to resume state after failures - no state DB needed by app code. Activities (side-effecting steps) retry per policy with heartbeats; timers persist for days-long waits; signals inject external events; queries inspect state live. Version pinning handles code upgrades mid-flight.",
+  "use": [
+    "Order fulfillment sagas spanning payment/inventory/shipping with compensations",
+    "KYC/onboarding approvals lasting days with human steps",
+    "Infrastructure provisioning orchestration",
+    "Media pipelines with long-running transcodes + callbacks"
+  ],
+  "avoid": [
+    "Simple request/response CRUD",
+    "Massive parallel fan-outs (millions of concurrent workflows have limits)",
+    "Sub-millisecond latency paths (durability costs ms)"
+  ],
+  "after": [
+    "api",
+    "payment_gateway"
+  ],
+  "to": [
+    "ledger_service",
+    "email_service"
+  ],
+  "size": {
+    "workflows_per_sec": "~500 starts/sec cluster-typical"
+  },
+  "world": [
+    "Temporal (ex-Ubuntu Cadence lineage)",
+    "Netflix Conductor",
+    "Uber Cadence origin",
+    "Stripe? (internal equivalents)"
+  ],
+  "pat": [
+    {
+      "n": "Saga orchestration",
+      "d": "Compensation activities undo prior steps on failure - code reads linearly!"
+    }
+  ],
+  "pits": [
+    "Non-deterministic code changes break replays - versioning discipline (pinning/pipelining)",
+    "History bloat on chatty loops - continue-as-new patterns"
+  ],
+  "tips": [
+    "'Code-as-workflow' vs YAML-DAG contrast explains the durability magic crisply"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "s": "Sharded ordered event streams with multi-day replay - AWS's log-as-a-service for telemetry pipelines.",
+  "w": "Streams divide capacity into shards (1MB/s-in, 2MB/s-out each); partition keys route records deterministically preserving per-key order. Consumers read shards directly or via enhanced fan-out (dedicated throughput). Records persist 24h-365d enabling reprocessing. Data Streams vs Firehose (auto-deliver to S3/redshift) distinction matters.",
+  "use": [
+    "Clickstream/app-event ingestion feeding analytics + ML features",
+    "Ordered per-user/device event logs",
+    "Reprocessing windows after consumer bugs (replay!)",
+    "CDC transport from databases to processors"
+  ],
+  "avoid": [
+    "Tiny volumes (cost/complexity overhead vs sqs)",
+    "Random-access queue semantics (that's sqs)",
+    "Unbounded hot partition keys - shard storms"
+  ],
+  "after": [
+    "api",
+    "cdc_pipeline",
+    "pubsub"
+  ],
+  "to": [
+    "flink",
+    "spark",
+    "data_warehouse"
+  ],
+  "props": {
+    "partition_key": "Deterministic shard routing key preserving order"
+  },
+  "size": {
+    "messages_per_sec": "~50k baseline scalable via shards"
+  },
+  "world": [
+    "Netflix viewing telemetry",
+    "Amazon retail clickstreams",
+    "Zillow event pipelines"
+  ],
+  "pat": [
+    {
+      "n": "Lambda Architecture lineage",
+      "d": "Speed layer (flink) + batch replay (spark) from same stream."
+    }
+  ],
+  "pits": [
+    "Iterator-age alarms ignored -> silent lag growth - monitor consumer lag religiously",
+    "Hot shards on celebrity keys - salting strategies"
+  ],
+  "tips": [
+    "Replay capability is the headline differentiator vs queues - say why (bug fixes, backfills, new consumers)"
+  ]
+}

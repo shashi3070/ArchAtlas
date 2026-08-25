@@ -1,0 +1,52 @@
+{
+  "s": "Double-entry bookkeeping service recording all financial transactions with immutable audit trail and balance consistency.",
+  "w": "Every financial event (charge, refund, payout, adjustment) creates balanced journal entries (debit = credit). The ledger is append-only; corrections are done via reversals, never overwrites. Account balances are derived from entry aggregation. Supports multi-currency, accrual accounting, and reconciliation. Regulatory compliance (SOX, GAAP) requires this immutable record of every money movement.",
+  "use": [
+    "Marketplace or platform requiring financial reconciliation between parties",
+    "Subscription billing with proration, credits, and usage-based billing",
+    "Internal accounting for multi-entity organizations",
+    "Audit trail for regulatory compliance (SOX, PCI-DSS)"
+  ],
+  "avoid": [
+    "Simple payment processing without multi-party settlement (payment_gateway alone suffices)",
+    "Non-financial event logging (use event store or audit log)",
+    "Real-time balance queries requiring sub-millisecond latency (cache derived balances)"
+  ],
+  "after": [
+    "payment_gateway",
+    "workflow_engine",
+    "api",
+    "worker"
+  ],
+  "to": [
+    "email_service",
+    "data_warehouse",
+    "api"
+  ],
+  "props": {
+    "currency_precision": "Decimal places for currency amounts (typically 2 or 4)"
+  },
+  "size": {
+    "entries_per_sec": "~500-2k durable writes per node"
+  },
+  "world": [
+    "Stripe Treasury / Ledger",
+    "Airbnb payments ledger",
+    "QuickBooks ledger internals",
+    "Thought Machine Vault (banking)"
+  ],
+  "pat": [
+    {
+      "n": "Event Sourcing",
+      "d": "Ledger IS an event store: every entry is an immutable event with balance effect."
+    }
+  ],
+  "pits": [
+    "Rounding errors accumulating over millions of transactions - use proper decimal arithmetic, never floats",
+    "Asynchronous webhook delays making balance appear wrong - show pending/settled distinction to users"
+  ],
+  "tips": [
+    "Double-entry bookkeeping is the answer to 'how do you know the money is right' - always debit and credit",
+    "Immutable append-only ledger with reversal entries is the standard pattern - never UPDATE financial records"
+  ]
+}

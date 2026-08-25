@@ -1,0 +1,58 @@
+{
+  "s": "Intermediary that tokenizes, authorizes, and settles financial transactions between merchants and payment networks.",
+  "w": "Receives payment details (card, bank, wallet), tokenizes sensitive data to offload PCI scope, sends authorization requests to card networks (Visa/Mastercard) or bank networks (ACH), receives approve/decline response, and handles capture/settlement. Manages idempotency to prevent double charges, 3D-Secure for fraud, and dispute management. Webhooks notify systems of async settlement outcomes.",
+  "use": [
+    "E-commerce checkout: card payments, digital wallets (Apple Pay, Google Pay)",
+    "Subscription billing with recurring charges and retry logic",
+    "Marketplace payouts splitting payments between platform and sellers",
+    "Cross-border payments with currency conversion"
+  ],
+  "avoid": [
+    "Direct card network integration (PCI compliance burden is enormous)",
+    "Cryptocurrency-only payments (niche, different infrastructure entirely)",
+    "Internal ledger operations (use ledger_service for bookkeeping)"
+  ],
+  "after": [
+    "api",
+    "workflow_engine",
+    "worker"
+  ],
+  "to": [
+    "ledger_service",
+    "email_service",
+    "api",
+    "postgresql"
+  ],
+  "props": {
+    "provider": "Stripe | Adyen | Braintree | Checkout.com",
+    "idempotency_key": "Prevents duplicate charges on retries"
+  },
+  "size": {
+    "transactions_per_sec": "~100-1k per merchant account depending on provider limits"
+  },
+  "world": [
+    "Stripe (dominant SaaS payment)",
+    "Adyen (enterprise/global)",
+    "Square (POS + online)",
+    "PayPal/Braintree",
+    "Checkout.com"
+  ],
+  "pat": [
+    {
+      "n": "Idempotency Key",
+      "d": "Client-generated key prevents duplicate charges on network retries."
+    },
+    {
+      "n": "Saga participant",
+      "d": "Payment step in order saga with charge/refund compensations."
+    }
+  ],
+  "pits": [
+    "Idempotency key not implemented = double charges on retries - MANDATORY for production",
+    "Webhook delivery lag causing stale payment status - poll as backup, don't rely solely on webhooks"
+  ],
+  "tips": [
+    "PCI scope reduction via tokenization is the primary reason to use a gateway over direct integration",
+    "Idempotency keys are non-negotiable - always mention them when discussing payment systems"
+  ]
+}

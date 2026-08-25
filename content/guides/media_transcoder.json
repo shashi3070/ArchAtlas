@@ -1,0 +1,57 @@
+{
+  "s": "Converts, compresses, and adapts media files between formats, resolutions, and codecs for cross-platform delivery.",
+  "w": "Receives source media (video, audio, images) via upload or message, transcodes to target formats (H.264/H.265/AV1 for video, AAC/Opus for audio), generates multiple renditions for adaptive bitrate streaming (HLS/DASH manifests), creates thumbnails and previews, and stores outputs to object storage. Processing is CPU/GPU-intensive and parallelized across chunks. Progress callbacks and status webhooks inform callers of completion.",
+  "use": [
+    "Video platforms: YouTube/TikTok-style multi-resolution upload processing",
+    "Live streaming: real-time transcoding of live feeds to adaptive bitrate",
+    "Media asset management: format conversion for cross-device compatibility",
+    "Content delivery: generating optimized assets for CDN consumption"
+  ],
+  "avoid": [
+    "Real-time synchronous request paths (transcoding takes seconds to minutes)",
+    "Single-format use cases where client accepts one format natively",
+    "Audio-only lightweight conversions (FFmpeg subprocess may suffice)"
+  ],
+  "after": [
+    "api",
+    "object_storage",
+    "worker",
+    "event_bus",
+    "workflow_engine"
+  ],
+  "to": [
+    "object_storage",
+    "file_storage",
+    "cdn",
+    "api",
+    "kafka"
+  ],
+  "props": {
+    "output_codecs": "h264 | h265 | av1",
+    "renditions": "Number of quality levels for adaptive streaming"
+  },
+  "size": {
+    "jobs_per_sec_per_instance": "~1-5 concurrent transcodes per GPU instance"
+  },
+  "world": [
+    "AWS Elemental MediaConvert",
+    "Cloudflare Stream",
+    "Mux video infrastructure",
+    "Vimeo OTT transcoding",
+    "FFmpeg on Kubernetes"
+  ],
+  "pat": [
+    {
+      "n": "Saga participant",
+      "d": "Transcode step in media pipeline saga with compensation on failure."
+    }
+  ],
+  "pits": [
+    "GPU/CPU resource contention with other workloads - isolate transcoder nodes in dedicated pools",
+    "Storage costs from keeping all renditions - lifecycle policies to tier/delete old outputs"
+  ],
+  "tips": [
+    "Adaptive bitrate streaming (HLS/DASH) is the primary output format - mention manifest generation",
+    "AV1 codec adoption is the modern trend - better compression than H.265 but slower encoding"
+  ]
+}

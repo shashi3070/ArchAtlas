@@ -1,0 +1,43 @@
+{
+  "s": "Global topic-based publish/subscribe fanning events out to independent subscriptions with per-key ordering options.",
+  "w": "Publishers emit to topics; each subscription receives the full stream independently (queue or streaming pull). Ordering keys serialize per-key when chosen. Exactly-once delivery feature exists regionally now. Backlogs persist until acked/dead-lettered; snapshotting preserves offsets during migrations.",
+  "use": [
+    "Event broadcast to many services (order.created -> email, analytics, fraud)",
+    "Ingest front door feeding stream processors and warehouses simultaneously",
+    "Cross-region replication of domain events",
+    "Microservices choreography replacing brittle HTTP chains"
+  ],
+  "avoid": [
+    "Simple worker-queue semantics where sqs-style polling fits cheaper",
+    "Very long retention/replay years back (kinesis/warehouse tiers better)"
+  ],
+  "after": [
+    "api",
+    "serverless_function"
+  ],
+  "to": [
+    "flink",
+    "bigquery-analog data_warehouse",
+    "cdc_pipeline"
+  ],
+  "size": {
+    "messages_per_sec": "~100k+ per topic easily"
+  },
+  "world": [
+    "Google's internal logging backbone heritage",
+    "Spotify event delivery",
+    "Trivago analytics ingestion"
+  ],
+  "pat": [
+    {
+      "n": "Choreography Saga",
+      "d": "Services react to each other's published facts; no central orchestrator."
+    }
+  ],
+  "pits": [
+    "Subscriber slowdowns grow unbounded backlog - alarm on oldest-unacked age"
+  ],
+  "tips": [
+    "Contrast queue (competing consumers, one winner) vs topic fan-out (everyone gets a copy) explicitly"
+  ]
+}

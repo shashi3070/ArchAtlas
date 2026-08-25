@@ -1,0 +1,48 @@
+{
+  "s": "HTTP/2 protobuf RPC framework giving typed contracts, multiplexed streams, and deadlines between services.",
+  "w": ".proto files define services/messages; codegen produces typed clients/servers in dozens of languages. HTTP/2 multiplexes many concurrent calls per connection; bidirectional streaming flows naturally. Deadline metadata propagates through call chains enabling cascading cancellation. Load balancing works L7 (per-RPC) via proxy or client-side aware balancers.",
+  "use": [
+    "Internal microservice meshes needing efficient typed contracts",
+    "Polyglot environments sharing single schema source-of-truth",
+    "Streaming use cases: live telemetry, chat relays, chunked uploads",
+    "Mobile-to-backend where bandwidth/CPU efficiency matters"
+  ],
+  "avoid": [
+    "Browser-direct calls (needs grpc-web proxy gymnastics)",
+    "Human-debugged quick integrations (curl-able JSON wins)",
+    "Public partner APIs where REST/JSON ubiquity lowers friction"
+  ],
+  "after": [
+    "service_mesh",
+    "api_gateway"
+  ],
+  "to": [
+    "api",
+    "vector_database"
+  ],
+  "props": {
+    "deadline_ms": "Per-call timeout propagated downstream"
+  },
+  "size": {
+    "rps_per_instance": "~20k rps/core typical protobuf handlers"
+  },
+  "world": [
+    "Google's entire internal RPC fabric (Stubby ancestor)",
+    "Netflix gRPC middleware",
+    "Square/Cash App payments rails",
+    "Lyft mobile APIs"
+  ],
+  "pat": [
+    {
+      "n": "Circuit Breaker integration",
+      "d": "Deadline failures feed breaker stats naturally per-endpoint."
+    }
+  ],
+  "pits": [
+    "Proto field-number reuse corrupting payloads - reserved tags discipline",
+    "TCP head-of-line blocking at L4 - HTTP/3/gRPC future mitigations"
+  ],
+  "tips": [
+    "Deadline propagation story (why one slow leaf shouldn't eat whole budget) is interview gold"
+  ]
+}

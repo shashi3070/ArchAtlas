@@ -1,0 +1,57 @@
+{
+  "s": "The most advanced open-source relational database: ACID, rich types, extensibility, and standards compliance.",
+  "w": "MVCC provides concurrent reads/writes without locks. B-tree/hash/GiST/GIN/BRIN indexes support diverse query patterns. JSONB columns bridge document and relational models. Streaming replication (sync/async) and logical replication enable read scaling and CDC. Extensions (PostGIS, pgvector, TimescaleDB) extend functionality massively. VACUUM manages dead tuple cleanup; partitioning handles large tables.",
+  "use": [
+    "Transactional OLTP requiring strong ACID guarantees and complex joins",
+    "Geospatial data with PostGIS (standard for location-aware systems)",
+    "Hybrid relational + document with JSONB columns",
+    "Multi-purpose database (with pgvector for small-scale vector search)"
+  ],
+  "avoid": [
+    "Write throughput beyond single-node vertical scaling (~5k writes/sec ceiling before sharding)",
+    "Global distributed active-active across regions (CockroachDB/Spanner territory)",
+    "Analytical scans over billions of rows without columnar storage (use ClickHouse/warehouse)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "serverless_function",
+    "kubernetes"
+  ],
+  "to": [],
+  "props": {
+    "max_connections": "Connection ceiling (default ~100; use PgBouncer for pooling)",
+    "wal_level": "minimal | replica | logical - controls replication and CDC capabilities"
+  },
+  "size": {
+    "safe_reads_per_sec": "~10k-15k per node with indexes",
+    "safe_writes_per_sec": "~2.5k-5k durable commits per node",
+    "default_instances": 2
+  },
+  "world": [
+    "GitLab (largest known single-db instance)",
+    "Instagram (pre-Meta scaling)",
+    "Apple Maps data",
+    "Reddit",
+    "Supabase managed Postgres"
+  ],
+  "pat": [
+    {
+      "n": "CQRS-lite",
+      "d": "Writes to primary, heavy reads to replicas."
+    },
+    {
+      "n": "Transactional Outbox",
+      "d": "Events written in same transaction as business data, polled by CDC or relay."
+    }
+  ],
+  "pits": [
+    "Connection exhaustion without pooling - always use PgBouncer or built-in pooling in front",
+    "VACUUM bloat from long-running transactions preventing cleanup - monitor dead tuples",
+    "Replica lag causing stale reads for read-your-writes patterns - route to primary when needed"
+  ],
+  "tips": [
+    "Extensions are PostgreSQL's superpower - mention PostGIS, pgvector, pg_cron as differentiators",
+    "Connection pooling is mandatory at scale - state the PgBouncer connection ratio rule of thumb"
+  ]
+}

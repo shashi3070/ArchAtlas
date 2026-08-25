@@ -1,0 +1,56 @@
+{
+  "s": "A sequence of local transactions where each step has a compensating undo, maintaining consistency without distributed locks.",
+  "w": "Instead of one ACID transaction across services, each step commits locally and publishes an event. The next step consumes and continues. If step N fails, previously completed steps execute their compensating transactions in reverse order. Choreography sagas use events (order-created -> payment-charged -> inventory-reserved); orchestration sagas use a central coordinator telling each service what to do and when to compensate.",
+  "use": [
+    "Order fulfillment spanning payment, inventory, and shipping across microservices",
+    "Booking systems with reservation-confirm-cancel flows",
+    "Any cross-service operation requiring eventual consistency without 2PC",
+    "Multi-step business processes where partial completion is acceptable"
+  ],
+  "avoid": [
+    "Operations requiring strict read-after-write consistency across services (use 2PC or single DB)",
+    "Simple two-step processes where a try/catch and HTTP call suffices",
+    "Workflows with no compensating action possible (impossible to undo email send)"
+  ],
+  "after": [
+    "api",
+    "workflow_engine",
+    "event_bus",
+    "pubsub"
+  ],
+  "to": [
+    "payment_gateway",
+    "ledger_service",
+    "email_service",
+    "postgresql",
+    "redis"
+  ],
+  "props": {
+    "orchestration_mode": "choreography (event-driven) vs orchestration (central coordinator)"
+  },
+  "size": {},
+  "world": [
+    "Amazon order processing",
+    "Uber ride matching + payment + driver payout",
+    "Netflix content delivery pipeline",
+    "Cadence/Temporal saga patterns"
+  ],
+  "pat": [
+    {
+      "n": "Choreography Saga",
+      "d": "Services publish events; each listens and reacts - no central coordinator."
+    },
+    {
+      "n": "Orchestration Saga",
+      "d": "Central workflow engine drives steps and compensations in sequence."
+    }
+  ],
+  "pits": [
+    "Compensation logic harder than forward logic - design compensations alongside forward steps",
+    "Partial failures leaving inconsistent intermediate state without proper timeout handling"
+  ],
+  "tips": [
+    "Choreography vs orchestration debate is the core discussion: choreography = loose coupling, orchestration = visibility",
+    "Temporal/Cadence make saga code read linearly - huge simplification over raw event choreography"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "s": "The stateless application server hosting core business logic, validating inputs, orchestrating calls to data stores and downstream services.",
+  "w": "Receives requests from gateways or load balancers, executes domain logic (validation, authorization, transformation), queries databases/caches, and returns structured responses. Typically deployed as horizontally scalable containers behind a load balancer. Each instance is stateless; all persistent state lives in databases or caches. Health checks route traffic only to healthy instances.",
+  "use": [
+    "Core CRUD and business logic for any product domain",
+    "Request validation, transformation, and orchestration of downstream calls",
+    "Enforcing business rules that span multiple data sources",
+    "Serving as the authoritative backend for web and mobile clients"
+  ],
+  "avoid": [
+    "Heavy background processing (use worker nodes instead to avoid request latency)",
+    "Stateful long-lived connections like websockets (use websocket_gateway)",
+    "Direct database writes without business logic (wasted hop)"
+  ],
+  "after": [
+    "api_gateway",
+    "load_balancer",
+    "reverse_proxy",
+    "cdn",
+    "client",
+    "graphql_gateway",
+    "grpc"
+  ],
+  "to": [
+    "postgresql",
+    "mysql",
+    "redis",
+    "mongodb",
+    "kafka",
+    "vector_database",
+    "neo4j",
+    "elasticsearch",
+    "memcached",
+    "payment_gateway",
+    "email_service",
+    "sms_service",
+    "object_storage",
+    "llm_api",
+    "recommendation_engine"
+  ],
+  "props": {
+    "timeout_ms": "Per-request deadline before the caller gets a 504",
+    "replicas": "Horizontal instance count behind the load balancer"
+  },
+  "size": {
+    "rps_per_instance": "~500-5k depending on DB call weight",
+    "default_instances": 2
+  },
+  "world": [
+    "Netflix Zuul-originated business services",
+    "Stripe API servers",
+    "Shopify Ruby on Rails monolith",
+    "Twitter/Nitter backend",
+    "Figma stateless API tier"
+  ],
+  "pat": [
+    {
+      "n": "CQRS-lite",
+      "d": "API reads from replicas/cache, writes to primary - simple read/write split."
+    },
+    {
+      "n": "Strangler Fig",
+      "d": "New API handles fresh routes while legacy handles old - gateway routes between them."
+    }
+  ],
+  "pits": [
+    "Chatty downstream calls multiply latency - batch or use DataLoader/gRPC multiplexing",
+    "Missing timeouts cascade - set connect/read/write timeouts on every outbound call",
+    "N+1 database queries from ORM eager-loading misconfig - profile query counts per request"
+  ],
+  "tips": [
+    "Emphasize stateless design enabling horizontal scaling - any instance can handle any request",
+    "Discuss timeout budgets: if gateway is 5s and DB is 2s, API call budget is <3s with headroom",
+    "Mention the distinction between API (request/response) and worker (background) compute"
+  ]
+}

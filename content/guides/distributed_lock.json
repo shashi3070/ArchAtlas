@@ -1,0 +1,40 @@
+{
+  "s": "Lease-based mutual exclusion across processes/nodes so exactly-one-worker runs critical sections safely.",
+  "w": "Acquire writes a lock key with TTL lease + fencing token (monotonic id). Holders renew leases while working; expiry auto-releases crashed holders. Fencing tokens let downstream resources reject stale holders' writes after lease loss. Backends range from redis (SET NX PX) to zookeeper/etcd consensus for stronger guarantees.",
+  "use": [
+    "Singleton cron deduplication across replica instances",
+    "Migration/DDL serialization during deploys",
+    "Leader-coordinated maintenance windows",
+    "Resource arbitration (one indexer scans shard X now)"
+  ],
+  "avoid": [
+    "High-frequency coordination (>thousands/sec - redesign to sharding/token buckets)",
+    "Correctness-critical mutual exclusion on plain redis without fencing (split-brain risks)"
+  ],
+  "after": [
+    "redis",
+    "cron_scheduler"
+  ],
+  "to": [],
+  "size": {
+    "operations_per_sec": "~50k lock ops/sec on redis-backed"
+  },
+  "world": [
+    "Redlock debate fame (Kleppmann vs antirez)",
+    "Curator recipes on zookeeper",
+    "etcd concurrency primitives"
+  ],
+  "pat": [
+    {
+      "n": "Leader Election companion",
+      "d": "Locks elect leaders implicitly; election formalizes it."
+    }
+  ],
+  "pits": [
+    "GC pause exceeding lease = two holders - fencing tokens REQUIRED for safety-critical sections",
+    "Clock jumps breaking TTL math - prefer monotonic-source-backed stores"
+  ],
+  "tips": [
+    "Know Kleppmann's Redlock critique - fencing tokens argument separates deep from shallow answers"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "s": "Cross-platform mobile and web push notification delivery via APNs, FCM, and web push protocols.",
+  "w": "Receives notification requests (device tokens, title, body, data payload) via API, routes to the appropriate platform protocol (Apple Push Notification Service for iOS, Firebase Cloud Messaging for Android, Web Push for browsers), handles token management (invalid tokens purged), delivery tracking, and rich notification rendering (images, action buttons, silent/background pushes for data sync).",
+  "use": [
+    "Mobile app notifications: new messages, order updates, social interactions",
+    "Web browser notifications for real-time updates (chat, news, collaboration)",
+    "Background data sync triggering app content refresh",
+    "Time-sensitive alerts requiring immediate user attention on mobile"
+  ],
+  "avoid": [
+    "Non-urgent notifications where email is more appropriate and less intrusive",
+    "Communication requiring rich formatting or long-form content (use in-app or email)",
+    "Users who have disabled push permissions (handle gracefully with fallback channels)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "event_bus",
+    "alert_manager",
+    "workflow_engine",
+    "moderation_service"
+  ],
+  "to": [],
+  "props": {
+    "platform": "ios | android | web",
+    "priority": "high (immediate) | normal (batched by OS)"
+  },
+  "size": {
+    "notifications_per_sec": "~5k-20k per provider account"
+  },
+  "world": [
+    "Firebase Cloud Messaging (FCM)",
+    "Apple Push Notification Service (APNs)",
+    "OneSignal",
+    "Braze",
+    "Twilio Notify"
+  ],
+  "pat": [],
+  "pits": [
+    "Stale device tokens causing silent failures - implement token refresh and invalidation handling",
+    "Over-notification causing users to disable push entirely - respect frequency caps and preferences"
+  ],
+  "tips": [
+    "Platform-specific limits: APNs has connection limits, FCM has message queue limits per device",
+    "Silent/background pushes are powerful for data sync but have strict payload size limits (4KB)"
+  ]
+}

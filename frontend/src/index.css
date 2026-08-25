@@ -1415,3 +1415,144 @@ button:disabled {
     stroke-dashoffset: -12;
   }
 }
+
+/* ---------- node guide modal ---------- */
+
+.node-guide-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: min(640px, 90vw);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.node-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.node-guide-header h2 {
+  margin: 0;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.node-guide-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+
+.guide-section {
+  margin-bottom: 16px;
+}
+
+.guide-section h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin: 0 0 6px 0;
+}
+
+.guide-section p,
+.guide-section li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.guide-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.guide-section li {
+  margin-bottom: 4px;
+}
+
+.guide-pattern {
+  margin-bottom: 8px;
+}
+
+.guide-pattern strong {
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.guide-pattern p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.guide-props {
+  margin: 0;
+}
+
+.guide-prop-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.guide-prop-row dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  min-width: 140px;
+}
+
+.guide-prop-row dd {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.guide-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.guide-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  font-size: 11px;
+  font-family: monospace;
+  color: #475569;
+}
+
+/* ---------- palette info button ---------- */
+
+.palette-info-btn {
+  margin-left: auto;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.palette-item:hover .palette-info-btn {
+  opacity: 1;
+}
+
+.palette-info-btn:hover {
+  color: #4338ca;
+}

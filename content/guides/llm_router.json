@@ -1,0 +1,47 @@
+{
+  "s": "Intelligent request dispatcher that selects the optimal LLM model/provider based on task type, cost, latency, and quality requirements.",
+  "w": "Incoming LLM requests are classified by task type (classification, summarization, complex reasoning, code generation). The router maps task types to optimal models: small models for simple classification, large models for complex reasoning. This optimizes cost (cheap models for cheap tasks), latency (fast models for interactive use), and quality (best model when it matters). Fallback chains handle provider outages.",
+  "use": [
+    "Cost optimization across a portfolio of LLM calls with varying complexity",
+    "Provider failover: if OpenAI is down, route to Anthropic or self-hosted model",
+    "Quality-tiered routing: simple tasks to small models, complex tasks to large models",
+    "Latency optimization: route interactive queries to fastest available model"
+  ],
+  "avoid": [
+    "Single-model systems where routing adds unnecessary complexity",
+    "Tasks where model consistency is mandatory (all requests must use the same model)",
+    "Ultra-low-latency paths where routing decision overhead is unacceptable"
+  ],
+  "after": [
+    "api",
+    "tool_orchestrator"
+  ],
+  "to": [
+    "llm_api",
+    "embeddings_model"
+  ],
+  "props": {
+    "routing_strategy": "task-type | cost-optimized | latency-optimized | fallback-chain"
+  },
+  "size": {},
+  "world": [
+    "OpenRouter",
+    "Martian AI router",
+    "Portkey AI gateway",
+    "LiteLLM proxy"
+  ],
+  "pat": [
+    {
+      "n": "Circuit Breaker for LLMs",
+      "d": "Route away from failing providers automatically with fallback chain."
+    }
+  ],
+  "pits": [
+    "Routing decision latency adding to end-to-end response time - pre-classify and cache routing decisions",
+    "Model quality inconsistency confusing users - stable routing per task type"
+  ],
+  "tips": [
+    "Router pattern is analogous to load balancer but for AI models instead of servers",
+    "Cost per 1K tokens varies 100x between models - routing saves significant budget at scale"
+  ]
+}

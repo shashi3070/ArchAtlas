@@ -1,0 +1,51 @@
+{
+  "s": "Auxiliary process co-located with the main application container handling cross-cutting concerns like networking, logging, and security.",
+  "w": "Deployed as a second container in the same pod (Kubernetes) or process group, the sidecar intercepts inbound/outbound traffic transparently. It handles mTLS termination, retries, circuit breaking, metrics collection, and log shipping so application code stays clean. Service mesh data planes (Envoy, linkerd-proxy) are the canonical sidecars. Shared network namespace means localhost communication with zero latency overhead.",
+  "use": [
+    "Service mesh proxy: mTLS, retries, traffic splitting without app changes",
+    "Log shipping agent forwarding container stdout to aggregator",
+    "Metrics exporter collecting runtime stats for Prometheus scraping",
+    "Database proxy (PgBouncer sidecar) managing connection pooling per pod"
+  ],
+  "avoid": [
+    "Single-container simple deployments where sidecar overhead exceeds benefit",
+    "Performance-critical paths where sidecar hop latency is unacceptable",
+    "Teams without Kubernetes or process-management capacity to operate sidecar lifecycle"
+  ],
+  "after": [
+    "kubernetes"
+  ],
+  "to": [
+    "api",
+    "grpc",
+    "tracing_collector",
+    "metrics_collector",
+    "log_aggregator"
+  ],
+  "props": {
+    "proxy_type": "envoy | linkerd-proxy | custom"
+  },
+  "size": {
+    "overhead_per_sidecar": "~50-100MB RAM and ~0.5-2ms latency per hop"
+  },
+  "world": [
+    "Envoy sidecar in Istio mesh",
+    "Fluent Bit log shipper sidecar",
+    "Cloud SQL Proxy sidecar",
+    "Vault Agent sidecar injecting secrets"
+  ],
+  "pat": [
+    {
+      "n": "Service Mesh",
+      "d": "Sidecars form the data plane; mesh control plane configures them centrally."
+    }
+  ],
+  "pits": [
+    "Sidecar upgrade storms rolling across every pod simultaneously - canary node pools",
+    "Resource contention with app container when both compete for CPU/memory - set explicit limits"
+  ],
+  "tips": [
+    "The pattern name is sidecar; the application is the front car",
+    "Ambient mesh (no sidecar) is emerging - mention awareness for forward-looking answers"
+  ]
+}

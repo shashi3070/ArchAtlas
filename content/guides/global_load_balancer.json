@@ -1,0 +1,50 @@
+{
+  "s": "Routes users to the best region using health, geography, and latency - the switchboard of a multi-region deployment.",
+  "w": "It answers DNS or anycast-edge queries with region endpoints. Health checks continuously probe each region; when one fails its weight shifts to survivors within seconds-to-minutes. Steering policies include geo-proximity, latency-based, weighted-canary, and failover priority. Sessions that need regional affinity rely on consistent user-to-region mapping.",
+  "use": [
+    "Active-active multi-region serving where users hit the nearest healthy region",
+    "Disaster recovery: automatic traffic drain from a failed region",
+    "Canarying a new region with 1% of traffic before full cutover",
+    "Compliance routing - EU users land in EU regions only"
+  ],
+  "avoid": [
+    "Single-region products (pure cost)",
+    "Per-request routing decisions - it steers at connection/DNS granularity, not per API call",
+    "Stateful flows that assume all requests from one session hit one region unless you also replicate session state"
+  ],
+  "after": [
+    "dns",
+    "client"
+  ],
+  "to": [
+    "load_balancer",
+    "api_gateway"
+  ],
+  "props": {
+    "steering_policy": "latency | geo | weighted | failover"
+  },
+  "size": {
+    "rps_per_instance": "Managed service scales transparently; cost is per query"
+  },
+  "world": [
+    "AWS Route 53 latency records",
+    "Google Cloud Load Balancing (anycast)",
+    "Cloudflare Load Balancer",
+    "Azure Traffic Manager"
+  ],
+  "pat": [
+    {
+      "n": "Active-Active Regions",
+      "d": "All regions serve read-write traffic; GLB absorbs failures invisibly to users."
+    }
+  ],
+  "pits": [
+    "DNS caching delays failover - set TTLs low (30-60s) during migration windows, accept resolver stickiness otherwise",
+    "Health-check false positives flap traffic - require multiple consecutive failures",
+    "Regional DB failover lags traffic failover - sequence carefully to avoid writes hitting a region with stale data"
+  ],
+  "tips": [
+    "Always pair with a story about data layer: traffic failover is easy, consistent data failover is the real problem",
+    "Know RTO/RPO vocabulary when discussing region evacuation"
+  ]
+}

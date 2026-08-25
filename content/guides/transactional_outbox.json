@@ -1,0 +1,49 @@
+{
+  "s": "Guarantees at-least-once event publishing by writing events to an outbox table in the same DB transaction as business data.",
+  "w": "Instead of writing to DB then publishing to Kafka (non-atomic, can lose events), you write BOTH in one transaction: business row + outbox event. A relay (CDC connector, polling publisher, or log tailer) reads the outbox and publishes to the message bus. This eliminates the dual-write problem. Once published, outbox rows are archived or deleted. Combined with idempotent consumers, this guarantees at-least-once delivery.",
+  "use": [
+    "Microservice event publishing where losing events is unacceptable",
+    "Replacing dual-write patterns (write to DB, then publish - race conditions)",
+    "Systems requiring transactional consistency between state changes and notifications",
+    "Any service publishing events to Kafka/RabbitMQ from database mutations"
+  ],
+  "avoid": [
+    "Already using CDC (Debezium) from WAL - CDC reads committed rows directly, no outbox needed",
+    "Fire-and-forget notifications where occasional loss is acceptable",
+    "High-volume event streams where polling overhead is prohibitive (use CDC instead)"
+  ],
+  "after": [
+    "api",
+    "worker"
+  ],
+  "to": [
+    "kafka",
+    "rabbitmq",
+    "pubsub",
+    "event_bus"
+  ],
+  "props": {
+    "relay_mode": "CDC (Debezium) | polling | transactional log tailing"
+  },
+  "size": {},
+  "world": [
+    "Debezium outbox pattern",
+    "Axon outbox (Java)",
+    "Eventuous outbox (.NET)",
+    "Spring Transactional Event Listener"
+  ],
+  "pat": [
+    {
+      "n": "Transactional Outbox",
+      "d": "Atomic DB write + event eliminates dual-write inconsistency."
+    }
+  ],
+  "pits": [
+    "Polling-based relay adding DB load at scale - migrate to CDC-based relay as volume grows",
+    "Outbox table growing unbounded - implement cleanup after confirmed publication"
+  ],
+  "tips": [
+    "Dual-write problem explanation is the core: DB write + message publish are two commits, not atomic",
+    "CDC vs polling relay: CDC is preferred at scale; polling is simpler to implement initially"
+  ]
+}

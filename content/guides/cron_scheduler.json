@@ -1,0 +1,38 @@
+{
+  "s": "Time-triggered job firing with missed-run policies and concurrency guards - humble but everywhere.",
+  "w": "Cron expressions define schedules; scheduler instances coordinate via locks/leadership ensuring single-fire per tick. Missed-run policies decide skip-vs-run-immediately-after-downtime; overlapping-run guards prevent pileups when jobs exceed intervals. Timezone/DST edges handled explicitly (UTC recommended internally).",
+  "use": [
+    "Nightly report generations and digest emails",
+    "Cache warmups before peak hours",
+    "Database maintenance windows (vacuum/optimize)",
+    "Periodic reconciliation sweeps (billing drift checks)"
+  ],
+  "avoid": [
+    "Event-driven immediacy (queues/reactors respond faster)",
+    "Dynamic per-user schedules at scale (quartz-style stores or workflow timers)",
+    "Sub-second cadences"
+  ],
+  "after": [],
+  "to": [
+    "worker",
+    "airflow",
+    "event_bus"
+  ],
+  "size": {
+    "jobs_per_sec": "~1000 triggers/sec distributed lockers"
+  },
+  "world": [
+    "Kubernetes CronJobs",
+    "systemd timers",
+    "Airflow schedules",
+    "Cloud schedulers (EventBridge cron)"
+  ],
+  "pat": [],
+  "pits": [
+    "Double-fire during leader failover - idempotency keys per schedule-tick",
+    "DST ambiguity double-runs - UTC internally always"
+  ],
+  "tips": [
+    "Pair with distributed_lock answer for multi-instance correctness"
+  ]
+}

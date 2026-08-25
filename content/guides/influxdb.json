@@ -1,0 +1,36 @@
+{
+  "s": "Specialized time-series database with built-in retention, downsampling, and windowed math.",
+  "w": "TSM trees optimize timestamp-ordered writes/compactions. Retention policies auto-expire raw data; tasks downsample into summary measurements (5m averages). Flux/InfluxQL express time-window aggregations naturally. Cardinality (unique tag combos) is THE scaling constraint.",
+  "use": [
+    "DevOps/server monitoring pipelines (telegraf -> influx)",
+    "Industrial sensor fleets with straightforward tag models",
+    "Home/lab IoT dashboards",
+    "Fast prototyping of TS apps before bespoke choices needed"
+  ],
+  "avoid": [
+    "Millions-of-series cardinality (consider M3/TimescaleDB/prometheus federation)",
+    "Relational joins across business entities",
+    "Long-term archival (pair with object storage tiers)"
+  ],
+  "after": [
+    "metrics_collector",
+    "cdc_pipeline"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~8k",
+    "safe_writes_per_sec": "~50k points"
+  },
+  "world": [
+    "Cisco ThousandEyes internals",
+    "eBay IoT pilots",
+    "Countless homelabs"
+  ],
+  "pat": [],
+  "pits": [
+    "Cardinality explosion from unbounded tags (uuid tags!) - whitelist label values"
+  ],
+  "tips": [
+    "Cardinality concept is the interview differentiator vs other TSDBs"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "s": "Uniform mTLS, retries, timeouts, and telemetry for service-to-service calls - implemented as sidecar proxies so apps stay clean.",
+  "w": "Each pod gets a sidecar proxy; all outbound/inbound traffic detours through it. The mesh control plane distributes certificates (mTLS identity), retry budgets, circuit-breaker settings, and collects L7 metrics/traces centrally. Policy is declared once, enforced everywhere regardless of language.",
+  "use": [
+    "50+ polyglot microservices needing consistent security and reliability defaults",
+    "Zero-trust networks: every hop mutually authenticated",
+    "Progressive delivery: mesh-level traffic splitting for canaries",
+    "Unified golden metrics (success rate, p99 per service-pair) without instrumenting each codebase"
+  ],
+  "avoid": [
+    "<10 services - config overhead exceeds benefit",
+    "Latency-critical tight loops where sidecar hops hurt p99",
+    "Teams lacking platform engineering capacity to operate control planes"
+  ],
+  "after": [
+    "kubernetes"
+  ],
+  "to": [
+    "api",
+    "grpc",
+    "tracing_collector"
+  ],
+  "props": {
+    "mtls_mode": "strict | permissive"
+  },
+  "size": {
+    "rps_per_instance": "Sidecars add ~0.5-2ms and ~50-100MB RAM per pod"
+  },
+  "world": [
+    "Istio at Airbnb-scale fleets",
+    "Linkerd (lightweight)",
+    "AWS App Mesh",
+    "Cilium Service Mesh (eBPF)"
+  ],
+  "pat": [
+    {
+      "n": "Sidecar",
+      "d": "The mesh's unit of deployment - platform features ride beside the app container."
+    },
+    {
+      "n": "Circuit Breaker",
+      "d": "Mesh enforces outlier ejection so one bad upstream doesn't cascade."
+    }
+  ],
+  "pits": [
+    "Upgrade storms - mesh versions must roll across every pod; plan canary node pools",
+    "Debugging opacity - failures move from app code into proxy config; invest in mesh dashboards early"
+  ],
+  "tips": [
+    "Name the tradeoff: uniform platform goodness vs operational weight; mention ambient/eBPF meshes reducing sidecar tax"
+  ]
+}

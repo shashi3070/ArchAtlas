@@ -1,0 +1,43 @@
+{
+  "s": "Columnar OLAP monster: billions of rows scanned/aggregated in milliseconds for realtime analytics.",
+  "w": "Column-oriented storage compresses sparse numeric/time data massively; vectorized execution processes batches SIMD-style. MergeTree family tables sort/partition data; materialized views pre-aggregate continuously. Inserts batch efficiently; updates rare by design. Distributed tables shard/replicate across nodes.",
+  "use": [
+    "Product analytics dashboards over billions of events (funnels, cohorts)",
+    "Realtime ad-tech bidding stats and reporting",
+    "Observability backends (logs/traces at scale - Uber LogHouse, SigNoz)",
+    "Fraud/feature computations needing fast group-bys"
+  ],
+  "avoid": [
+    "Row-level OLTP updates/deletes (mutual exclusivity with design strengths)",
+    "Simple CRUD apps (postgres suffices)",
+    "Small data (<millions rows) where postgres GROUP BY is fine"
+  ],
+  "after": [
+    "kafka",
+    "cdc_pipeline"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~50k queries amortized",
+    "safe_writes_per_sec": "~25k rows batches"
+  },
+  "world": [
+    "Cloudflare HTTP analytics",
+    "Uber LogHouse",
+    "PostHog analytics engine",
+    "Bloomberg second-largest deployer"
+  ],
+  "pat": [
+    {
+      "n": "Realtime CQRS",
+      "d": "Kafka -> ClickHouse materialized views -> instant dashboards."
+    }
+  ],
+  "pits": [
+    "Too-many-parts insert errors - batch inserts (≥1k rows/sec guidance)",
+    "Unbounded cardinality dims melt memory - cap dictionaries/buckets"
+  ],
+  "tips": [
+    "Why columnar wins analytics: only read needed columns + compress similar data together"
+  ]
+}

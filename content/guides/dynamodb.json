@@ -1,0 +1,46 @@
+{
+  "s": "Serverless key-value at absurd scale: consistent single-digit-ms latency regardless of table size.",
+  "w": "Tables partition on hash key (+optional sort key for ranges). Throughput is provisioned (RCU/WCU) or on-demand; DynamoDB auto-splits hot partitions and replicates across AZs synchronously. DAX adds microsecond caching; Streams capture item changes for CDC; Global Tables approximate multi-region active-active with last-writer-wins.",
+  "use": [
+    "Massive key-value/session/catalog lookups with known access patterns",
+    "Serverless architectures pairing functions with zero-ops storage",
+    "Leaderboards/counters (atomic increments, sort keys)",
+    "Games/IoT metadata where scale unpredictability kills provisioning guesses"
+  ],
+  "avoid": [
+    "Ad-hoc queries/joins - access patterns must be designed upfront (single-table design)",
+    "Complex transactions across many items (limited txn support exists but costly)",
+    "Analytics scans (export to warehouse instead)"
+  ],
+  "after": [
+    "api",
+    "serverless_function"
+  ],
+  "to": [
+    "kinesis"
+  ],
+  "size": {
+    "safe_reads_per_sec": "~60k",
+    "safe_writes_per_sec": "~40k",
+    "default_instances": 3
+  },
+  "world": [
+    "Amazon Prime Day carts",
+    "Duolingo sessions",
+    "Lyft matching metadata",
+    "Snap discovery feeds"
+  ],
+  "pat": [
+    {
+      "n": "Single-Table Design",
+      "d": "One table, multiple GSIs, overloaded keys serve every access pattern."
+    }
+  ],
+  "pits": [
+    "Hot partition on popular hash key - add suffixes/sharding buckets",
+    "Cost blowups scanning - always query by keys, use GSIs deliberately"
+  ],
+  "tips": [
+    "Frame as 'access-pattern-first' database; contrast with relational schema-first thinking"
+  ]
+}

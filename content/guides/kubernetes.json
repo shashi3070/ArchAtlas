@@ -1,0 +1,62 @@
+{
+  "s": "Declarative container orchestration: schedule workloads, heal failures, roll deploys - the de-facto compute substrate for microservices.",
+  "w": "A control plane reconciles desired state (Deployments) with reality: containers packed onto nodes respecting resource requests/limits, restarted when unhealthy, rescheduled when nodes die. Services give stable virtual IPs; HPA scales replicas on metrics; rolling updates surge new pods while retiring old. etcd stores cluster state.",
+  "use": [
+    "Polyglot microservices needing standardized deploy/networking/observability",
+    "Batch + serving mixed on one fleet with bin-packing efficiency",
+    "Self-healing requirements: node dies, pods relocate automatically",
+    "Portability across clouds/on-prem (cluster API is the same everywhere)"
+  ],
+  "avoid": [
+    "Two-service startups - a PaaS or single VM is cheaper than operating clusters",
+    "Truly serverless-shaped spiky loads (functions fit better)",
+    "Stateful naive lifts - databases need operators/PVC planning, not just Deployments"
+  ],
+  "after": [
+    "global_load_balancer",
+    "api_gateway",
+    "dns"
+  ],
+  "to": [
+    "postgresql",
+    "redis",
+    "kafka",
+    "metrics_collector"
+  ],
+  "props": {
+    "replicas": "Pod count for the deployment",
+    "resource_requests": "CPU/memory reserved per pod drives scheduling"
+  },
+  "size": {
+    "rps_per_instance": "Depends entirely on pods; cluster overhead ~3 control-plane nodes"
+  },
+  "world": [
+    "Google's Borg lineage",
+    "Spotify on GKE",
+    "Capital One on EKS",
+    "OpenShift in banks"
+  ],
+  "pat": [
+    {
+      "n": "Sidecar",
+      "d": "Mesh/logging agents join every pod automatically."
+    },
+    {
+      "n": "Blue-Green Deployment",
+      "d": "Two Deployment sets flipped by selector change - instant rollback."
+    },
+    {
+      "n": "Bulkhead",
+      "d": "Namespaces + ResourceQuotas partition teams so one cannot starve others."
+    }
+  ],
+  "pits": [
+    "No requests/limits -> noisy neighbors and evictions; mandate QoS classes org-wide",
+    "etcd degradation cascades cluster-wide - monitor fsync latency, keep it on fast SSDs",
+    "YAML sprawl - adopt GitOps (Argo/Flux) or drown in kubectl history"
+  ],
+  "tips": [
+    "Explain reconciliation loop plainly - it's the interview core: desired vs actual, controllers converge",
+    "HPA discussion: scale on RPS vs CPU; CPU lags traffic, leading indicators better for bursty APIs"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "s": "Snowflake-style unique ID issuance: time-ordered, coordination-free, sortable identifiers at massive scale.",
+  "w": "64-bit layout: timestamp-ms | machine-id | sequence-counter. Each node generates independently - no central bottleneck; IDs sort chronologically enabling range scans/index locality. Machine-ids assigned statically or via coordinator; sequence resets per-ms allowing thousands per ms per node. Clock-rewind guarded by spin-wait logic.",
+  "use": [
+    "Primary keys for sharded databases (range-friendly vs random UUIDs)",
+    "Trace/request correlation ids across systems",
+    "Message/event ids in append-only logs",
+    "URL shortener slug seeds (encode base62)"
+  ],
+  "avoid": [
+    "Security-sensitive exposure (sequential ids leak volume/timing - hash or encrypt if needed)",
+    "Zero-gap requirements (counter skips on collisions)"
+  ],
+  "after": [],
+  "to": [
+    "cassandra",
+    "sharded-mysql"
+  ],
+  "size": {
+    "ids_per_sec": "~100k+/node trivially"
+  },
+  "world": [
+    "Twitter Snowflake (origin)",
+    "Discord snowflake variants",
+    "Instagram modified snowflake (lower bits shuffled)"
+  ],
+  "pat": [],
+  "pits": [
+    "NTP step-backwards duplicates - monotonic guards or accept brief pauses"
+  ],
+  "tips": [
+    "vs UUIDv4: randomness kills B-tree locality; vs UUIDv7: same idea standardized - mention both"
+  ]
+}

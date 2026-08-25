@@ -1,0 +1,60 @@
+{
+  "s": "Upload code, get an autoscaling endpoint/event-handler with zero servers - billed per millisecond of use.",
+  "w": "The provider runs your handler in ephemeral sandboxes scaled per concurrency. Events invoke it: HTTP via gateway, queue messages, schedules, object uploads. State must live outside (DB, cache) since instances vanish. Cold starts add latency after idle periods; provisioned concurrency mitigates for hot paths.",
+  "use": [
+    "Spiky or unpredictable traffic (viral campaigns, nightly bursts)",
+    "Glue/integration work: webhook receivers, ETL steps, thumbnail triggers",
+    "Multi-region fan-out where per-region idle cost would be wasted VMs",
+    "MVPs validating ideas before committing to server fleets"
+  ],
+  "avoid": [
+    "Sub-millisecond latency paths (cold starts + gateway hops)",
+    "Long-running jobs beyond execution time limits (chunk or use workers)",
+    "Websocket/persistent-connection servers (platforms constrain lifetime)",
+    "Chatty fan-out calling relational DBs - connection storms exhaust pools"
+  ],
+  "after": [
+    "api_gateway",
+    "event_bus",
+    "object_storage",
+    "cron_scheduler"
+  ],
+  "to": [
+    "postgresql",
+    "dynamodb",
+    "queue-like messaging",
+    "llm_api"
+  ],
+  "props": {
+    "memory_mb": "Bigger memory also allocates more CPU proportionally"
+  },
+  "size": {
+    "rps_per_instance": "~200 rps per concurrent execution context (default assumption)",
+    "default_instances": 1
+  },
+  "world": [
+    "Lambda at Amazon scale",
+    "Cloud Functions",
+    "Azure Functions",
+    "Cloudflare Workers at edge"
+  ],
+  "pat": [
+    {
+      "n": "Event-Driven Architecture",
+      "d": "Functions react to streams of facts; nothing polls anything."
+    },
+    {
+      "n": "Compute Glue in ETL",
+      "d": "Object upload triggers function -> transforms -> writes warehouse."
+    }
+  ],
+  "pits": [
+    "Downstream connection storms at scale - use RDS Proxy / HTTP DBs / connection pooling",
+    "Cold-start SLO breaches - provision concurrency for p99-sensitive routes",
+    "Vendor limits (15min runtime, payload caps) discovered late - design chunking upfront"
+  ],
+  "tips": [
+    "Cost story: pay-per-use beats idle VMs below ~30-40% utilization; crossover favors containers above",
+    "Mention observability: distributed tracing becomes essential when logic scatters into functions"
+  ]
+}

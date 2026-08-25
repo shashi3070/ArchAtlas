@@ -26,3 +26,14 @@ async def get_component(ctype: str) -> dict[str, Any]:
             detail=f"Unknown component type '{ctype}'",
         )
     return entry
+
+
+@router.get("/components/{ctype}/guide")
+async def get_component_guide(ctype: str) -> dict[str, Any]:
+    guide = loader.get_guide(ctype)
+    if guide is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No guide available for component type '{ctype}'",
+        )
+    return guide

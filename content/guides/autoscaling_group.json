@@ -1,0 +1,51 @@
+{
+  "s": "A pool of identical VMs that grows/shrinks on demand behind a load balancer - classic elastic web tier.",
+  "w": "Launch templates define the machine image; the group maintains min/max bounds, replacing unhealthy instances and spreading across AZs. Scaling policies react to CPU, request count, or schedules; cooldown windows prevent thrash. New instances boot from the AMI, run userdata bootstrap, pass health checks, then receive traffic.",
+  "use": [
+    "Steady-state web/API fleets with predictable scaling curves",
+    "Queue-driven batch workers scaling on backlog depth",
+    "Cost optimization: shrink overnight to minimum capacity",
+    "Immutable-infrastructure deploys: bake new AMI, roll the group"
+  ],
+  "avoid": [
+    "Sub-minute burst absorption - boot times lag spikes; pre-warm or use serverless",
+    "Pets with unique local state - treat cattle only",
+    "Fine-grained microservice packing (containers/orchestrators fit better)"
+  ],
+  "after": [
+    "load_balancer"
+  ],
+  "to": [
+    "api",
+    "worker",
+    "postgresql",
+    "redis"
+  ],
+  "props": {
+    "min_size": "Floor for availability",
+    "max_size": "Ceiling protecting budget"
+  },
+  "size": {
+    "rps_per_instance": "~500 rps per mid-size VM (tune per app)",
+    "default_instances": 2
+  },
+  "world": [
+    "Netflix ASG fleets pre-containers",
+    "Imgur image resize workers",
+    "Classic EC2 web tiers"
+  ],
+  "pat": [
+    {
+      "n": "Bulkhead",
+      "d": "Separate groups per workload class stop batch pressure from evicting API capacity."
+    }
+  ],
+  "pits": [
+    "Scaling thrash on spiky metrics - use target-tracking with warm-up and cooldowns",
+    "AMI drift - rebuild images via pipeline (Packer) weekly or patch gaps grow",
+    "Deregistration delays cause 5xx during scale-in - wire LB deregistration with connection draining"
+  ],
+  "tips": [
+    "Compare to k8s honestly: fewer moving parts for simple fleets; no bin-packing or rich scheduling"
+  ]
+}

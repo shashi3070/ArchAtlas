@@ -1,0 +1,46 @@
+{
+  "s": "Transactional and marketing email delivery system handling sending, deliverability, bounce/complaint management, and template rendering.",
+  "w": "Receives email requests (to, subject, template, variables) via API, renders templates with variable substitution, manages sending reputation through dedicated IPs and domain authentication (SPF/DKIM/DMARC), handles bounces/complaints/unsubscribes via webhooks, and provides delivery analytics. Dedicated IPs warm up gradually; shared pools used for low-volume senders.",
+  "use": [
+    "Transactional emails: password resets, order confirmations, shipping notifications",
+    "Marketing campaigns: newsletters, product announcements, promotional emails",
+    "System notifications: alert emails, report delivery, weekly digests",
+    "Multi-channel notifications alongside SMS and push (asynchronous email leg)"
+  ],
+  "avoid": [
+    "Real-time synchronous request paths where email send latency blocks user experience",
+    "Legal/regulatory notifications requiring guaranteed immediate delivery (use SMS or push)",
+    "Internal team communication (use Slack/chat instead)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "event_bus",
+    "alert_manager",
+    "workflow_engine"
+  ],
+  "to": [],
+  "props": {
+    "provider": "SendGrid | Mailgun | SES | Postmark",
+    "dedicated_ip": "Warm IP for sender reputation"
+  },
+  "size": {
+    "emails_per_sec": "~1k-10k per provider account depending on reputation"
+  },
+  "world": [
+    "SendGrid (Twilio)",
+    "Amazon SES",
+    "Postmark",
+    "Mailgun",
+    "SparkPost"
+  ],
+  "pat": [],
+  "pits": [
+    "Shared IP reputation damage from one bad sender - use dedicated IPs for high-volume senders",
+    "Template rendering failures from unescaped variables - sanitize all user input in templates"
+  ],
+  "tips": [
+    "Email deliverability is about domain authentication (SPF/DKIM/DMARC) and sending reputation",
+    "Transactional vs marketing emails have different deliverability requirements - separate streams"
+  ]
+}

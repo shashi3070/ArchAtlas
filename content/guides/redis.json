@@ -1,0 +1,60 @@
+{
+  "s": "In-memory data structure store serving as cache, session store, rate limiter, and pub/sub backbone at microsecond latency.",
+  "w": "Single-threaded event loop handles commands; data structures (strings, hashes, lists, sets, sorted sets, streams) serve diverse use cases. RDB/AOF persistence provides durability options; replication with Sentinel or Cluster provides HA and sharding. Lua scripts execute atomic operations; TTLs expire keys automatically. Redis Streams compete with Kafka for lightweight eventing.",
+  "use": [
+    "Caching layer absorbing DB reads with sub-millisecond response times",
+    "Session storage for authenticated user state across stateless API instances",
+    "Distributed locking (Redlock) and rate limiting (sliding window counters)",
+    "Real-time leaderboards and counters using sorted sets and atomic increments",
+    "Lightweight pub/sub for inter-service notifications (Redis Streams preferred at scale)"
+  ],
+  "avoid": [
+    "Primary data store without persistence (Redis is optimized for speed not durability)",
+    "Datasets exceeding available RAM (Redis is in-memory by design)",
+    "Complex relational queries - Redis is not a relational database"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "kubernetes",
+    "serverless_function"
+  ],
+  "to": [
+    "api",
+    "worker"
+  ],
+  "props": {
+    "max_memory_policy": "How Redis evicts when full: allkeys-lru, volatile-lru, noeviction"
+  },
+  "size": {
+    "reads_per_sec": "~100k+ single node",
+    "writes_per_sec": "~80k+ single node",
+    "default_instances": 2
+  },
+  "world": [
+    "Twitter timeline caching",
+    "GitHub rate limiting",
+    "Pinterest feed caching",
+    "Stack Overflow session store",
+    "Discord presence tracking"
+  ],
+  "pat": [
+    {
+      "n": "Cache-Aside",
+      "d": "App checks Redis first, misses go to DB then populate Redis."
+    },
+    {
+      "n": "Rate Limiter",
+      "d": "Sorted set sliding window or token bucket in Lua script for atomic rate enforcement."
+    }
+  ],
+  "pits": [
+    "Cache stampede on hot key expiry - use locking (SETNX) or stale-while-revalidate",
+    "Memory limit hit with allkeys-lru evicting critical keys - use volatile-lru with TTL discipline",
+    "Cluster mode sharding misunderstandings - key design must account for hash slot routing"
+  ],
+  "tips": [
+    "Redis data structures are the interview differentiator: sorted sets for leaderboards, streams for events, Lua for atomic scripts",
+    "Redis Cluster vs Sentinel: Cluster for sharding, Sentinel for HA of a single dataset"
+  ]
+}

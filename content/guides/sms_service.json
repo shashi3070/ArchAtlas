@@ -1,0 +1,46 @@
+{
+  "s": "Programmatic SMS delivery for notifications, verification codes, and time-critical alerts via carrier networks.",
+  "w": "Receives SMS request (phone number, message, optional templates for compliance) via API, routes through carrier aggregators or direct carrier connections, handles delivery receipts (DLR) via webhooks, and manages opt-out lists (STOP/START). Two-way SMS enables interactive workflows. Character limits (160 GSM / 70 Unicode) affect message composition and cost.",
+  "use": [
+    "Two-factor authentication (2FA) OTP codes",
+    "Time-critical alerts: fraud alerts, delivery updates, appointment reminders",
+    "Two-factor account recovery flows",
+    "Customer engagement in regions where SMS dominates (emerging markets)"
+  ],
+  "avoid": [
+    "Non-urgent notifications where email or push is cheaper and richer",
+    "Marketing blasts (cost-prohibitive at scale compared to email/push)",
+    "Internal communication (use chat platforms instead)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "alert_manager",
+    "workflow_engine",
+    "moderation_service"
+  ],
+  "to": [],
+  "props": {
+    "provider": "Twilio | Vonage | SNS | MessageBird",
+    "sender_id": "Alphanumeric or short code for branded sender"
+  },
+  "size": {
+    "messages_per_sec": "~100-1k per provider account depending on throughput limits"
+  },
+  "world": [
+    "Twilio",
+    "Vonage (Nexmo)",
+    "Amazon SNS",
+    "MessageBird",
+    "Plivo"
+  ],
+  "pat": [],
+  "pits": [
+    "Delivery latency spikes during carrier congestion - use multiple provider failover paths",
+    "Cost escalation from long messages split across segments - count characters and optimize templates"
+  ],
+  "tips": [
+    "OTP delivery speed matters more than almost any other SMS use case - mention provider selection for latency",
+    "Carrier filtering of A2P (application-to-person) messages requires registered sender IDs"
+  ]
+}

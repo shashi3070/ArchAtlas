@@ -1,0 +1,38 @@
+{
+  "s": "Google's globally-distributed, strongly-consistent relational database with TrueTime-bounded external consistency.",
+  "w": "Paxos-replicated spans of data across continents; TrueTime hardware gives bounded clock uncertainty letting commit-wait guarantee linearizability globally. Automatic sharding (splits), synchronous replication, SQL with strong schemas. You choose region vs multi-region configs trading latency/capacity/resilience.",
+  "use": [
+    "Planet-scale financial correctness (payments ledgers, ad billing)",
+    "Global applications demanding single consistent truth (game economies, identity)",
+    "Multi-region active-active ACID without application-side coordination"
+  ],
+  "avoid": [
+    "Cost-sensitive moderate workloads (managed premium pricing)",
+    "Non-relational blob/document shapes",
+    "On-prem/private-cloud mandates (fully managed GCP)"
+  ],
+  "after": [
+    "api",
+    "payment_gateway"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~30k",
+    "safe_writes_per_sec": "~6k",
+    "default_instances": 3
+  },
+  "world": [
+    "Google Ads billing",
+    "Snapchat",
+    "Bandwidth.com telecom",
+    "Dennys? no - major fintechs"
+  ],
+  "pat": [],
+  "pits": [
+    "Commit-wait adds ~5-15ms on multi-region writes - design around batching",
+    "Schema changes have operational weight - plan migrations"
+  ],
+  "tips": [
+    "The TrueTime story is THE differentiator - be able to sketch commit-wait reasoning"
+  ]
+}

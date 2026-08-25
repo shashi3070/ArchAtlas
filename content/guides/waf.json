@@ -1,0 +1,49 @@
+{
+  "s": "Inspects HTTP traffic against attack signatures (SQLi, XSS, bots) before requests touch your services.",
+  "w": "Operating inline or as a mirror, it matches requests against managed rule sets (OWASP Top 10, bot lists, reputation feeds), geoblocks, and rate heuristics. Matches trigger allow/count/block actions. Tuning is continuous: false positives break real users, false negatives let attacks through.",
+  "use": [
+    "Public-facing apps needing baseline OWASP protection at the edge",
+    "Compliance mandates (PCI-DSS requires WAF for card-handling surfaces)",
+    "Blocking credential-stuffing and scraping bot waves",
+    "Emergency virtual patching while a framework CVE fix rolls out"
+  ],
+  "avoid": [
+    "Business-logic abuse (e.g., 'user A transferring to themselves twice') - needs app-level rules",
+    "Replacing authN/authZ - WAF sees patterns, not identity semantics",
+    "Highly custom APIs where generic signatures mostly generate noise"
+  ],
+  "after": [
+    "client",
+    "global_load_balancer"
+  ],
+  "to": [
+    "api_gateway",
+    "load_balancer",
+    "reverse_proxy"
+  ],
+  "props": {
+    "mode": "block vs count (monitor-only)"
+  },
+  "size": {
+    "rps_per_instance": "~20k rps inspected per instance; adds ~1-2ms"
+  },
+  "world": [
+    "AWS WAF",
+    "Cloudflare WAF",
+    "ModSecurity",
+    "Imperva"
+  ],
+  "pat": [
+    {
+      "n": "Defense in Depth",
+      "d": "WAF at edge + input validation in services + least-privilege DB accounts - no single wall trusts itself."
+    }
+  ],
+  "pits": [
+    "False positives blocking legit traffic - start in count mode, tune, then enforce",
+    "Regex catastrophic backtracking under crafted payloads - prefer managed rules with safe engines"
+  ],
+  "tips": [
+    "Frame as buy-down of known vulnerability classes; emphasize monitoring mode rollout discipline"
+  ]
+}

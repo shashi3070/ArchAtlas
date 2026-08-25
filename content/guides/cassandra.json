@@ -1,0 +1,50 @@
+{
+  "s": "Masterless wide-column store built for linear write scaling and multi-datacenter survival.",
+  "w": "Consistent hashing rings distribute partition keys; ANY quorum levels tune consistency per query (ONE/QUORUM/ALL). Writes go to commitlog + memtables flushed to SSTables, compacted in background. Every node is identical - no primary to fall over. Replication factors span DCs natively; tunable consistency lets you pick AP-leaning or CP-leaning per operation.",
+  "use": [
+    "Write-heavy ingest: telemetry, messages, clickstreams at huge volume",
+    "Always-available writes across regions (shopping carts, activity feeds)",
+    "Time-bucketed histories (chat logs, device timelines) queried by key",
+    "Linear horizontal growth without manual sharding layers"
+  ],
+  "avoid": [
+    "Ad-hoc joins/aggregations - model tables per query instead",
+    "Strong single-row serializable semantics",
+    "Small datasets where operational overhead isn't justified"
+  ],
+  "after": [
+    "api",
+    "kafka",
+    "cdc_pipeline"
+  ],
+  "to": [],
+  "props": {
+    "partition_key": "Design FIRST around queries; random token avoids hotspots"
+  },
+  "size": {
+    "safe_reads_per_sec": "~30k cluster",
+    "safe_writes_per_sec": "~40k cluster",
+    "default_instances": 3
+  },
+  "world": [
+    "Apple's 175k-instance deployment (largest known)",
+    "Netflix streaming history",
+    "Instagram feed store",
+    "Discord messages (pre-Trillian)"
+  ],
+  "pat": [
+    {
+      "n": "Event Sourcing store",
+      "d": "Append-only event streams partitioned by entity id."
+    }
+  ],
+  "pits": [
+    "Bad partition design = unfixable hotspots later - model queries first, literally",
+    "Compaction stalls spike latencies - tune compaction strategy per workload",
+    "GC pauses at big heaps - keep heaps ≤14GB, prefer many medium nodes"
+  ],
+  "tips": [
+    "CAP nuance: Cassandra is 'effectively AP with tunable C' - say it precisely",
+    "Quote Discord/Apple numbers sparingly but credibly when asked about proof at scale"
+  ]
+}

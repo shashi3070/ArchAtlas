@@ -1,0 +1,46 @@
+{
+  "s": "Dead-simple multithreaded RAM key/value store - the original lookaside cache workhorse.",
+  "w": "Slab allocator partitions memory into size classes; LRU evicts within slabs. Keys hash across a server ring (clients pick node). No persistence, no replication: a lost node is just a cold cache that refills. Multithreading gives high throughput per box on simple GET/SET workloads.",
+  "use": [
+    "Pure lookaside caching of DB rows/rendered fragments with strict TTLs",
+    "Massive GET-heavy read absorption where simplicity wins",
+    "Session storage acceptable to lose on reboot (users just re-login)",
+    "Multithreaded throughput on few large nodes rather than many Redis shards"
+  ],
+  "avoid": [
+    "Anything needing persistence, pub/sub, Lua, sorted sets (choose redis)",
+    "Cache stampede-sensitive keys without locking strategy (no native CAS-heavy ops ecosystem)",
+    "Datasets exceeding RAM comfort - eviction storm risk"
+  ],
+  "after": [
+    "api"
+  ],
+  "to": [
+    "postgresql",
+    "mysql"
+  ],
+  "props": {},
+  "size": {
+    "reads_per_sec_per_node": "~120k reads/node",
+    "writes_per_sec_per_node": "~90k writes/node"
+  },
+  "world": [
+    "Facebook/Meta's massive memcached fleet (their NSDI paper is canonical)",
+    "Wikipedia object caching",
+    "YouTube early era"
+  ],
+  "pat": [
+    {
+      "n": "Cache-Aside",
+      "d": "App reads cache, misses go to DB then populate cache - memcached's bread and butter."
+    }
+  ],
+  "pits": [
+    "Hot-key saturation of one slab class - spread suffixes or duplicate hot values",
+    "Thundering herd on expiry - jitter TTLs, use stale-while-revalidate patterns",
+    "Node loss = instant DB load spike - pre-warm replicas or accept degraded SLO briefly"
+  ],
+  "tips": [
+    "vs Redis question: memcached = simpler+faster multithreaded for pure cache; redis = richer datatypes/persistence/pubsub"
+  ]
+}

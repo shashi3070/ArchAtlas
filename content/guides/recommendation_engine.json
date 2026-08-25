@@ -1,0 +1,53 @@
+{
+  "s": "System that generates personalized item suggestions using collaborative filtering, content-based, or hybrid ML approaches.",
+  "w": "Collects user interaction signals (clicks, purchases, ratings, time spent). Collaborative filtering finds similar users/items from the interaction matrix. Content-based models match item features to user profiles. Hybrid approaches combine both. Models retrain periodically on fresh data. Results are cached per user and served from a fast store (Redis, feature store). Real-time signals (current session) can boost or re-rank cached recommendations.",
+  "use": [
+    "E-commerce product recommendations (frequently bought together, personalized for you)",
+    "Content platforms: video, article, music recommendations (YouTube, Netflix, Spotify)",
+    "Social feeds ranked by predicted engagement",
+    "Ad targeting and creative selection optimization"
+  ],
+  "avoid": [
+    "Cold-start scenarios with no user history (use content-based or popularity fallback)",
+    "Small catalogs where simple rule-based recommendations suffice",
+    "Real-time per-request model inference without pre-computation (too slow for interactive use)"
+  ],
+  "after": [
+    "data_warehouse",
+    "feature_store",
+    "api",
+    "kafka"
+  ],
+  "to": [
+    "redis",
+    "vector_database",
+    "api",
+    "feature_store"
+  ],
+  "props": {
+    "model_type": "collaborative | content-based | hybrid | deep-learning"
+  },
+  "size": {
+    "recommendations_per_sec": "~10k pre-computed, ~1k real-time per instance"
+  },
+  "world": [
+    "Amazon 'customers also bought'",
+    "Netflix recommendation algorithm",
+    "Spotify Discover Weekly",
+    "TikTok For You Page"
+  ],
+  "pat": [
+    {
+      "n": "Feature Store integration",
+      "d": "User/item features from feature store power real-time model inference."
+    }
+  ],
+  "pits": [
+    "Cold-start problem for new users/items - implement fallback strategies (popularity, content-based)",
+    "Filter bubbles from pure collaborative feedback - add exploration/diversity signals"
+  ],
+  "tips": [
+    "Two-stage architecture: candidate generation (fast, broad) then ranking (slow, precise)",
+    "Offline evaluation metrics (precision@K, NDCG) vs online A/B tests - mention both"
+  ]
+}

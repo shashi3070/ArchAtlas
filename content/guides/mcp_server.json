@@ -1,0 +1,46 @@
+{
+  "s": "Model Context Protocol server exposing tools, resources, and prompts to LLM agents via a standardized JSON-RPC interface.",
+  "w": "Implements the MCP specification: advertises available tools (with JSON Schema definitions), exposes resources (files, database schemas), and provides prompt templates. LLM agents connect via stdio, SSE, or HTTP transport and discover capabilities dynamically. The server handles authentication, rate limiting, and tool execution while maintaining conversation context. MCP enables tool reuse across different LLM frameworks.",
+  "use": [
+    "Standardizing tool access for multiple LLM agent frameworks (LangChain, LlamaIndex, custom)",
+    "Exposing company-internal APIs as LLM-callable tools with governance",
+    "Building reusable tool servers shared across teams and products",
+    "Providing database/file-system access to LLM agents with controlled permissions"
+  ],
+  "avoid": [
+    "Direct LLM API calls where no tools are needed",
+    "Custom tool implementations that are tightly coupled to one LLM framework",
+    "High-security tool execution without sandboxing (MCP servers should restrict permissions)"
+  ],
+  "after": [
+    "api",
+    "tool_orchestrator"
+  ],
+  "to": [
+    "llm_api",
+    "postgresql",
+    "redis",
+    "api",
+    "embeddings_model"
+  ],
+  "props": {
+    "transport": "stdio | sse | streamable-http",
+    "capabilities": "tools | resources | prompts"
+  },
+  "size": {},
+  "world": [
+    "Anthropic MCP specification",
+    "MCP servers for Slack/GitHub/DB",
+    "Cursor IDE MCP integration",
+    "Continue.dev MCP tools"
+  ],
+  "pat": [],
+  "pits": [
+    "Tool explosion overwhelming LLM context window - implement tool filtering and discovery",
+    "Authentication gaps if MCP servers are exposed without proper authorization"
+  ],
+  "tips": [
+    "MCP is the USB-C of LLM tools: one standard interface connecting any agent to any tool",
+    "Think of MCP as the API gateway equivalent for the AI agent ecosystem"
+  ]
+}

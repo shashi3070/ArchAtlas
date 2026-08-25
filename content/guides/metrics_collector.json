@@ -1,0 +1,39 @@
+{
+  "s": "Pull-based time-series metrics engine (Prometheus-style) computing golden signals and firing alert rules.",
+  "w": "Scrapers poll /metrics endpoints on targets; samples land in TSDB with label dimensions. PromQL queries aggregate/filter (rate(), histogram_quantile()). Rule evaluators run periodically firing alerts to managers. Federations/remote-write scale horizontally; service discovery keeps target lists current.",
+  "use": [
+    "RED/USE golden-signal monitoring for services",
+    "HPA autoscaling signal sources (custom metrics APIs)",
+    "SLI computation feeding error-budget burn alerts",
+    "Capacity trending from historical series"
+  ],
+  "avoid": [
+    "Full-text log search (log aggregators)",
+    "Trace waterfall analysis (tracing collectors)",
+    "Business analytics warehousing"
+  ],
+  "after": [
+    "kubernetes",
+    "api"
+  ],
+  "to": [
+    "alert_manager",
+    "grafana-analog dashboards"
+  ],
+  "size": {
+    "samples_per_sec": "~100k active-series comfort per node"
+  },
+  "world": [
+    "Prometheus + Thanos/Mimir at scale",
+    "CloudWatch metrics",
+    "Datadog metrics backend",
+    "M3 at Uber"
+  ],
+  "pat": [],
+  "pits": [
+    "Cardinality explosions from unbounded labels (user_id!) - whitelist label sets strictly"
+  ],
+  "tips": [
+    "Golden signals fluency: latency/traffic/errors/saturation per service"
+  ]
+}

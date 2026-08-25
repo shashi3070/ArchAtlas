@@ -1,0 +1,50 @@
+{
+  "s": "Streams row-level changes from database write-ahead logs to downstream systems with second-level freshness.",
+  "w": "Debezium-style connectors read binlog/WAL, convert changes to structured events (before/after rows, op type), and publish to Kafka-compatible topics. Snapshot phase bootstraps existing table state then transitions to streaming. Schema registry handles column evolution; transforms filter/route. Downstream consumers rebuild caches/search indexes/analytics continuously.",
+  "use": [
+    "Cache invalidation feeds keeping redis fresh within seconds",
+    "Search index sync (postgres -> elasticsearch without dual-writes)",
+    "Audit trails capturing every row change immutably",
+    "Warehouse micro-batch ingestion replacing nightly dumps"
+  ],
+  "avoid": [
+    "Transform-heavy ETL logic (pair with stream processor instead)",
+    "Sources you can't enable logical decoding on",
+    "Write-amplification-sensitive primary DBs without replicas"
+  ],
+  "after": [
+    "postgresql",
+    "mysql"
+  ],
+  "to": [
+    "kafka",
+    "elasticsearch",
+    "vector_database",
+    "cache-nodes"
+  ],
+  "size": {
+    "jobs_per_sec_per_instance": "~20k events/sec typical connector"
+  },
+  "world": [
+    "Wealthfront audit pipelines",
+    "New Relic ingestion",
+    "Shopify search indexing"
+  ],
+  "pat": [
+    {
+      "n": "Transactional Outbox alternative",
+      "d": "CDC reads committed rows directly - no outbox table needed."
+    },
+    {
+      "n": "CQRS projection feed",
+      "d": "Continuous read-model rebuilding."
+    }
+  ],
+  "pits": [
+    "Replication slot bloat halts WAL recycling if consumer down - monitor lag + slot sizes",
+    "Schema drift breaks deserialization - evolve contracts via registry first"
+  ],
+  "tips": [
+    "Explain why log-based beats trigger/polling approaches (no source load, ordered, complete)"
+  ]
+}

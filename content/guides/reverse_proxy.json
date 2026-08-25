@@ -1,0 +1,53 @@
+{
+  "s": "Self-managed HTTP server (nginx-style) that accepts traffic, terminates TLS, and forwards to upstream pools - cheap, fast, fully under your control.",
+  "w": "The proxy maintains persistent upstream connection pools so backends avoid TCP setup cost, offloads TLS decryption, serves static files directly from disk/cache, compresses responses, and load-balances across registered upstreams with round-robin or least-connections. Config is declarative files reloaded atomically (no downtime).",
+  "use": [
+    "Terminating TLS in your own VPC instead of paying managed-gateway prices",
+    "Serving static assets or SPA bundles directly alongside API proxying",
+    "Fronting a small fleet (2-20 instances) where a full API gateway is overkill",
+    "Blue-green deploys by switching an upstream block between old/new target groups",
+    "Adding gzip/brotli compression and HTTP caching headers uniformly"
+  ],
+  "avoid": [
+    "Global multi-region steering (use global_load_balancer)",
+    "Deep per-client authentication and quota enforcement (that is api_gateway territory)",
+    "Teams without ops capacity to patch/config-test it - managed gateways shift that burden"
+  ],
+  "after": [
+    "client",
+    "load_balancer"
+  ],
+  "to": [
+    "api",
+    "kubernetes",
+    "autoscaling_group"
+  ],
+  "props": {
+    "upstream_pool": "Backend instances receiving forwarded traffic"
+  },
+  "size": {
+    "rps_per_instance": "~30k rps per instance depending on payload sizes; CPU-bound on TLS",
+    "default_instances": 2
+  },
+  "world": [
+    "nginx serving GitHub's edge",
+    "HAProxy at Reddit",
+    "Envoy in front of Lyft's services",
+    "Caddy for small teams"
+  ],
+  "pat": [
+    {
+      "n": "Sidecar",
+      "d": "An envoy/nginx sidecar next to every pod gives each service local TLS/retry logic."
+    }
+  ],
+  "pits": [
+    "File-descriptor exhaustion under connection storms - raise worker_connections and enable reuseport",
+    "Config syntax errors on reload - always run nginx -t in CI and on deploy hooks",
+    "Slowloris-style attacks - set aggressive client_header_timeout"
+  ],
+  "tips": [
+    "Contrast with api_gateway: proxy = transport concerns, gateway = product/API concerns",
+    "Mention connection pooling benefit for chatty internal RPC"
+  ]
+}

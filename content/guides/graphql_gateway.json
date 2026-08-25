@@ -1,0 +1,46 @@
+{
+  "s": "Single typed endpoint where clients shape responses - composed from many services via federated schemas.",
+  "w": "Clients send queries describing exact fields needed; gateway resolves each field via resolvers (local or federated entity calls), batches/dedupes upstream fetches, returns merged JSON. Federation lets teams own subgraphs composing one supergraph. Complexity analysis/depth limits guard abusive queries; persisted-query allowlists harden production.",
+  "use": [
+    "Frontend teams iterating UI fast without backend endpoint churn",
+    "Aggregating many BFFs into one graph (mobile especially benefits)",
+    "Public developer platforms offering flexible querying (GitHub API v4)",
+    "Killing overfetch on bandwidth-constrained clients"
+  ],
+  "avoid": [
+    "Firehose/streaming pushes (subscriptions exist but niche)",
+    "Simple CRUD with stable shapes (REST simpler ops)",
+    "Teams unable to enforce query-cost limits (DoS surface)"
+  ],
+  "after": [
+    "client",
+    "api_gateway"
+  ],
+  "to": [
+    "api",
+    "grpc",
+    "redis"
+  ],
+  "size": {
+    "rps_per_instance": "~8k resolved-fields-heavy rps"
+  },
+  "world": [
+    "GitHub public API",
+    "Shopify Storefront API",
+    "Netflix/Expedia federated graphs",
+    "Twitter? (they went graphql-lite internally)"
+  ],
+  "pat": [
+    {
+      "n": "Backend-for-Frontend evolution",
+      "d": "The graph IS the ultimate BFF - one schema per experience domain."
+    }
+  ],
+  "pits": [
+    "Resolver N+1 storms - DataLoader-style batching/caching mandatory",
+    "Query-depth DoS - cost analysis + depth limits + persisted queries"
+  ],
+  "tips": [
+    "Overfetch/underfetch vocabulary + federation governance story covers most questions"
+  ]
+}

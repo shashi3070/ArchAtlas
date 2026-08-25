@@ -1,0 +1,41 @@
+{
+  "s": "Routes, deduplicates, groups, and escalates alerts into human-paging workflows with silences and rotations.",
+  "w": "Consumes alert events from metric/log/trace rules; grouping collapses storms into single notifications; inhibition suppresses dependents when roots fire; routing tables map severities/teams to channels (PagerDuty/Slack/email); silences mute during maintenance; escalation chains page backups after non-ack windows.",
+  "use": [
+    "On-call paging for SLO burn-rate breaches",
+    "Ticket-only routing for low-severity warnings",
+    "Maintenance silences during deploys",
+    "Escalation chains ensuring 15-min ack coverage"
+  ],
+  "avoid": [
+    "Metric storage itself (feeds FROM collectors)",
+    "Dashboarding (alert ≠ visualize)"
+  ],
+  "after": [
+    "metrics_collector",
+    "log_aggregator",
+    "tracing_collector"
+  ],
+  "to": [
+    "push_service",
+    "sms_service",
+    "email_service"
+  ],
+  "size": {
+    "alerts_per_sec": "~100 eval events/sec trivially handled"
+  },
+  "world": [
+    "Alertmanager (prometheus sibling)",
+    "PagerDuty",
+    "Opsgenie",
+    "Grafana OnCall"
+  ],
+  "pat": [],
+  "pits": [
+    "Alert fatigue from noisy thresholds - burn-rate windows over static thresholds",
+    "Missing ownership mapping - alerts must route to teams not /dev/null"
+  ],
+  "tips": [
+    "Multi-window burn-rate alerting reference (Google SRE workbook) earns credibility"
+  ]
+}

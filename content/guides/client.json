@@ -1,0 +1,51 @@
+{
+  "s": "The consumer of the system - mobile app, browser, CLI, or third-party integration making requests to the API surface.",
+  "w": "Clients initiate HTTP/WebSocket/gRPC connections to the system edge. Browsers resolve DNS, connect through CDN, and load SPA bundles; mobile apps talk API directly or through gateways. Clients handle retries, token refresh, local caching, and offline queues. Retry-after headers and exponential backoff prevent thundering herd on recovery.",
+  "use": [
+    "Mobile/web frontends consuming product APIs",
+    "Third-party partner integrations calling public API endpoints",
+    "CLI tools and automation scripts accessing system programmatically",
+    "IoT devices pushing telemetry and receiving commands"
+  ],
+  "avoid": [
+    "Treating client as reliable - always design for client bugs, timeouts, and duplicate requests",
+    "Trusting client-supplied values without server-side validation"
+  ],
+  "after": [],
+  "to": [
+    "cdn",
+    "api_gateway",
+    "load_balancer",
+    "reverse_proxy",
+    "global_load_balancer",
+    "dns",
+    "waf",
+    "websocket_gateway"
+  ],
+  "props": {
+    "retry_strategy": "How the client backs off after failures",
+    "auth_token": "JWT or API key used for authentication"
+  },
+  "size": {},
+  "world": [
+    "Spotify mobile app",
+    "Netflix iOS/Android clients",
+    "GitHub CLI",
+    "Postman API client",
+    "Stripe SDK clients"
+  ],
+  "pat": [
+    {
+      "n": "Retry with Exponential Backoff",
+      "d": "Client doubles delay between retries with jitter to avoid synchronized storms."
+    }
+  ],
+  "pits": [
+    "Missing client-side retry budget causing infinite loops - cap retries and use circuit-breaking",
+    "Hardcoded timeouts too short for flaky mobile networks - adaptive timeouts per connection type"
+  ],
+  "tips": [
+    "Discuss idempotency keys: clients should resend with the same key to prevent duplicate charges",
+    "Token refresh race conditions in mobile apps are a common source of auth bugs"
+  ]
+}

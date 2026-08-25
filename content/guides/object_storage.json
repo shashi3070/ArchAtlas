@@ -1,0 +1,56 @@
+{
+  "s": "HTTP-accessible blob store providing virtually unlimited durable storage for files, backups, and static assets at low cost.",
+  "w": "Objects (files + metadata) are stored in buckets with flat key namespaces; access is via REST API (GET/PUT/DELETE). Data is replicated across availability zones automatically; versioning preserves object history. Lifecycle policies transition objects between tiers (standard, infrequent, glacier) based on age. Pre-signed URLs grant temporary access without exposing credentials. Event notifications trigger functions or queues on upload/delete.",
+  "use": [
+    "Media storage: user uploads, images, videos, audio files",
+    "Backup and disaster recovery destinations for database snapshots",
+    "Static website hosting and SPA bundle storage",
+    "Data lake foundation for analytics pipelines (Parquet/Avro files)",
+    "CDN origin for cached content delivery"
+  ],
+  "avoid": [
+    "Frequent small reads requiring low latency (use block_storage or database instead)",
+    "Structured data requiring SQL queries (use a database)",
+    "Real-time mutable files (object storage is optimized for write-once/read-many)"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "cdn",
+    "media_transcoder"
+  ],
+  "to": [
+    "cdn",
+    "data_warehouse",
+    "spark",
+    "api",
+    "file_storage"
+  ],
+  "props": {
+    "storage_class": "standard | infrequent-access | glacier | deep-archive"
+  },
+  "size": {
+    "objects_per_bucket": "Unlimited; throughput scales with prefix parallelism"
+  },
+  "world": [
+    "AWS S3",
+    "Google Cloud Storage",
+    "Azure Blob Storage",
+    "Cloudflare R2",
+    "MinIO (self-hosted)"
+  ],
+  "pat": [
+    {
+      "n": "CDN Origin",
+      "d": "Object storage serves as origin; CDN caches at edge for low-latency delivery."
+    }
+  ],
+  "pits": [
+    "High request costs from millions of small object reads - batch or cache in front of object storage",
+    "Lifecycle policy misconfiguration deleting production data - test policies on non-critical buckets first"
+  ],
+  "tips": [
+    "Object storage IS the foundation of cloud: S3-like services underpin backups, data lakes, CDNs, and ML training data",
+    "Pre-signed URLs eliminate the need for a proxy server for temporary file access"
+  ]
+}

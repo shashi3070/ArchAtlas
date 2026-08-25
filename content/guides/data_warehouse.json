@@ -1,0 +1,47 @@
+{
+  "s": "Columnar MPP analytical store where BI queries crunch historical truth - fed by pipelines, never by users directly.",
+  "w": "ETL/ELT lands data (often via staging buckets), transformations model it (dbt style: raw -> staged -> marts). Massively parallel clusters scan compressed columns; results cached. Separation of compute/storage (Snowflake/BQ) lets warehouses sleep when unused. Concurrency scaling handles dashboard floods.",
+  "use": [
+    "Company-wide BI: revenue dashboards, cohort analyses",
+    "ML feature engineering over history",
+    "Regulatory reporting with snapshots",
+    "Data science sandboxes querying petabyte history"
+  ],
+  "avoid": [
+    "OLTP serving paths (ms-latency lookups)",
+    "Realtime sub-second alerting on raw events (stream processors first)",
+    "Source-of-truth mutable state"
+  ],
+  "after": [
+    "cdc_pipeline",
+    "spark",
+    "airflow"
+  ],
+  "to": [
+    "recommendation_engine",
+    "feature_store"
+  ],
+  "size": {
+    "safe_reads_per_sec": "~20k scan-amortized",
+    "safe_writes_per_sec": "~2k bulk loads"
+  },
+  "world": [
+    "Snowflake at Capital One",
+    "BigQuery at Spotify",
+    "Redshift at Nasdaq",
+    "Databricks lakehouse everywhere"
+  ],
+  "pat": [
+    {
+      "n": "Medallion/Lakehouse",
+      "d": "Bronze raw -> Silver cleaned -> Gold modeled layers feeding BI/ML."
+    }
+  ],
+  "pits": [
+    "Runaway query costs - enforce workload mgmt/quotas per team",
+    "Freshness lies - document pipeline lag on every dashboard"
+  ],
+  "tips": [
+    "ELT vs ETL distinction + dbt's role shows modern fluency"
+  ]
+}

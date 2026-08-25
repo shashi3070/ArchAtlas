@@ -47,3 +47,35 @@ def test_get_single_component(client) -> None:
 def test_unknown_component_returns_404(client) -> None:
     resp = client.get("/api/components/definitely_not_real")
     assert resp.status_code == 404
+
+
+# ── Guide endpoint tests ──────────────────────────────────────────────
+
+def test_get_component_guide(client) -> None:
+    resp = client.get("/api/components/redis/guide")
+    assert resp.status_code == 200
+    guide = resp.json()
+    assert "s" in guide  # summary
+    assert "w" in guide  # how it works
+    assert "use" in guide
+    assert "avoid" in guide
+    assert "tips" in guide
+    assert len(guide["use"]) >= 2
+    assert len(guide["tips"]) >= 1
+
+
+def test_guide_returns_404_for_missing(client) -> None:
+    resp = client.get("/api/components/definitely_not_real/guide")
+    assert resp.status_code == 404
+
+
+def test_guide_covers_all_catalog_types(client) -> None:
+    """Every catalog component should have a corresponding guide."""
+    catalog = client.get("/api/components").json()
+    missing = []
+    for item in catalog:
+        ctype = item["type"]
+        resp = client.get(f"/api/components/{ctype}/guide")
+        if resp.status_code != 200:
+            missing.append(ctype)
+    assert missing == [], f"Guides missing for: {missing}"

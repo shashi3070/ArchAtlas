@@ -1,0 +1,55 @@
+{
+  "s": "Retrieval-Augmented Generation system that grounds LLM responses in retrieved documents to reduce hallucination and add knowledge.",
+  "w": "Documents are chunked, embedded, and indexed in a vector database. At query time: the query is embedded, nearest-neighbor search retrieves relevant chunks, optional reranking refines results, and the top chunks are injected into the LLM prompt as context. The LLM generates an answer citing the provided documents. Metadata filtering, hybrid search (BM25 + vector), and chunking strategy are critical quality levers.",
+  "use": [
+    "Enterprise knowledge bases: internal docs, wikis, Slack history answering employee questions",
+    "Customer support: AI assistant answering based on product documentation",
+    "Legal/medical research: retrieval of relevant case studies or papers for grounded answers",
+    "Code assistant: retrieval of codebase patterns for context-aware generation"
+  ],
+  "avoid": [
+    "Tasks where LLM training data is sufficient (no external knowledge needed)",
+    "Scenarios requiring real-time data that changes faster than index refresh cycles",
+    "Domains where hallucinated citations have serious consequences without human review"
+  ],
+  "after": [
+    "api",
+    "embeddings_model",
+    "vector_database"
+  ],
+  "to": [
+    "llm_api",
+    "reranker",
+    "api"
+  ],
+  "props": {
+    "chunk_size": "Document split size for embedding (256-1024 tokens typical)",
+    "retrieval_top_k": "Number of chunks retrieved before reranking"
+  },
+  "size": {},
+  "world": [
+    "ChatGPT with browsing",
+    "Perplexity AI",
+    "Pinecone + LLM reference architectures",
+    "LangChain LCEL pipelines",
+    "Azure AI Search + OpenAI"
+  ],
+  "pat": [
+    {
+      "n": "Two-Stage Retrieval",
+      "d": "Embedding search for recall, cross-encoder reranker for precision."
+    },
+    {
+      "n": "Hybrid Search",
+      "d": "BM25 keyword + vector semantic merged by reranker for best of both."
+    }
+  ],
+  "pits": [
+    "Poor chunking destroys retrieval quality - test chunk sizes, overlap, and boundary strategies",
+    "Index staleness giving outdated answers - implement incremental re-embedding pipelines"
+  ],
+  "tips": [
+    "Chunking strategy is the most underrated quality lever in RAG - spend time on it",
+    "Hybrid search (keyword + semantic) consistently outperforms either alone"
+  ]
+}

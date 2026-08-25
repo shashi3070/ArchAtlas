@@ -1,0 +1,53 @@
+{
+  "s": "Neural network that converts text, images, or structured data into fixed-length dense vector representations for similarity search.",
+  "w": "Input (text/image/audio) is tokenized and fed through transformer or specialized encoder layers; the output is a fixed-dimensional vector (e.g., 768-d or 1536-d). Semantically similar inputs produce nearby vectors in embedding space. Models are hosted as APIs or self-hosted containers. Embeddings are pre-computed for documents and stored in vector databases; queries embed in real-time for nearest-neighbor retrieval.",
+  "use": [
+    "RAG retrieval: embedding documents and queries for semantic search",
+    "Semantic deduplication of similar content across large corpora",
+    "Recommendation engines using embedding similarity between users/items",
+    "Classification and clustering tasks via embedding similarity thresholds"
+  ],
+  "avoid": [
+    "Exact-match keyword search (inverted indexes are faster and cheaper for literal matches)",
+    "Tasks requiring structured numeric reasoning (use LLMs or traditional ML instead)",
+    "Real-time embedding of massive inputs (video, long documents) without batching"
+  ],
+  "after": [
+    "api",
+    "worker",
+    "rag_pipeline"
+  ],
+  "to": [
+    "vector_database",
+    "reranker",
+    "llm_api"
+  ],
+  "props": {
+    "dimension": "Length of output vector (768, 1536, 3072 typical)",
+    "max_tokens": "Maximum input token count supported"
+  },
+  "size": {
+    "embeddings_per_sec": "~50-200 per GPU instance"
+  },
+  "world": [
+    "OpenAI text-embedding-3-large",
+    "Cohere Embed v3",
+    "BGE (BAAI open-source)",
+    "Sentence-Transformers",
+    "Google text-embedding-004"
+  ],
+  "pat": [
+    {
+      "n": "RAG grounding",
+      "d": "Embedding search retrieves context; LLM generates grounded answer."
+    }
+  ],
+  "pits": [
+    "Model version changes invalidate entire index - version embeddings with model ID, plan re-embedding",
+    "Dimension mismatch between indexing and querying models - enforce schema validation"
+  ],
+  "tips": [
+    "Embedding quality is the foundation of RAG - poor embeddings mean poor retrieval regardless of reranker",
+    "Dimension vs quality vs cost triangle: larger dimensions are better but slower to index and search"
+  ]
+}

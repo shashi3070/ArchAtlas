@@ -1,0 +1,44 @@
+{
+  "s": "Native graph database where relationships are first-class citizens, enabling deep traversal queries in constant time per hop.",
+  "w": "Index-free adjacency means each node stores direct pointers to its relationships, so traversals cost O(1) per hop regardless of total data size. Cypher query language expresses pattern matching declaratively. ACID transactions on graphs. Causal cluster provides HA with Raft consensus. PageRank, community detection, and shortest-path algorithms run natively. Horizontal sharding remains limited.",
+  "use": [
+    "Fraud detection: shared cards, devices, addresses across accounts",
+    "Social network features: friends-of-friends, relationship strength scoring",
+    "Knowledge graphs powering semantic search and recommendations",
+    "IT/infrastructure dependency mapping and impact analysis"
+  ],
+  "avoid": [
+    "Simple CRUD and key-value lookups (overkill, use Postgres/Redis)",
+    "Write-heavy workloads on super-nodes (celebrity nodes bottleneck writes)",
+    "Datasets requiring horizontal sharding (graph partitioning is unsolved at scale)"
+  ],
+  "after": [
+    "api",
+    "cdc_pipeline",
+    "worker"
+  ],
+  "to": [],
+  "props": {
+    "replication_factor": "Number of cluster replicas (typically 3 for causal cluster)"
+  },
+  "size": {
+    "safe_reads_per_sec": "~5k traversal-heavy queries",
+    "safe_writes_per_sec": "~1.5k",
+    "default_instances": 3
+  },
+  "world": [
+    "eBay fraud detection",
+    "NASA dependency graphs",
+    "Airbnb knowledge graph",
+    "Adobe Experience Platform"
+  ],
+  "pat": [],
+  "pits": [
+    "Super-node problem: one node with millions of relationships creates traversal bottlenecks - add intermediate nodes",
+    "Whole-graph RAM requirement: working set must fit in memory for traversal performance"
+  ],
+  "tips": [
+    "When to graph vs relational: if queries recurse to unknown-depth joins constantly, graph wins",
+    "Cypher's MATCH pattern syntax is the interview talking point - show you can read/write patterns"
+  ]
+}

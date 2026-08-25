@@ -1,0 +1,38 @@
+{
+  "s": "Rule-based event router connecting producers to many consumers without polling loops or point-to-point wiring.",
+  "w": "Events publish to buses with structured payloads; rules pattern-match content (JSONPath-ish) routing matches onto targets (lambdas, queues, HTTP webhooks, other buses). Archive/replay replays matched history. Schema registry validates evolution. Cross-account sharing enables org-wide event fabrics.",
+  "use": [
+    "SaaS-webhook normalization into internal event flows",
+    "Decoupled microservice reactions without every team polling everything",
+    "Scheduled crons expressed as events (timer targets)",
+    "Cross-account event distribution in multi-team orgs"
+  ],
+  "avoid": [
+    "High-volume raw streaming (per-event rule costs add up; kinesis cheaper)",
+    "Ordered batch pipelines (event buses don't guarantee ordering)"
+  ],
+  "after": [
+    "api",
+    "serverless_function",
+    "cron_scheduler"
+  ],
+  "to": [
+    "sqs",
+    "serverless_function",
+    "email_service"
+  ],
+  "size": {
+    "messages_per_sec": "~5k comfortable before costs push elsewhere"
+  },
+  "world": [
+    "AWS EventBridge powering serverless schedulers everywhere",
+    "Vendia-style shared ledgers"
+  ],
+  "pat": [],
+  "pits": [
+    "Rule sprawl becomes unmaintainable - naming conventions + schema registry discipline early"
+  ],
+  "tips": [
+    "Content-based ROUTING is the differentiator vs dumb pipes - explain filtering value"
+  ]
+}

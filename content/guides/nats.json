@@ -1,0 +1,38 @@
+{
+  "s": "Featherweight pub/sub + request-reply bus with microsecond latency; JetStream adds persistence when needed.",
+  "w": "Subject-based matching (foo.*.bar wildcards) routes messages without brokers storing them by default - pure fire-and-forget at insane speeds. JetStream streams persist with consumers, exactly-once opts, and retention policies. Clusters use Raft; super-clusters bridge regions. Single Go binary deploys anywhere.",
+  "use": [
+    "Internal RPC replacement (request-reply semantics built in)",
+    "IoT/edge fleets where footprint matters (runs on ARM boxes)",
+    "Low-latency trading/control planes",
+    "Service discovery-ish broadcast (presence, config refresh signals)"
+  ],
+  "avoid": [
+    "Long-term archival/event-sourcing stores (JetStream exists but kafka ecosystem richer)",
+    "Teams wanting huge managed-ecosystem connectors"
+  ],
+  "after": [
+    "api",
+    "websocket_gateway"
+  ],
+  "to": [
+    "worker",
+    "metrics_collector"
+  ],
+  "size": {
+    "messages_per_sec": "~200k+/node core; millions clustered"
+  },
+  "world": [
+    "Ericsson 5G control planes",
+    "Dell edge offerings",
+    "Baidu location services",
+    "ZipRecruiter pipelines"
+  ],
+  "pat": [],
+  "pits": [
+    "Core NATS loses messages if no subscriber - decide persistence needs consciously (JetStream on/off)"
+  ],
+  "tips": [
+    "Position honestly: simplicity/speed vs kafka's durability ecosystem tradeoff"
+  ]
+}

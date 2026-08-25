@@ -1,0 +1,55 @@
+{
+  "s": "Distributes a single incoming message to multiple downstream subscribers or destinations based on subscription rules.",
+  "w": "Receives a message or event and fans it out to all registered consumers in parallel. Implementation ranges from Pub/Sub topic fan-out to custom services that maintain subscriber lists and deliver via HTTP, queue, or WebSocket push. Each subscriber receives an independent copy. Fan-out decouples producers from knowing about all downstream consumers; new consumers register without producer changes.",
+  "use": [
+    "Event broadcast to multiple services (order.created -> email + analytics + fraud)",
+    "Real-time notification distribution to multiple channels (push + email + in-app)",
+    "Multi-consumer data feeds (one telemetry stream -> monitoring + warehouse + alerting)",
+    "Webhook distribution to registered third-party endpoints"
+  ],
+  "avoid": [
+    "Competing-consumer patterns where only one worker should process each message (use queue)",
+    "Low-volume point-to-point communication (direct API call is simpler)",
+    "Ordered processing across subscribers (each subscriber gets independent order)"
+  ],
+  "after": [
+    "api",
+    "kafka",
+    "pubsub",
+    "event_bus"
+  ],
+  "to": [
+    "worker",
+    "email_service",
+    "push_service",
+    "webhook_endpoint",
+    "elasticsearch",
+    "clickhouse"
+  ],
+  "props": {
+    "subscriber_count": "Number of downstream consumers per event type"
+  },
+  "size": {
+    "messages_per_sec": "Depends on implementation; Pub/Sub handles ~100k+ per topic"
+  },
+  "world": [
+    "Google Pub/Sub topic fan-out",
+    "AWS SNS topic subscriptions",
+    "Webhook delivery services",
+    "Socket.IO broadcast rooms"
+  ],
+  "pat": [
+    {
+      "n": "Event-Driven Architecture",
+      "d": "Fan-out IS the mechanism enabling decoupled event consumers."
+    }
+  ],
+  "pits": [
+    "Slow subscriber creating backpressure on fast ones - each subscriber should be independently buffered",
+    "Missing subscriber failure handling - dead-letter or retry per subscriber, not globally"
+  ],
+  "tips": [
+    "Fan-out vs fan-in: fan-out = one-to-many distribution, fan-in = many-to-one aggregation",
+    "Pub/Sub topics and SNS are the managed fan-out implementations to reference"
+  ]
+}

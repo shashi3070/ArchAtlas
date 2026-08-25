@@ -1,0 +1,45 @@
+{
+  "s": "Version-controlled repository tracking ML model artifacts, metadata, lineage, and deployment status across environments.",
+  "w": "Stores model binaries (ONNX, pickle, SavedModel) with version metadata: training data version, hyperparameters, evaluation metrics, and approval status. Models transition through stages: Development -> Staging -> Production -> Archived. Integration with CI/CD triggers automated testing and deployment. Model comparison dashboards track performance drift over versions.",
+  "use": [
+    "Governed model promotion from experiments to production",
+    "Audit trail of which model version is serving which traffic",
+    "A/B testing infrastructure: deploy two versions, compare metrics, promote winner",
+    "Rollback capability when a new model degrades in production"
+  ],
+  "avoid": [
+    "Teams with single models that never change (YAML config suffices)",
+    "Deep learning research environments without production deployment needs",
+    "Organizations without ML governance/compliance requirements"
+  ],
+  "after": [
+    "feature_store",
+    "spark",
+    "data_warehouse"
+  ],
+  "to": [
+    "llm_api",
+    "api",
+    "kubernetes"
+  ],
+  "props": {
+    "registry_backend": "MLflow | Weights & Biases | Vertex AI Model Registry"
+  },
+  "size": {},
+  "world": [
+    "MLflow Model Registry",
+    "Weights & Biases",
+    "Vertex AI Model Registry",
+    "SageMaker Model Registry",
+    "Neptune.ai"
+  ],
+  "pat": [],
+  "pits": [
+    "Model artifacts too large for registry storage - store in object store, registry holds pointers and metadata",
+    "Missing model lineage tracking makes debugging production failures impossible"
+  ],
+  "tips": [
+    "Model registry is the ML equivalent of artifact repository + deployment pipeline combined",
+    "Stages (Dev/Staging/Production) mirror software release processes - familiar concept for interviewers"
+  ]
+}

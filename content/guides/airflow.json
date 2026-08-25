@@ -1,0 +1,39 @@
+{
+  "s": "The de-facto workflow orchestrator expressing pipelines as DAGs of tasks with retries, schedules, and backfills.",
+  "w": "Scheduler parses DAG files, enqueues ready tasks respecting dependencies; executors (Celery/K8s) run them on workers; metadata DB tracks state/history. Tasks retry with configurable policies; sensors wait on external conditions; backfill commands replay historical windows. UI shows tree/graph/gantt views for ops.",
+  "use": [
+    "Multi-stage ELT orchestrating extract->load->dbt->quality checks nightly",
+    "ML retraining cadences (features -> train -> evaluate -> promote)",
+    "Report generation with cross-system dependencies",
+    "Data-platform housekeeping (compactions, archive jobs)"
+  ],
+  "avoid": [
+    "Per-event sub-second reactions (event buses/functions)",
+    "Massive parallel task counts (thousands) - scheduler chokes; consider Dagster/Prefect/argo",
+    "Streaming logic entirely"
+  ],
+  "after": [
+    "cron_scheduler"
+  ],
+  "to": [
+    "spark",
+    "data_warehouse",
+    "feature_store"
+  ],
+  "size": {
+    "jobs_per_sec_per_instance": "Orchestration throughput ~tens of tasks/min/node"
+  },
+  "world": [
+    "Airbnb created it",
+    "Every data platform since",
+    "PayPal, Slack data infra"
+  ],
+  "pat": [],
+  "pits": [
+    "Scheduler death spiral from dynamic DAG generation - cap DAG count, static definitions",
+    "Tasks holding DB connections during sleeps - use sensors properly"
+  ],
+  "tips": [
+    "Idempotent+partitioned tasks mantra for reliable backfills"
+  ]
+}

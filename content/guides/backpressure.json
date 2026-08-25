@@ -1,0 +1,49 @@
+{
+  "s": "Mechanism that propagates overload signals upstream so producers slow down before consumers collapse.",
+  "w": "When a consumer is overwhelmed (queue full, latency spike), it signals the producer to reduce send rate - via bounded queues blocking publishers, credit-based flow control, or explicit NAK signals. Without backpressure, producers run unbounded causing OOM or cascading failure. Kafka consumer lag, Flink credit-based flow, and TCP windowing are all forms of backpressure.",
+  "use": [
+    "Stream processing pipelines where downstream slowdown must not crash upstream",
+    "Database write ingestion where DB commit rate is the hard ceiling",
+    "Microservice call chains where one slow service should not cause upstream retries",
+    "Message queue consumers that cannot keep up during traffic spikes"
+  ],
+  "avoid": [
+    "Unbounded buffers between stages - they just delay failure and increase blast radius",
+    "Ignoring backpressure signals - if consumer lag grows, something must give"
+  ],
+  "after": [
+    "kafka",
+    "kinesis",
+    "rabbitmq"
+  ],
+  "to": [
+    "worker",
+    "flink",
+    "clickhouse"
+  ],
+  "props": {
+    "buffer_size": "Max items queued before producer blocks",
+    "signal_mechanism": "blocking | credit-based | negative-ack"
+  },
+  "size": {},
+  "world": [
+    "Kafka consumer lag monitoring",
+    "Flink credit-based flow control",
+    "TCP receive window",
+    "Kubernetes pod Pending as backpressure"
+  ],
+  "pat": [
+    {
+      "n": "Circuit Breaker companion",
+      "d": "Circuit breaker stops calls; backpressure throttles them - complementary strategies."
+    }
+  ],
+  "pits": [
+    "Unbounded buffers masking the real problem - memory grows until OOM kills the process",
+    "Backpressure invisible to operators - instrument consumer lag and buffer depth as first-class metrics"
+  ],
+  "tips": [
+    "TCP itself is the canonical backpressure example: receiver window shrinks when app is slow",
+    "Interview answer: backpressure is graceful degradation, not failure prevention"
+  ]
+}

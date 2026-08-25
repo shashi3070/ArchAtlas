@@ -1,0 +1,53 @@
+{
+  "s": "Stores all state changes as an immutable append-only event log rather than overwriting current state.",
+  "w": "Instead of UPDATE rows, you APPEND events (OrderCreated, ItemAdded, PaymentReceived). Current state is derived by replaying events. The event log is the source of truth; snapshots optimize replay for long histories. Projections build read-optimized views. Temporal queries answer 'what was the state at time T?'. Kafka or EventStoreDB serve as the log infrastructure.",
+  "use": [
+    "Audit-critical domains: financial transactions, healthcare records, legal systems",
+    "Complex state machines: order lifecycle, insurance claims, approval workflows",
+    "Systems needing temporal queries and full history replay",
+    "Debugging production issues - the full history of what happened is available"
+  ],
+  "avoid": [
+    "Simple CRUD apps where current-state-only storage is sufficient",
+    "High-cardinality event streams with no meaningful state transitions",
+    "Teams without experience managing event schema evolution and projection rebuilding"
+  ],
+  "after": [
+    "api",
+    "workflow_engine"
+  ],
+  "to": [
+    "kafka",
+    "postgresql",
+    "elasticsearch",
+    "redis"
+  ],
+  "props": {
+    "event_store": "Kafka | EventStoreDB | Postgres with append-only table"
+  },
+  "size": {},
+  "world": [
+    "EventStoreDB (purpose-built)",
+    "Kafka as event store at LinkedIn/Uber",
+    "Domain Events in Marten (.NET)",
+    "LMAX Exchange event log"
+  ],
+  "pat": [
+    {
+      "n": "CQRS",
+      "d": "Events written to store; projections rebuild read models for querying."
+    },
+    {
+      "n": "Saga",
+      "d": "Event-driven saga steps react to previously committed events."
+    }
+  ],
+  "pits": [
+    "Event schema evolution breaking old projections - use upcasting and schema registry",
+    "Replay time growing unbounded - implement snapshots every N events"
+  ],
+  "tips": [
+    "Event sourcing and CQRS are complementary, not synonymous - distinguish them clearly",
+    "Event schema registry is essential for versioning - mention Avro or protobuf for event payloads"
+  ]
+}

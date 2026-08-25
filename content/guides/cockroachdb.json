@@ -1,0 +1,42 @@
+{
+  "s": "Distributed SQL that shards itself and survives node/datacenter loss while speaking Postgres-flavored SQL.",
+  "w": "Data lives in ranges (Raft consensus groups) replicated 3x, auto-split and migrated for balance. Transactions use serialized timestamps ensuring external consistency across ranges. Nodes form one logical cluster; losing minority replicas keeps data readable/writable. SQL layer sits atop the KV layer enabling joins/distributed transactions transparently.",
+  "use": [
+    "Globally distributed OLTP needing strong consistency without hand-sharding",
+    "Financial ledgers, inventory, billing where correctness > raw speed",
+    "Cloud-native multi-region active-active with serializable isolation",
+    "Escape hatch from manual shard management as growth continues"
+  ],
+  "avoid": [
+    "Latency-tiny-budget paths crossing regions (commit-wait costs ms)",
+    "Huge append-only analytics (clickhouse style wins)",
+    "Budget-tight projects - resource footprint is significant"
+  ],
+  "after": [
+    "api"
+  ],
+  "to": [],
+  "size": {
+    "safe_reads_per_sec": "~20k cluster",
+    "safe_writes_per_sec": "~4k cluster",
+    "default_instances": 3
+  },
+  "world": [
+    "Cockroach Labs' own cloud billing",
+    "Bose e-commerce",
+    "Equifax credit disputes"
+  ],
+  "pat": [
+    {
+      "n": "Event Sourcing-friendly store",
+      "d": "Serializable transactions simplify appending ordered events consistently."
+    }
+  ],
+  "pits": [
+    "Hot-spotting on sequential keys - hash or scatter prefix high-write tables",
+    "Cross-range txn latency - co-locate related data via INTERLEAVE/follower reads"
+  ],
+  "tips": [
+    "Position vs Spanner (open-source analog), vs Vitess (manual shard mgmt eliminated), vs mongo (consistency guarantees)"
+  ]
+}
