@@ -11,20 +11,46 @@ results; AI agents explain, hint, and critique — never silently modify.
 - Product/architecture spec: [`SYSTEM.md`](./SYSTEM.md)
 - Implementation plan & roadmap: [`PLAN.md`](./PLAN.md)
 
-## Status — Phase 0 (Foundations & Contracts)
+## Screenshots
+
+### Home
+![Home Screen](screenshots/home-screen.png)
+
+### Learn — System Design Topics
+![Learning Page](screenshots/learning-page1.png)
+![Learning Page - Topic Detail](screenshots/learning-page2.png)
+
+### Lab — Drag & Drop Canvas
+![System Design Lab](screenshots/system-design-lab.png)
+
+### Challenges
+![Challenge Page](screenshots/challenge-page1.png)
+![Challenge Run](screenshots/challenge-page2.png)
+![Evaluate Solution](screenshots/evalute-solution.png)
+
+### Interview Simulator
+![Interview Page](screenshots/interview-page.png)
+
+## Status — Phase 7 (Simulation Layer)
 
 | Piece | State |
 |---|---|
 | Canonical JSON Schemas (9) | ✅ `schemas/` |
 | Pydantic codegen + drift check | ✅ `backend/scripts/gen_models.py` |
 | TS types codegen + drift check | ✅ `frontend/scripts/generate-types.mjs` |
-| Backend API (health, component catalog) | ✅ FastAPI, schema-validating loader |
+| Backend API (health, components, evaluate, agent, interview, simulate) | ✅ FastAPI |
 | Frontend smoke lab | ✅ Vite + React Flow canvas → canonical JSON export |
-| Component catalog seed (11 entries) | ✅ `content/components/` |
+| Component catalog (85 nodes) | ✅ `content/components/` |
 | Rule registry (55 rule ids) | ✅ `content/rules/rules.yaml` |
-| Challenge concepts (24 families) | ✅ `content/challenges/CONCEPTS.md` |
-| Docker Compose (api/web/postgres/redis/ollama) | ✅ |
-| CI (lint/typecheck/tests/drift) | ✅ `.github/workflows/ci.yml` |
+| Challenge packs (36 challenges) | ✅ `content/challenges/` |
+| Node encyclopedia guides (85 guides) | ✅ `content/guides/` |
+| AI Mentor Coach (multi-provider) | ✅ Phase 5 |
+| Interview Agent (12-phase state machine) | ✅ Phase 6 |
+| Simulation Layer (analytical engine) | ✅ Phase 7 |
+| Google OAuth login | ✅ |
+| Chaos Engineering | 🔄 Phase 8 |
+| AI/GenAI Systems Lab | 📋 Phase 9 |
+| Collaborative Platform | 📋 Phase 10 |
 
 ## Quickstart
 

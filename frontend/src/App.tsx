@@ -9,6 +9,7 @@ import { HomePage } from './pages/HomePage'
 import { InterviewPage } from './pages/InterviewPage'
 import { LabPage } from './pages/LabPage'
 import { LoginPage } from './pages/LoginPage'
+import { SimulatePage } from './pages/SimulatePage'
 import { TopicPage } from './pages/TopicPage'
 import { TopicsPage } from './pages/TopicsPage'
 import { useAuth } from './state/auth'
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/challenges/:cid" element={<ChallengeRunPage />} />
           <Route path="/interview" element={<InterviewPage />} />
+          <Route path="/simulate" element={<SimulatePage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
         </Routes>
       </Layout>

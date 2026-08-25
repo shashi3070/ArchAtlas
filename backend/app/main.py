@@ -22,6 +22,7 @@ from app.api.routes import (
     interview,
     models,
     progress,
+    simulation,
     topics,
 )
 from app.content import challenge_loader, loader, topics_loader
@@ -65,6 +66,7 @@ def create_app() -> FastAPI:
     app.include_router(interview.router)
     app.include_router(auth.router)
     app.include_router(models.router)
+    app.include_router(simulation.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:
