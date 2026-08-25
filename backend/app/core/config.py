@@ -38,6 +38,16 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     gemini_api_key: str = ""
 
+    # --- Auth (Google OAuth + JWT) ---
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    jwt_secret: str = "archatlas-dev-secret-change-in-production"
+
+    # --- Rate limits ---
+    free_daily_limit: int = 100
+    free_cooldown_seconds: int = 10
+    free_groq_daily_limit: int = 1000
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

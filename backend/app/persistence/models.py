@@ -19,7 +19,9 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.core.base import Base
 
 
 def utcnow() -> datetime:
@@ -28,10 +30,6 @@ def utcnow() -> datetime:
 
 def new_uuid() -> str:
     return str(uuid.uuid4())
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class ProgressEntry(Base):

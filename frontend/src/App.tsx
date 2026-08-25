@@ -8,6 +8,7 @@ import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
 import { InterviewPage } from './pages/InterviewPage'
 import { LabPage } from './pages/LabPage'
+import { LoginPage } from './pages/LoginPage'
 import { TopicPage } from './pages/TopicPage'
 import { TopicsPage } from './pages/TopicsPage'
 import { useProgress } from './state/progress'
@@ -23,6 +24,7 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/learn" element={<TopicsPage />} />
           <Route path="/learn/:topicId" element={<TopicPage />} />
           <Route path="/lab" element={<LabPage />} />

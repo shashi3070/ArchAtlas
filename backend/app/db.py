@@ -71,6 +71,7 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def init_db() -> None:
+    from app.auth import models as auth_models  # noqa: F401  (register User table)
     from app.persistence import models  # noqa: F401  (register mappers)
 
     models.Base.metadata.create_all(get_engine())

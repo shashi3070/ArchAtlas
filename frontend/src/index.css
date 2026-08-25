@@ -27,6 +27,11 @@ body {
 .brand {
   font-weight: 700;
   letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.brand-link {
+  text-decoration: none;
 }
 
 .brand-accent {
@@ -1900,4 +1905,258 @@ button:disabled {
   font-size: 13px;
   margin-bottom: 4px;
   color: #334155;
+}
+
+/* ── Login page ─────────────────────────────────────────── */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 52px);
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.login-brand {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 24px;
+  line-height: 1.5;
+}
+
+.login-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 20px 0;
+}
+
+.login-tier-info {
+  display: flex;
+  gap: 12px;
+}
+
+.tier-card {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.tier-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.tier-badge.free {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.tier-badge.premium {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.login-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.login-error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.login-footer-text {
+  text-align: center;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 16px;
+}
+
+/* ── User menu / avatar ─────────────────────────────────── */
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.login-nav-link {
+  font-weight: 600;
+  color: #4338ca !important;
+}
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.user-avatar-btn:hover {
+  border-color: #cbd5e1;
+}
+
+.user-avatar-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.user-avatar-placeholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 13px;
+  color: #334155;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 6px;
+  width: 260px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.user-dropdown-header {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-dropdown-header strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.user-tier-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.user-tier-badge.free {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.user-tier-badge.premium {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.user-dropdown-rate {
+  padding: 0 16px 12px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.user-dropdown-logout {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 13px;
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.user-dropdown-logout:hover {
+  background: #fef2f2;
 }

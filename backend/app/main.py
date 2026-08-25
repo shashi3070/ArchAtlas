@@ -14,11 +14,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import (
     agent,
     architectures,
+    auth,
     challenges,
     components,
     evaluate,
     health,
     interview,
+    models,
     progress,
     topics,
 )
@@ -61,6 +63,8 @@ def create_app() -> FastAPI:
     app.include_router(challenges.router)
     app.include_router(agent.router)
     app.include_router(interview.router)
+    app.include_router(auth.router)
+    app.include_router(models.router)
 
     @app.get("/")
     async def root() -> dict[str, Any]:
