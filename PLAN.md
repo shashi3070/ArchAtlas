@@ -20,8 +20,8 @@
 | 4 Challenge packs + run UI | ✅ Complete |
 | 5 AI Tutor & Coach | ✅ Complete + hardening pass |
 | 5.5 Node Library Expansion | ✅ Complete |
-| Node Guides encyclopedia (5.6) | 🔄 In progress — content ~55%, UI pending |
-| 6 Interview Agent | ⏳ Next |
+| Node Guides encyclopedia (5.6) | ✅ Complete |
+| 6 Interview Agent | 🔄 In progress |
 
 **Delivered since Phase 5 core commit (`6975f78`):**
 - Mentor chat hardening: strict JSON mode (`json_object` + gpt-oss low reasoning), live per-provider model listing (`GET /api/agent/models`), Groq default → `openai/gpt-oss-120b`, raised token budgets, clickable follow-up suggestion chips, "+ New chat", resumable scoped chat history (localStorage), LLMProviderError → HTTP 502 mapping, graceful non-JSON degradation.
@@ -30,7 +30,7 @@
 - Phase 5.5: catalog grown **11 → 85 nodes** across 19 palette groups; new `kind` taxonomy (`concept`/`implementation`/`pattern`) in schema + generated models; engine role frozensets expanded additively (golden fixtures unchanged); pattern nodes excluded from SPOF/capacity/reach math and styled dashed-slate; lucide icon + category color per node (`nodeVisuals.ts`, 83 icons); palette search box; glossary +12 terms; project renamed **ArchAtlas** everywhere incl. `app_name`.
 - Verification at last push: backend pytest **196 passed**, ruff + mypy clean; frontend lint/typecheck/12 vitest/production build all green.
 
-**Next steps:** finish node-guide corpus (parts C/D) + guide viewer UI → Phase 6 Interview Agent (session state machine over the twelve-step method, interviewer prompts consuming board state, deterministic-first final report with communication scoring separate).
+**Next steps:** Phase 6 Interview Agent (session state machine over the twelve-step method, interviewer prompts consuming board state, deterministic-first final report with communication scoring separate).
 
 ---
 

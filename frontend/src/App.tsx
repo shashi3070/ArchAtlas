@@ -6,6 +6,7 @@ import { ChallengesPage } from './pages/ChallengesPage'
 import { ChallengeRunPage } from './pages/ChallengeRunPage'
 import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
+import { InterviewPage } from './pages/InterviewPage'
 import { LabPage } from './pages/LabPage'
 import { TopicPage } from './pages/TopicPage'
 import { TopicsPage } from './pages/TopicsPage'
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/lab" element={<LabPage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/challenges/:cid" element={<ChallengeRunPage />} />
+          <Route path="/interview" element={<InterviewPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
         </Routes>
       </Layout>
