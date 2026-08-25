@@ -21,7 +21,12 @@
 | 5 AI Tutor & Coach | ✅ Complete + hardening pass |
 | 5.5 Node Library Expansion | ✅ Complete |
 | Node Guides encyclopedia (5.6) | ✅ Complete |
-| 6 Interview Agent | 🔄 In progress |
+| 6 Interview Agent | ✅ Complete |
+| 7 Simulation Layer | ✅ Complete |
+| 8 Chaos Engineering Learning | ✅ Complete |
+| 9 AI/GenAI Systems Lab | ✅ Complete |
+| 10 Collaborative Platform | ✅ Complete |
+| 11 Enterprise | 📋 Future, unsized |
 
 **Delivered since Phase 5 core commit (`6975f78`):**
 - Mentor chat hardening: strict JSON mode (`json_object` + gpt-oss low reasoning), live per-provider model listing (`GET /api/agent/models`), Groq default → `openai/gpt-oss-120b`, raised token budgets, clickable follow-up suggestion chips, "+ New chat", resumable scoped chat history (localStorage), LLMProviderError → HTTP 502 mapping, graceful non-JSON degradation.
