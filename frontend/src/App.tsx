@@ -5,12 +5,14 @@ import { Layout } from './components/Layout'
 import { ChallengesPage } from './pages/ChallengesPage'
 import { ChallengeRunPage } from './pages/ChallengeRunPage'
 import { ChaosPage } from './pages/ChaosPage'
+import { ComparePage } from './pages/ComparePage'
 import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
 import { InterviewPage } from './pages/InterviewPage'
 import { LabPage } from './pages/LabPage'
 import { LoginPage } from './pages/LoginPage'
 import { SimulatePage } from './pages/SimulatePage'
+import { SharedPage } from './pages/SharedPage'
 import { TopicPage } from './pages/TopicPage'
 import { TopicsPage } from './pages/TopicsPage'
 import { useAuth } from './state/auth'
@@ -38,6 +40,8 @@ export default function App() {
           <Route path="/interview" element={<InterviewPage />} />
           <Route path="/simulate" element={<SimulatePage />} />
           <Route path="/chaos" element={<ChaosPage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/shared/:token" element={<SharedPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
         </Routes>
       </Layout>

@@ -3094,3 +3094,181 @@ button:disabled {
   padding-left: 20px;
   font-size: 13px;
 }
+
+/* ── Compare page ────────────────────────────────────── */
+
+.compare-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+
+.compare-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.compare-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.compare-input-group label {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.compare-input-group input {
+  margin-top: 4px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.compare-vs {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 0 4px;
+}
+
+.compare-summary-cards {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.compare-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  min-width: 110px;
+}
+
+.compare-card-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.compare-card-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.compare-added {
+  color: #22c55e;
+}
+
+.compare-removed {
+  color: #ef4444;
+}
+
+.compare-modified {
+  color: #f59e0b;
+}
+
+.compare-section {
+  margin-bottom: 20px;
+}
+
+.compare-section h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.compare-diff-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+.compare-diff-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.compare-before {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.compare-after {
+  color: #334155;
+  font-size: 12px;
+}
+
+.compare-added-bg {
+  background: #f0fdf4;
+}
+
+.compare-removed-bg {
+  background: #fef2f2;
+}
+
+/* ── Shared page ─────────────────────────────────────── */
+
+.shared-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+
+.shared-graph-info h3 {
+  margin: 16px 0 10px;
+  font-size: 15px;
+}
+
+.shared-node-list,
+.shared-edge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shared-node-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+.shared-node-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.shared-edge-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}

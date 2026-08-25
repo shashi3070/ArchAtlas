@@ -53,6 +53,7 @@ class SavedArchitecture(Base):
     name: Mapped[str] = mapped_column(String(200))
     current_version: Mapped[int] = mapped_column(Integer, default=1)
     challenge_id: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
+    share_token: Mapped[str | None] = mapped_column(String(32), nullable=True, unique=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
 
